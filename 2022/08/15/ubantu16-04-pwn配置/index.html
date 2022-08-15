@@ -1,7 +1,7 @@
 
 
 <!DOCTYPE html>
-<html lang="zh-CN" data-default-color-scheme=auto>
+<html lang="zh-CN" >
 
 
 
@@ -16,12 +16,12 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="giacomo">
   
-    <meta name="description" content="ubantu16.04 pwn环境搭建虚拟机安装ubantu镜像下载地址 配置vmtools（如果联网会自动安装）  sudo apt-get update sudo apt-get install open-vm-tools-desktop -y sudo reboot python，git，pip等工具python3.6参考博客python3.6安装，这里先不用按照文中的安装pip，因为会下载">
+    <meta name="description" content="ubantu16.04 pwn环境搭建虚拟机安装ubantu镜像下载地址 配置vmtools（如果联网会自动安装）  123sudo apt-get updatesudo apt-get install open-vm-tools-desktop -ysudo reboot python，git，pip等工具python3.6参考博客python3.6安装，这里先不用按照文中的安装pip，因为会下">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ubantu16.04_pwn配置">
 <meta property="og:url" content="http://example.com/2022/08/15/ubantu16-04-pwn%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="giacomo">
-<meta property="og:description" content="ubantu16.04 pwn环境搭建虚拟机安装ubantu镜像下载地址 配置vmtools（如果联网会自动安装）  sudo apt-get update sudo apt-get install open-vm-tools-desktop -y sudo reboot python，git，pip等工具python3.6参考博客python3.6安装，这里先不用按照文中的安装pip，因为会下载">
+<meta property="og:description" content="ubantu16.04 pwn环境搭建虚拟机安装ubantu镜像下载地址 配置vmtools（如果联网会自动安装）  123sudo apt-get updatesudo apt-get install open-vm-tools-desktop -ysudo reboot python，git，pip等工具python3.6参考博客python3.6安装，这里先不用按照文中的安装pip，因为会下">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="c:/Users/zhngy/AppData/Roaming/Typora/typora-user-images/image-20220814092248721.png">
 <meta property="article:published_time" content="2022-08-15T01:23:16.000Z">
@@ -43,8 +43,6 @@
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
 
-  <link  rel="stylesheet" href="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.css" />
-
   <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
 
 
@@ -62,18 +60,13 @@
 <link  rel="stylesheet" href="/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
-  
-    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
-  
-
 
 
 
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":false,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -129,33 +122,9 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
-                <i class="iconfont icon-archive-fill"></i>
-                归档
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
               <a class="nav-link" href="/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
-              </a>
-            </li>
-          
-        
-          
-          
-          
-          
-            <li class="nav-item">
-              <a class="nav-link" href="/tags/">
-                <i class="iconfont icon-tags-fill"></i>
-                标签
               </a>
             </li>
           
@@ -173,18 +142,6 @@
           
         
         
-          <li class="nav-item" id="search-btn">
-            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
-              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
-            </a>
-          </li>
-          
-        
-        
-          <li class="nav-item" id="color-toggle-btn">
-            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
-                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
-          </li>
         
       </ul>
     </div>
@@ -220,23 +177,7 @@
 
   <div class="mt-1">
     
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-chart"></i>
-        
-          2.8k 字
-        
-      </span>
-    
 
-    
-      <span class="post-meta mr-2">
-        <i class="iconfont icon-clock-fill"></i>
-        
-        
-        
-          24 分钟
-        
-      </span>
     
 
     
@@ -278,32 +219,25 @@
               <div class="markdown-body">
                 
                 <h1 id="ubantu16-04-pwn环境搭建"><a href="#ubantu16-04-pwn环境搭建" class="headerlink" title="ubantu16.04 pwn环境搭建"></a>ubantu16.04 pwn环境搭建</h1><h2 id="虚拟机安装"><a href="#虚拟机安装" class="headerlink" title="虚拟机安装"></a>虚拟机安装</h2><p>ubantu镜像下载<a target="_blank" rel="noopener" href="https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/16.04/">地址</a></p>
-<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="vmtools（如果联网会自动安装）"><a href="#vmtools（如果联网会自动安装）" class="headerlink" title="vmtools（如果联网会自动安装）"></a>vmtools（如果联网会自动安装）</h3>  <figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">sudo apt-get update
-sudo apt-get install open-vm-tools-desktop -y
-sudo reboot<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span></span></code></pre></div></figure>
+<h2 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h2><h3 id="vmtools（如果联网会自动安装）"><a href="#vmtools（如果联网会自动安装）" class="headerlink" title="vmtools（如果联网会自动安装）"></a>vmtools（如果联网会自动安装）</h3>  <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install open-vm-tools-desktop -y</span><br><span class="line">sudo reboot</span><br></pre></td></tr></table></figure>
 <h3 id="python，git，pip等工具"><a href="#python，git，pip等工具" class="headerlink" title="python，git，pip等工具"></a>python，git，pip等工具</h3><h4 id="python3-6"><a href="#python3-6" class="headerlink" title="python3.6"></a>python3.6</h4><p>参考博客<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_48125776/article/details/122475540">python3.6安装</a>，这里先不用按照文中的安装pip，因为会下载pip8比较老</p>
 <p>更改了默认py3版本之后，也把顺便默认的python从2.7改成3.6，参考博客<a target="_blank" rel="noopener" href="https://blog.csdn.net/White_Idiot/article/details/78240298">更改默认py的版本</a></p>
 <h4 id="pip21"><a href="#pip21" class="headerlink" title="pip21"></a>pip21</h4><p>安装pip21.3.1<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_46039239/article/details/114694348">安装pip</a>文中的命令为python3.7，需要使用如下命令。</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">curl https:&#x2F;&#x2F;bootstrap.pypa.io&#x2F;pip&#x2F;3.6&#x2F;get-pip.py -o get-pip.py<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">curl https://bootstrap.pypa.io/pip/3.6/get-pip.py -o get-pip.py</span><br></pre></td></tr></table></figure>
 <p>更换pip源,这里换成清华源</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">pip config set global.index-url https:&#x2F;&#x2F;pypi.tuna.tsinghua.edu.cn&#x2F;simple<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</span><br></pre></td></tr></table></figure>
 <h4 id="git"><a href="#git" class="headerlink" title="git"></a>git</h4><p>git clone命令会把下载内容放到我们使用git clone时候的路径下面，所以可以建一个文件夹专门存放git下载的文件</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">sudo apt-get install git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt-get install git</span><br></pre></td></tr></table></figure>
 
 <h3 id="gdb重新编译和pwndbg的安装"><a href="#gdb重新编译和pwndbg的安装" class="headerlink" title="gdb重新编译和pwndbg的安装"></a>gdb重新编译和pwndbg的安装</h3><p>由于gdb调用py不是调用python这个可执行文件，而是链接到gdb的libpython.so，版本不能更改只能重新编译gdb。我的ubantu上gdb的py版本是3.5，能够支持的pip8无法下载很多模块（py3.5不能被pip21支持），所以这里选择下载py3.6重新编译gdb。</p>
 <ul>
 <li>查看gdb的python版本(如果是3.6就不用重新编译了)</li>
 </ul>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">(gdb) py
-&gt;import sys
-&gt;print(sys.version)
-&gt;end
-3.4.0 (default, Apr 11 2014, 13:08:40)
-[GCC 4.8.2]<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(gdb) py</span><br><span class="line">&gt;import sys</span><br><span class="line">&gt;print(sys.version)</span><br><span class="line">&gt;end</span><br><span class="line">3.4.0 (default, Apr 11 2014, 13:08:40)</span><br><span class="line">[GCC 4.8.2]</span><br></pre></td></tr></table></figure>
 
 <ul>
 <li><p>卸载原来的gdb</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">sudo apt remove gdb<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sudo apt remove gdb</span><br></pre></td></tr></table></figure>
 </li>
 <li><p>从官网下载gdb压缩包 <a target="_blank" rel="noopener" href="https://mirrors.ustc.edu.cn/gnu/gdb/">下载</a></p>
 </li>
@@ -312,54 +246,21 @@ sudo reboot<span aria-hidden="true" class="line-numbers-rows"><span></span><span
 </ul>
 <p>解压：tar -zxf gdb-7.11.1.tar.gz</p>
 <p>进入目录：cd gdb-7.11.1</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">mkdir build
-cd    build
-..&#x2F;configure  （此处不用添加参数，会用默认版本的python）
-make        （时间稍久）
-sudo apt-get install texinfo
-sudo make install<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">mkdir build</span><br><span class="line">cd    build</span><br><span class="line">../configure  （此处不用添加参数，会用默认版本的python）</span><br><span class="line">make        （时间稍久）</span><br><span class="line">sudo apt-get install texinfo</span><br><span class="line">sudo make install</span><br></pre></td></tr></table></figure>
 
 <p>此时在terminal输入gdb能出现gdb界面了。</p>
 <ul>
 <li>pwndbg下载</li>
 </ul>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">git clone https:&#x2F;&#x2F;github.com&#x2F;pwndbg&#x2F;pwndbg 
-cd pwndbg 
-（修改 requirements.txt）
-.&#x2F;setup.sh<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/pwndbg/pwndbg </span><br><span class="line">cd pwndbg </span><br><span class="line">（修改 requirements.txt）</span><br><span class="line">./setup.sh</span><br></pre></td></tr></table></figure>
 
 <p>修改的requirements如下，有些版本pip21无法下载，所以改一下版本号</p>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">attrs&#x3D;&#x3D;21.4.0
-capstone&#x3D;&#x3D;4.0.2
-enum34&#x3D;&#x3D;1.1.10
-future&#x3D;&#x3D;0.18.2
-iniconfig&#x3D;&#x3D;1.1.1
-isort&#x3D;&#x3D;5.10.1
-packaging&#x3D;&#x3D;21.3
-pbr&#x3D;&#x3D;5.9.0
-pluggy&#x3D;&#x3D;1.0.0
-psutil&#x3D;&#x3D;5.9.1
-py&#x3D;&#x3D;1.11.0
-pycparser&#x3D;&#x3D;2.21
-pyelftools&#x3D;&#x3D;0.28
-Pygments&#x3D;&#x3D;2.12.0
-pyparsing&#x3D;&#x3D;3.0.7
-pytest&#x3D;&#x3D;7.0.1
-python-ptrace&#x3D;&#x3D;0.9.8
-ROPGadget&#x3D;&#x3D;6.8
-six&#x3D;&#x3D;1.16.0
-testresources&#x3D;&#x3D;2.0.1
-tomli&#x3D;&#x3D;1.2.3
-unicorn&#x3D;&#x3D;2.0.0<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">attrs==21.4.0</span><br><span class="line">capstone==4.0.2</span><br><span class="line">enum34==1.1.10</span><br><span class="line">future==0.18.2</span><br><span class="line">iniconfig==1.1.1</span><br><span class="line">isort==5.10.1</span><br><span class="line">packaging==21.3</span><br><span class="line">pbr==5.9.0</span><br><span class="line">pluggy==1.0.0</span><br><span class="line">psutil==5.9.1</span><br><span class="line">py==1.11.0</span><br><span class="line">pycparser==2.21</span><br><span class="line">pyelftools==0.28</span><br><span class="line">Pygments==2.12.0</span><br><span class="line">pyparsing==3.0.7</span><br><span class="line">pytest==7.0.1</span><br><span class="line">python-ptrace==0.9.8</span><br><span class="line">ROPGadget==6.8</span><br><span class="line">six==1.16.0</span><br><span class="line">testresources==2.0.1</span><br><span class="line">tomli==1.2.3</span><br><span class="line">unicorn==2.0.0</span><br></pre></td></tr></table></figure>
 
 <h3 id="其他安装"><a href="#其他安装" class="headerlink" title="其他安装"></a>其他安装</h3><ul>
 <li>sublime</li>
 </ul>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none">cd &#x2F;usr&#x2F;lib&#x2F;python3&#x2F;dist-packages
-sudo cp apt_pkg.cpython-35m-x86_64-linux-gnu.so apt_pkg.cpython-36m-x86_64-linux-gnu.so
-sudo add-apt-repository ppa:webupd8team&#x2F;sublime-text-3
-sudo apt-get update
-sudo apt-get install sublime-text-installer<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">cd /usr/lib/python3/dist-packages</span><br><span class="line">sudo cp apt_pkg.cpython-35m-x86_64-linux-gnu.so apt_pkg.cpython-36m-x86_64-linux-gnu.so</span><br><span class="line">sudo add-apt-repository ppa:webupd8team/sublime-text-3</span><br><span class="line">sudo apt-get update</span><br><span class="line">sudo apt-get install sublime-text-installer</span><br></pre></td></tr></table></figure>
 
 
 
@@ -367,18 +268,7 @@ sudo apt-get install sublime-text-installer<span aria-hidden="true" class="line-
 <ul>
 <li>更改setup.sh</li>
 </ul>
-<figure><div class="code-wrapper"><pre class="line-numbers language-none"><code class="language-none"># Find the Python version used by GDB.
--PYVER&#x3D;$(gdb -batch -q --nx -ex &#39;pi import platform; print(&quot;.&quot;.join(platform.python_version_tuple()[:2]))&#39;)
-+PYVER&#x3D;3.6
-PYTHON+&#x3D;$(gdb -batch -q --nx -ex &#39;pi import sys; print(sys.executable)&#39;)
-PYTHON+&#x3D;&quot;$&#123;PYVER&#125;&quot;
-
-# Find the Python site-packages that we need to use so that
-# GDB can find the files once we&#39;ve installed them.
-if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
-    -SITE_PACKAGES&#x3D;$(gdb -batch -q --nx -ex &#39;pi import site; print(site.getsitepackages()[0])&#39;)
-    +SITE_PACKAGES&#x3D;&#x2F;usr&#x2F;local&#x2F;lib&#x2F;python3.6&#x2F;dist-packages
-    INSTALLFLAGS&#x3D;&quot;--target $&#123;SITE_PACKAGES&#125;&quot;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre></div></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"># Find the Python version used by GDB.</span><br><span class="line">-PYVER=$(gdb -batch -q --nx -ex &#x27;pi import platform; print(&quot;.&quot;.join(platform.python_version_tuple()[:2]))&#x27;)</span><br><span class="line">+PYVER=3.6</span><br><span class="line">PYTHON+=$(gdb -batch -q --nx -ex &#x27;pi import sys; print(sys.executable)&#x27;)</span><br><span class="line">PYTHON+=&quot;$&#123;PYVER&#125;&quot;</span><br><span class="line"></span><br><span class="line"># Find the Python site-packages that we need to use so that</span><br><span class="line"># GDB can find the files once we&#x27;ve installed them.</span><br><span class="line">if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then</span><br><span class="line">    -SITE_PACKAGES=$(gdb -batch -q --nx -ex &#x27;pi import site; print(site.getsitepackages()[0])&#x27;)</span><br><span class="line">    +SITE_PACKAGES=/usr/local/lib/python3.6/dist-packages</span><br><span class="line">    INSTALLFLAGS=&quot;--target $&#123;SITE_PACKAGES&#125;&quot;</span><br></pre></td></tr></table></figure>
 
 <p>有些模块版本安装不了，需要更改一下requirements.txt，修改内容如上。</p>
 <p>成功安装，启动gdb报错如下，据说强制更新psutil有用，但是我没有搞出来。</p>
@@ -492,15 +382,9 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
 
 
 
-  
-
-
 
   
 
-
-
-  
 
 
 
@@ -523,28 +407,6 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
         <i class="iconfont icon-arrowup" aria-hidden="true"></i>
       </a>
     
-
-    
-      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
-     aria-hidden="true">
-  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header text-center">
-        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
-        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body mx-3">
-        <div class="md-form mb-5">
-          <input type="text" id="local-search-input" class="form-control validate">
-          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
-        </div>
-        <div class="list-group" id="local-search-result"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
     
 
@@ -638,34 +500,9 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
 </script>
 
 
-  <script  src="https://lib.baomitu.com/prism/1.27.0/plugins/line-numbers/prism-line-numbers.min.js" ></script>
-
   <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
 
   <script>Fluid.plugins.codeWidget();</script>
-
-
-  
-<script>
-  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
-    window.anchors.options = {
-      placement: CONFIG.anchorjs.placement,
-      visible  : CONFIG.anchorjs.visible
-    };
-    if (CONFIG.anchorjs.icon) {
-      window.anchors.options.icon = CONFIG.anchorjs.icon;
-    }
-    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
-    var res = [];
-    for (var item of el) {
-      res.push('.markdown-body > ' + item.trim());
-    }
-    if (CONFIG.anchorjs.placement === 'left') {
-      window.anchors.options.class = 'anchorjs-link-left';
-    }
-    window.anchors.add(res.join(', '));
-  });
-</script>
 
 
   
@@ -677,8 +514,6 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
 
 
   <script>Fluid.plugins.imageCaption();</script>
-
-  <script  src="/js/local-search.js" ></script>
 
 
 
