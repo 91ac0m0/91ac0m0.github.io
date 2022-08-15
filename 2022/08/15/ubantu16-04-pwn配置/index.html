@@ -7,8 +7,8 @@
 
 <head>
   <meta charset="UTF-8">
-  <link rel="apple-touch-icon" sizes="76x76" href="/91ac0m0.github.io/img/fluid.png">
-  <link rel="icon" href="/91ac0m0.github.io/img/icon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/project/img/fluid.png">
+  <link rel="icon" href="/project/img/icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -19,7 +19,7 @@
     <meta name="description" content="ubantu16.04 pwn环境搭建虚拟机安装ubantu镜像下载地址 配置vmtools（如果联网会自动安装）  sudo apt-get update sudo apt-get install open-vm-tools-desktop -y sudo reboot python，git，pip等工具python3.6参考博客python3.6安装，这里先不用按照文中的安装pip，因为会下载">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ubantu16.04_pwn配置">
-<meta property="og:url" content="https://91ac0m0.github.io/2022/08/15/ubantu16-04-pwn%E9%85%8D%E7%BD%AE/index.html">
+<meta property="og:url" content="https://91ac0m0.github.io/project/2022/08/15/ubantu16-04-pwn%E9%85%8D%E7%BD%AE/index.html">
 <meta property="og:site_name" content="giacomo&#39;s blogger">
 <meta property="og:description" content="ubantu16.04 pwn环境搭建虚拟机安装ubantu镜像下载地址 配置vmtools（如果联网会自动安装）  sudo apt-get update sudo apt-get install open-vm-tools-desktop -y sudo reboot python，git，pip等工具python3.6参考博客python3.6安装，这里先不用按照文中的安装pip，因为会下载">
 <meta property="og:locale" content="zh_CN">
@@ -59,12 +59,12 @@
 <link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
 
 
-<link  rel="stylesheet" href="/91ac0m0.github.io/css/main.css" />
+<link  rel="stylesheet" href="/project/css/main.css" />
 
 
-  <link id="highlight-css" rel="stylesheet" href="/91ac0m0.github.io/css/highlight.css" />
+  <link id="highlight-css" rel="stylesheet" href="/project/css/highlight.css" />
   
-    <link id="highlight-css-dark" rel="stylesheet" href="/91ac0m0.github.io/css/highlight-dark.css" />
+    <link id="highlight-css-dark" rel="stylesheet" href="/project/css/highlight-dark.css" />
   
 
 
@@ -73,15 +73,15 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"91ac0m0.github.io","root":"/91ac0m0.github.io/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/91ac0m0.github.io/local-search.xml"};
+    var CONFIG = {"hostname":"91ac0m0.github.io","root":"/project/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/project/local-search.xml"};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
       Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
     }
   </script>
-  <script  src="/91ac0m0.github.io/js/utils.js" ></script>
-  <script  src="/91ac0m0.github.io/js/color-schema.js" ></script>
+  <script  src="/project/js/utils.js" ></script>
+  <script  src="/project/js/color-schema.js" ></script>
   
 
 
@@ -98,7 +98,7 @@
 <div class="header-inner" style="height: 70vh;">
   <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
-    <a class="navbar-brand" href="/91ac0m0.github.io/">
+    <a class="navbar-brand" href="/project/">
       <strong>giacomo</strong>
     </a>
 
@@ -117,7 +117,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/91ac0m0.github.io/">
+              <a class="nav-link" href="/project/">
                 <i class="iconfont icon-home-fill"></i>
                 首页
               </a>
@@ -129,7 +129,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/91ac0m0.github.io/archives/">
+              <a class="nav-link" href="/project/archives/">
                 <i class="iconfont icon-archive-fill"></i>
                 归档
               </a>
@@ -141,7 +141,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/91ac0m0.github.io/categories/">
+              <a class="nav-link" href="/project/categories/">
                 <i class="iconfont icon-category-fill"></i>
                 分类
               </a>
@@ -153,7 +153,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/91ac0m0.github.io/tags/">
+              <a class="nav-link" href="/project/tags/">
                 <i class="iconfont icon-tags-fill"></i>
                 标签
               </a>
@@ -165,7 +165,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/91ac0m0.github.io/about/">
+              <a class="nav-link" href="/project/about/">
                 <i class="iconfont icon-user-fill"></i>
                 关于
               </a>
@@ -194,7 +194,7 @@
   
 
 <div id="banner" class="banner" parallax=true
-     style="background: url('/91ac0m0.github.io/img/default.png') no-repeat center center; background-size: cover;">
+     style="background: url('/project/img/default.png') no-repeat center center; background-size: cover;">
   <div class="full-bg-img">
     <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
       <div class="banner-text text-center fade-in-up">
@@ -382,7 +382,7 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
 
 <p>有些模块版本安装不了，需要更改一下requirements.txt，修改内容如上。</p>
 <p>成功安装，启动gdb报错如下，据说强制更新psutil有用，但是我没有搞出来。</p>
-<p><img src="C:\Users\zhngy\AppData\Roaming\Typora\typora-user-images\image-20220814092248721.png" srcset="/91ac0m0.github.io/img/loading.gif" lazyload alt="image-20220814092248721"></p>
+<p><img src="C:\Users\zhngy\AppData\Roaming\Typora\typora-user-images\image-20220814092248721.png" srcset="/project/img/loading.gif" lazyload alt="image-20220814092248721"></p>
 
                 
               </div>
@@ -395,7 +395,7 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/91ac0m0.github.io/tags/pwn/">#-pwn</a>
+        <a href="/project/tags/pwn/">#-pwn</a>
       
     </div>
   
@@ -408,7 +408,7 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
   <div class="license-box my-3">
     <div class="license-title">
       <div>ubantu16.04_pwn配置</div>
-      <div>https://91ac0m0.github.io/2022/08/15/ubantu16-04-pwn配置/</div>
+      <div>https://91ac0m0.github.io/project/2022/08/15/ubantu16-04-pwn配置/</div>
     </div>
     <div class="license-meta">
       
@@ -454,7 +454,7 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
                   <article class="post-next col-6">
                     
                     
-                      <a href="/91ac0m0.github.io/2022/08/15/hello-world/" title="Hello World">
+                      <a href="/project/2022/08/15/hello-world/" title="Hello World">
                         <span class="hidden-mobile">Hello World</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
@@ -581,8 +581,8 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
 
 <script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
 <script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
-<script  src="/91ac0m0.github.io/js/events.js" ></script>
-<script  src="/91ac0m0.github.io/js/plugins.js" ></script>
+<script  src="/project/js/events.js" ></script>
+<script  src="/project/js/plugins.js" ></script>
 
 
   <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
@@ -604,7 +604,7 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
 
 
   
-    <script  src="/91ac0m0.github.io/js/img-lazyload.js" ></script>
+    <script  src="/project/js/img-lazyload.js" ></script>
   
 
 
@@ -678,7 +678,7 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
 
   <script>Fluid.plugins.imageCaption();</script>
 
-  <script  src="/91ac0m0.github.io/js/local-search.js" ></script>
+  <script  src="/project/js/local-search.js" ></script>
 
 
 
@@ -686,7 +686,7 @@ if linux &amp;&amp; [ -z &quot;$INSTALLFLAGS&quot; ]; then
 
 <!-- 主题的启动项，将它保持在最底部 -->
 <!-- the boot of the theme, keep it at the bottom -->
-<script  src="/91ac0m0.github.io/js/boot.js" ></script>
+<script  src="/project/js/boot.js" ></script>
 
 
   
