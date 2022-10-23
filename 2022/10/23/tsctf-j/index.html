@@ -16,15 +16,15 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="giacomo">
   
-    <meta name="description" content="​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼…   pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且">
+    <meta name="description" content="​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼…  pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给">
 <meta property="og:type" content="article">
 <meta property="og:title" content="tsctf-j2022 wp——天璇merak招新赛">
 <meta property="og:url" content="https://91ac0m0.github.io/2022/10/23/tsctf-j/index.html">
 <meta property="og:site_name" content="giacomo">
-<meta property="og:description" content="​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼…   pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且">
+<meta property="og:description" content="​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼…  pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-10-23T12:45:44.255Z">
-<meta property="article:modified_time" content="2022-10-23T13:46:54.882Z">
+<meta property="article:modified_time" content="2022-10-23T13:50:23.220Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="giacomo">
 <meta name="twitter:card" content="summary_large_image">
@@ -216,7 +216,7 @@
             
               <div class="markdown-body">
                 
-                <p>​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼…  </p>
+                <p>​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼… </p>
 <h2 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h2><h3 id="世界"><a href="#世界" class="headerlink" title="世界"></a>世界</h3><ul>
 <li><p>思路</p>
 <p>前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给了goddess_backdoor函数，由此猜测栈溢出。</p>
