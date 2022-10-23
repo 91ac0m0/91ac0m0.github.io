@@ -16,22 +16,22 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="giacomo">
   
-    <meta name="description" content="感谢出题人们的耐心解答。 pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给了goddess_backdoor函数，由此猜测栈溢出。  size_t 变量类型 read前会检查输入的大小，49不够溢出，但是nbytes的变量类型是size_t，size_t被解析位无符号数，然而在和49比较的时候是以int格式的">
+    <meta name="description" content="​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼…   pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且">
 <meta property="og:type" content="article">
-<meta property="og:title" content="tsctf-j2022 wp">
-<meta property="og:url" content="https://91ac0m0.github.io/2022/10/13/tsctf-j/index.html">
+<meta property="og:title" content="tsctf-j2022 wp——天璇merak招新赛">
+<meta property="og:url" content="https://91ac0m0.github.io/2022/10/23/tsctf-j/index.html">
 <meta property="og:site_name" content="giacomo">
-<meta property="og:description" content="感谢出题人们的耐心解答。 pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给了goddess_backdoor函数，由此猜测栈溢出。  size_t 变量类型 read前会检查输入的大小，49不够溢出，但是nbytes的变量类型是size_t，size_t被解析位无符号数，然而在和49比较的时候是以int格式的">
+<meta property="og:description" content="​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼…   pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-10-13T13:36:30.207Z">
-<meta property="article:modified_time" content="2022-10-23T12:24:28.364Z">
+<meta property="article:published_time" content="2022-10-23T12:45:44.255Z">
+<meta property="article:modified_time" content="2022-10-23T13:46:54.882Z">
 <meta property="article:author" content="John Doe">
 <meta property="article:tag" content="giacomo">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>tsctf-j2022 wp - giacomo</title>
+  <title>tsctf-j2022 wp——天璇merak招新赛 - giacomo</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -155,7 +155,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="tsctf-j2022 wp"></span>
+            <span id="subtitle" data-typed-text="tsctf-j2022 wp——天璇merak招新赛"></span>
           
         </div>
 
@@ -166,8 +166,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-10-13 21:36" pubdate>
-          2022年10月13日 晚上
+        <time datetime="2022-10-23 20:45" pubdate>
+          2022年10月23日 晚上
         </time>
       </span>
     
@@ -211,12 +211,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">tsctf-j2022 wp</h1>
+            <h1 style="display: none">tsctf-j2022 wp——天璇merak招新赛</h1>
             
             
               <div class="markdown-body">
                 
-                <p>感谢出题人们的耐心解答。</p>
+                <p>​		从moe到tsctf-j，算是有一些些微薄的长进。gdb和google（笑）使用都越来越熟练了。只能说多亏了耐心的出题人们呗，特别是写的最波折的sc，辛苦ayoung在我每次骚扰他之后叮嘱我一句加油。赛后的感受其实是大佬好多，陷入了一些自我怀疑的焦灼…  </p>
 <h2 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h2><h3 id="世界"><a href="#世界" class="headerlink" title="世界"></a>世界</h3><ul>
 <li><p>思路</p>
 <p>前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给了goddess_backdoor函数，由此猜测栈溢出。</p>
@@ -335,7 +335,6 @@
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line">    <span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line">    </span><br><span class="line">    p = <span class="number">126848068662434725837362927110508359670513097902158347608742478683379412542373205396355795471254038301102414856525121647188484976552142343067044591036870463204973197337043645689668460536955381260032883948287738855267140030987485450026217231376934834164731323791161242646800219869703713605170682364116602398481</span></span><br><span class="line">    q = <span class="number">108831434115512090318037589335170063989256445400295000303568098461799570376658935415095544400164386313684432766346946165811277996284801631673216470358009654117077854125122927553974223129029217160157869796055967783796164293604324171269850795257143703187899358858675646672321319018167474020363026585548820771697</span></span><br><span class="line">    e = <span class="number">65537</span></span><br><span class="line">    c = <span class="number">12806426835071949867711416962709958594314368469792264574105984900555439512183487926101898057954900183669492820478219013019317212504718045553210233002824678962092820191899047884098185828625477721152790480535997733511787559909800255732856472382084502459064555276405636335011653299264667296955585832665754137638936306114164795630686750776282273654483469063781121080308493239356585954141139584326117462247270605137016151223704623131634401478066683053816761883398796060573577823014077050991745590269109018594293646949390055766822956018083267147781811450534232319486801350308073725708881185484667042111239958769639753074974</span></span><br><span class="line">    d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">    n = p *q</span><br><span class="line">    m=powmod(c,d,n)</span><br><span class="line">    m = long_to_bytes(m).decode()</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line">    </span><br><span class="line">    n = <span class="number">117468512089531428663961257960238163911</span></span><br><span class="line">    e = <span class="number">65537</span></span><br><span class="line">    c = <span class="number">116661533228458434140621528983098975679</span></span><br><span class="line">    p = <span class="number">10044079891992334031</span></span><br><span class="line">    q = <span class="number">11695298459661145481</span></span><br><span class="line">    d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">    n = p *q</span><br><span class="line">    m=powmod(c,d,n)</span><br><span class="line">    m = long_to_bytes(m).decode()</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line">    </span><br><span class="line">    q = <span class="number">116157631074161326668152038927249334338399827206586914589176832177082944299227717473355044107614652079152523161147120835537353552449908708629934368874677505050900078018992526314964561246045453416854196152086105218778204572329269076361235953745958869643828443636138454981800813514293034142691705140488032060333</span></span><br><span class="line">    p = <span class="number">116157631074161326668152038927249334338399827206586914589176832177082944299227717473355044107614652079152523161147120835537353552449908708629934368874677505050900078018992526314964561246045453416854196152086105218778204572329269076361235953745958869643828443636138454981800813514293034142691705140488032064827</span></span><br><span class="line">    n = <span class="number">13492595256760969040679230352398486845474955975199604800660741616776625780411272813224167801996221854423950963429539941573997611430663873182935561614207154821126761724862959388136641380305863820357311556705058402764857971168891247598952474612658335721334501562320453135569072859647106595744699686106575394155623607871280406174889010332061295980615904318604783210190774745857252314015710989087615728493401949363616443440371076313467788459099129219583070179936217564350523405302532093137784337453902235992607281224617514376983703401850900613434289916680690958012167734859041293116971287070809385300950616506089031207391</span></span><br><span class="line">    e = <span class="number">65537</span></span><br><span class="line">    c = <span class="number">9556855627975459046740821834528544070427049621127160951742003478725424449033433009828717934730280978533743220944726870403563278379897696996593408941742726761954126312142544881536075456011232335038713394388844246035946642298588354835538957640121051986433171003548328013363624428388045689223434747553158248457199579326477645217581943607544640937724609291757178063476167129106555047385785925998650584941948353305651394629383203202173799027705269424908549510903196317581322985993424298619576745664607011471390391051884932663025002185768778902167735501719300645089512150938345539777564021221129832163135987500087303945958</span></span><br><span class="line">    </span><br><span class="line">    d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">    n = p *q</span><br><span class="line">    m=powmod(c,d,n)</span><br><span class="line">    m = long_to_bytes(m).decode()</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line">    </span><br><span class="line">    e = <span class="number">7</span></span><br><span class="line">    c = <span class="number">24352183908812439486066187971806232095447207924326195067955513727448051350160252184726311366048048945796542616778567176778473328388848916602914602254361942853429047133399539108358587787495587158203125</span></span><br><span class="line">    n = <span class="number">16311936352179992492322678030084754707912920265012738488001035655568811201293057367042418918656434158566661057011011903060966139141261511970173395803273617809596669492853191556134593000727887389753473207671720940942296594391783348274481657029091989837730022520412600669905401644620228349730622930180575214015304207221073824165287677553936892684490958627884970712382480336987266790423306814756649897559941928884283783109014172545384266583536851269964790353704338665524956130951949158484613551769004309270737394403919413951880647112332734742309798941724190059029780419002154606451025683494409014840175366489059673990383</span></span><br><span class="line">    </span><br><span class="line">    m = gmpy2.iroot(c, e)</span><br><span class="line">    m = <span class="number">30464294894851269162823603325</span></span><br><span class="line">    m = long_to_bytes(m).decode()</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line"></span><br><span class="line"><span class="comment">### nonograms</span></span><br><span class="line"></span><br><span class="line">​		先写出开、得，结合hint，猜到是旗开得胜。</span><br><span class="line"></span><br><span class="line"><span class="comment">## ab</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### abstract_culture_revenge</span></span><br><span class="line"></span><br><span class="line">​	  比较确定的是最后一个蘑菇应该是“君”（菌）。水晶球应该是“不”（卜），这两个是在古诗语境下比较常见的解释。于是猜测后三字应该是“不见君”，“不识君”。结合前文，得出flag。（虽然猜的很不容易，但总的来说这题好妙！）</span><br><span class="line"></span><br><span class="line"><span class="comment">### helang</span></span><br><span class="line"></span><br><span class="line">- speak to saint he</span><br><span class="line"></span><br><span class="line">  ```bash</span><br><span class="line">  Speak to Saint He &gt; u8 b = <span class="number">1</span> | <span class="number">2</span> | <span class="number">3</span></span><br><span class="line">  Speak to Saint He &gt; u8 egg = <span class="number">688333</span> * b[<span class="number">1</span>]</span><br><span class="line">  Speak to Saint He &gt; <span class="built_in">print</span> egg</span><br><span class="line">  <span class="number">688333</span></span><br></pre></td></tr></table></figure></li>
 </ul>
 <h2 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h2><h3 id="byr之声"><a href="#byr之声" class="headerlink" title="byr之声"></a>byr之声</h3><p>​	倒放</p>
-<p>​		</p>
 <h2 id="re"><a href="#re" class="headerlink" title="re"></a>re</h2><h3 id="byte-code"><a href="#byte-code" class="headerlink" title="byte_code"></a>byte_code</h3><ul>
 <li><p>字节码简介</p>
 <p>汇编之于c语言，字节码之于python</p>
@@ -360,8 +359,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>tsctf-j2022 wp</div>
-      <div>https://91ac0m0.github.io/2022/10/13/tsctf-j/</div>
+      <div>tsctf-j2022 wp——天璇merak招新赛</div>
+      <div>https://91ac0m0.github.io/2022/10/23/tsctf-j/</div>
     </div>
     <div class="license-meta">
       
@@ -396,6 +395,12 @@
                   </article>
                   <article class="post-next col-6">
                     
+                    
+                      <a href="/2022/08/29/moectf/" title="moectf2022 wp ——我的第一场ctf">
+                        <span class="hidden-mobile">moectf2022 wp ——我的第一场ctf</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
                     
                   </article>
                 </div>
