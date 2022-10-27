@@ -2,4 +2,4 @@
 
 ## 2022
 
-- [tsctf-j](/tsctf-j)
+- [tsctf-j](/wp/tsctf-j)
