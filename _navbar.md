@@ -1,6 +1,6 @@
 * [start](/)
 
-* [note](/note/)
+* [weekly](/weekly/)
 
 * [wp](/wp/)
 
