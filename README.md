@@ -1,3 +1,6 @@
-# whoami
+# hello! hello! this is giacomo.
 
-> you dont get to choose to not pay a price, you get to choose which poison you are going to take
+简介还先空着，我没想好要怎么介绍我自己😜
+
+
+
