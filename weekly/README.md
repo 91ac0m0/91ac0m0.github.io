@@ -11,6 +11,8 @@
 
 ## November
 - [week1(2022/11/8)](/weekly/week1)
+- [week2(2022/11/14)](/weekly/week2)
+
 
 ## August
 - [ubantu16.04](/weekly/pwn环境搭建ubantu16.04)
