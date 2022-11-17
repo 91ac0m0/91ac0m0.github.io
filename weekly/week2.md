@@ -10,24 +10,18 @@ libc.so.6 中有很多东西可以利用，但是可是本地和远程的 libc �
 
 ```bash
 giacomo@ubuntu:~/Desktop/ctf/hnctf/ezheap$ ldd ./ezheap
-	linux-vdso.so.1 (0x00007ffe66f48000)
-	./libc-2.23.so (0x00007f37b0d58000)
-	/home/giacomo/Desktop/tools/glibc-all-in-one/libs/2.23-0ubuntu11.3_amd64/ld-2.23.so => /lib64/ld-linux-x86-64.so.2 (0x00007f37b112b000)
+    linux-vdso.so.1 (0x00007ffe66f48000)
+    ./libc-2.23.so (0x00007f37b0d58000)
+    /home/giacomo/Desktop/tools/glibc-all-in-one/libs/2.23-0ubuntu11.3_amd64/ld-2.23.so => /lib64/ld-linux-x86-64.so.2 (0x00007f37b112b000)
 ```
 
 我被这个命令里的 `=>` 困扰了很久，才知道这个箭头不是指向的意思，而是：
 
 > 在 ldd 命令打印的结果中，“=>”左边的表示该程序需要连接的共享库之 so 名称，右边表示由 Linux 的共享库系统找到的对应的共享库在文件系统中的具体位置
 
-（原来题目给的 libc 是有用的，然而我一直不懂，感谢善良的 memory ）
-
-
-
 #### 粗略理解延迟绑定
 
-上周在调 plt 是干什么的，没看懂到底怎么跳转的，这几天善良的 mark 碰巧提示了一下。
-
-
+上周在调 plt 是干什么的，没看懂到底怎么跳转的。
 
 c 代码长这样：
 
@@ -48,13 +42,3 @@ int main()
 在`_dl_runtime_resovle`函数中，`_dl_fixup()`函数用于解析导入函数的真实地址，并改写GOT。（这里尝试看了一下源码，但是结构体太复杂了 orz，于是先这样吧知道个原理就好，细节...再说吧。）
 
 简单理解就是`_dl_fixup(table, idx)`，`table` 里面装着先对地址，`idx` 是函数在 table 中相应序号，这个例子里面 idx 为 0。根据 idx 在 table 里面找相对地址，再加上基址，填到 got 表里面。
-
- 
-
-
-
-
-
-
-
-

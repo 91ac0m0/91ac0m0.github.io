@@ -2,9 +2,7 @@
 title: ubantu16.04 pwn环境搭建
 ---
 
-​		配环境花了整整两天时间，我感受到我的修为得到了极大的提升，境界得到新的程度的开拓，特此写一篇博客。
-
-
+​        配环境花了整整两天时间，我感受到我的修为得到了极大的提升，境界得到新的程度的开拓，特此写一篇博客。
 
 ## 虚拟机安装
 
@@ -12,13 +10,14 @@ ubantu镜像下载[地址](https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/
 
 ## 配置
 
-###  vmtools（如果联网会自动安装）
+### vmtools（如果联网会自动安装）
 
-  ```
-  sudo apt-get update
-  sudo apt-get install open-vm-tools-desktop -y
-  sudo reboot
-  ```
+```
+sudo apt-get update
+sudo apt-get install open-vm-tools-desktop -y
+sudo reboot
+```
+
 ### python，git，pip等工具
 
 #### python3.6
@@ -34,11 +33,14 @@ ubantu镜像下载[地址](https://mirrors.tuna.tsinghua.edu.cn/ubuntu-releases/
 ```
 curl https://bootstrap.pypa.io/pip/3.6/get-pip.py -o get-pip.py
 ```
+
 更换pip源,这里换成清华源
+
 ```
 pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
 ```
-####  git
+
+#### git
 
 git clone命令会把下载内容放到我们使用git clone时候的路径下面，所以可以建一个文件夹专门存放git下载的文件
 
@@ -62,11 +64,13 @@ sudo apt-get install git
 ```
 
 - 卸载原来的gdb
-```
-sudo apt remove gdb
-```
+  
+  ```
+  sudo apt remove gdb
+  ```
 
 - 从官网下载gdb压缩包 [下载](https://mirrors.ustc.edu.cn/gnu/gdb/)
+
 - 安装
 
 解压：tar -zxf gdb-7.11.1.tar.gz
@@ -131,8 +135,6 @@ sudo add-apt-repository ppa:webupd8team/sublime-text-3
 sudo apt-get update
 sudo apt-get install sublime-text-installer
 ```
-
-
 
 ## ps：
 
