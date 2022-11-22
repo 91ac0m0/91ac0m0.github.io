@@ -15,6 +15,7 @@
 
 - [week1(2022/11/8)](/weekly/week1)
 - [week2(2022/11/14)](/weekly/week2)
+- [week3(2022/11/22)](/weekly/week3)
 
 ## August
 
