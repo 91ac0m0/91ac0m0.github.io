@@ -48,4 +48,4 @@ unsorted 在 chunk 回到 bins 之前存放空闲 chunk。释放一个不属于 
 
 关于scikit-learn 写的很清楚的简单[例子](https://blog.csdn.net/qq_44971458/article/details/107092324)。
 
-下周看看 stack smash。
+下周看看栈迁移。
