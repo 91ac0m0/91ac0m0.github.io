@@ -11,10 +11,18 @@
 
 ---
 
+
+
+## February
+
+- [week1(2023/2/5)](/weekly/febweek1)
+
+
+
 ## January
 
-- [week1(2022/1/7)](/weekly/janweek1)
-- [week2(2022/1/14)](/weekly/janweek2)
+- [week1(2023/1/7)](/weekly/janweek1)
+- [week2(2023/1/14)](/weekly/janweek2)
 
 ## November
 
