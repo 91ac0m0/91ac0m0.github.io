@@ -1,6 +1,6 @@
 ### FEB week 1
 
-（happy 了好几天，没看习题安抚
+（happy 了好几天，没看习题爱抚
 
 注释了一下 glibc 2.32 的 malloc.c 
 
