@@ -16,6 +16,7 @@
 ## February
 
 - [week1(2023/2/5)](/weekly/febweek1)
+- [week3(2023/2/19)](/weekly/febweek3)
 
 
 

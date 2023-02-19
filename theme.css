@@ -64,7 +64,7 @@ body {
   -webkit-font-smoothing: antialiased;
   color: #34495e;
   font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif;
-  font-size: 15px;
+  font-size: 17px;
   letter-spacing: 0;
   margin: 0;
   overflow-x: hidden;
@@ -315,6 +315,7 @@ body.sticky .sidebar-toggle {
   bottom: 0;
   left: 300px;
   transition: left 250ms ease;
+  width : 70%
 }
 .markdown-section {
   margin: 0 auto;
