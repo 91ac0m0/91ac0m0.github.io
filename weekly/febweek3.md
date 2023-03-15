@@ -169,7 +169,7 @@ payload = payload.ljust(0xf0, b'\x00') #为了后续不用在减 0x10，这里�
 
 （乱入。主要是题目 ban 了 execve 所以就写了栈迁移。
 
-![image-20230219143022977](C:\Users\zhngy\AppData\Roaming\Typora\typora-user-images\image-20230219143022977.png) 
+![image-20230220073507177](https://s2.loli.net/2023/02/20/kiO4msVxTCYtfe6.png) 
 
   需要构造：
 
