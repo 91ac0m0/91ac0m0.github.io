@@ -77,86 +77,26 @@
 
 </header>
 
-    <div class="index_pan">
-    <div class="blog-title">
-        <h1>giacomo&#39;s journal</a></h1>
-    </div>
-    <div class="posts">
-        <div class="postslist">
-    
-    
-    <div class="post">
-        <a class = "post-title-link" href="/2023/09/11/2023-09-11/">
-            read behave in stdin
-        </a>
-        <span class="post-title-date">
-            2023-09-11
-        </span>
-    </div>
-    
-    <div class="post">
-        <a class = "post-title-link" href="/2023/09/10/2023-09-10/">
-            懒得取名
-        </a>
-        <span class="post-title-date">
-            2023-09-10
-        </span>
-    </div>
-    
-    <div class="post">
-        <a class = "post-title-link" href="/2023/09/10/2023-09-09/">
-            没脑子的bug增加了
-        </a>
-        <span class="post-title-date">
-            2023-09-10
-        </span>
-    </div>
-    
-    <div class="post">
-        <a class = "post-title-link" href="/2023/09/08/2023-09-08/">
-            偷学 toctou
-        </a>
-        <span class="post-title-date">
-            2023-09-08
-        </span>
-    </div>
-    
-    <div class="post">
-        <a class = "post-title-link" href="/2023/09/08/2023-09-07/">
-            用typora复现typora的cve
-        </a>
-        <span class="post-title-date">
-            2023-09-08
-        </span>
-    </div>
-    
-    <div class="post">
-        <a class = "post-title-link" href="/2023/09/06/2023-09-06/">
-            🌟
-        </a>
-        <span class="post-title-date">
-            2023-09-06
-        </span>
-    </div>
-    
-    <div class="post">
-        <a class = "post-title-link" href="/2023/09/05/2023-09-05/">
-            🌟
-        </a>
-        <span class="post-title-date">
-            2023-09-05
-        </span>
-    </div>
-    
-</div>
-
-        
-
-
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B0%83%E8%AF%95"><span class="toc-text">调试</span></a></li></ol>
     </div>
 
 </div>
+<article class="markdown-body">
+	<div></div><p>看见了一个好厉害的 blog （ <a target="_blank" rel="noopener" href="https://eternalsakura13.com/">https://eternalsakura13.com/</a> </p>
+<h2 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h2><p>本地能通，但是远程不行，最后发现是和 read 函数在不同情况下的读取的行为有关系。在 terminal 的时候，一行的内容超过了指定的大小，多余的内容会被抛弃。<a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/8975521/read-from-stdin">参考</a>。</p>
+<blockquote>
+<p>If read () is reading from a terminal in canonical&#x2F;cooked mode, the tty driver provides data a line at a time. So if you tell read () to get 3 characters or 300, read will hang until the tty driver has seen a newline or the terminal’s defined EOF key, and then read () will return with either the number of characters in the line or the number of characters you requested, whichever is smaller.</p>
+</blockquote>
+</div>
+</article>
 
+<script src="/js/image_pop_up.js"></script>
+
+	
 
 </body>
 </html>
