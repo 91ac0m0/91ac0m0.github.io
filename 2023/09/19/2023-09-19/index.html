@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#cpp"><span class="toc-text">cpp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#this"><span class="toc-text">this</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Static"><span class="toc-text">Static</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#strucure"><span class="toc-text">strucure</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#enum"><span class="toc-text">enum</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#header"><span class="toc-text">header</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#no-more-secret"><span class="toc-text">no more secret</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Tree-%E5%91%BD%E4%BB%A4"><span class="toc-text">Tree 命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#waiting-for-IO"><span class="toc-text">waiting for IO</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#locale"><span class="toc-text">locale</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#curses"><span class="toc-text">curses</span></a></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="cpp"><a href="#cpp" class="headerlink" title="cpp"></a>cpp</h2><p>好好好</p>
+<p><a target="_blank" rel="noopener" href="https://www.learncpp.com/">https://www.learncpp.com/</a></p>
+<h3 id="this"><a href="#this" class="headerlink" title="this"></a>this</h3><ul>
+<li>局部变量和成员名称相同</li>
+<li>返回对象本身</li>
+</ul>
+<h3 id="Static"><a href="#Static" class="headerlink" title="Static"></a>Static</h3><p>所有对象共有的字段，新建对象的时候不会划分内存</p>
+<h3 id="strucure"><a href="#strucure" class="headerlink" title="strucure"></a>strucure</h3><p>访问结构体成员 <code>structname.name</code>。</p>
+<p>为了使用指向结构的指针访问结构的成员，须使用 -&gt; 运算符，<code>struct_pointer-&gt;title</code>。</p>
+<h3 id="enum"><a href="#enum" class="headerlink" title="enum"></a>enum</h3><p>enum 的输入输出一般与 switch 结合来使用</p>
+<p>标签对应整数的子集。</p>
+<h3 id="header"><a href="#header" class="headerlink" title="header"></a>header</h3><p>把函数、变量的声明放进一个 header 文件内，让其他文件知道。</p>
+<h2 id="no-more-secret"><a href="#no-more-secret" class="headerlink" title="no more secret"></a>no more secret</h2><h3 id="Tree-命令"><a href="#Tree-命令" class="headerlink" title="Tree 命令"></a>Tree 命令</h3><p><code>tree -a</code> 递归列出目录、文件</p>
+<h3 id="waiting-for-IO"><a href="#waiting-for-IO" class="headerlink" title="waiting for IO"></a>waiting for IO</h3><p><a target="_blank" rel="noopener" href="https://www.gnu.org/software/libc/manual/html_node/Waiting-for-I_002fO.html">Waiting for I&#x2F;O (The GNU C Library) — 等待 I&#x2F;O （GNU C 库）</a></p>
+<p>select 函数可以等待一组输入中的摸一个输入，read 只能等待一个而非一组</p>
+<h3 id="locale"><a href="#locale" class="headerlink" title="locale"></a>locale</h3><p>设置程序的 locale</p>
+<pre><code class="c">char *setlocale(int category, const char *locale);
+</code></pre>
+<p>If  locale is not NULL, the program’s current locale is modified according to the arguments.  The argument category determines which parts of the program’s current locale should be modified.</p>
+<h3 id="curses"><a href="#curses" class="headerlink" title="curses"></a>curses</h3><p>curses 是一个在 Linux&#x2F;Unix 下广泛应用的图形函数库.，作用是可以绘制在 DOS 下的用户界面和漂亮的图形。</p>
+<ul>
+<li><p>stdscr 数据结构指的是 “标准屏幕”，它的工作原理和 stdio 函数库中的标准输出 stdout 非常相似，在 curses 程序里，它是缺省的输出窗口。</p>
+</li>
+<li><p>curscr 数据结构指的是 “当前屏幕”。在程序调用 refresh 之前，输出数据是不会出现在标准屏幕上的。refresh 被调用时，curses 会比较 stdscr 与 curscr 的内容，只刷新发生改变的部分。</p>
+</li>
+</ul>
+<p>在一个 curses 程序里，输出一个字符的过程是：</p>
+<ol>
+<li>使用 curses 函数刷新一个逻辑屏幕 (例如: printw(“hello world!\n”); )</li>
+<li>请求 curses 用 refresh 刷新物理屏幕</li>
+</ol>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Cpp"><span class="toc-text">Cpp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0"><span class="toc-text">成员函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AF%B9%E8%B1%A1%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-text">对象修饰符</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Public-%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-text">Public 修饰符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#private-%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-text">private 修饰符</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#protect-%E4%BF%AE%E9%A5%B0%E7%AC%A6"><span class="toc-text">protect 修饰符</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0-%E6%9E%90%E6%9E%84%E5%87%BD%E6%95%B0"><span class="toc-text">构造函数&amp;析构函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#new"><span class="toc-text">new</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%B7%E8%B4%9D%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0"><span class="toc-text">拷贝构造函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%A7%E6%89%BF"><span class="toc-text">继承</span></a></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="Cpp"><a href="#Cpp" class="headerlink" title="Cpp"></a>Cpp</h2><h3 id="成员函数"><a href="#成员函数" class="headerlink" title="成员函数"></a>成员函数</h3><p>成员函数可以定义在类定义内部，或者单独使用范围解析运算符 :: 来定义。在类定义中定义的成员函数把函数声明是内联的，即便没有使用 inline 标识符。所以您可以按照如下方式定义 getVolume () 函数：</p>
+<pre><code class="cpp">
+class Box
+&#123;
+   public:
+      double length;      // 长度
+      double breadth;     // 宽度
+      double height;      // 高度
+   
+      double getVolume(void)
+      &#123;
+         return length * breadth * height;
+      &#125;
+&#125;;
+
+double Box::getVolume(void)
+&#123;
+    return length * breadth * height;
+&#125;
+</code></pre>
+<blockquote>
+<p>当编译器处理调用内联函数的语句时，不会将该语句编译成函数调用的指令，而是直接将整个函数体的代码插人调用语句处，就像整个函数体在调用处被重写了一遍一样</p>
+</blockquote>
+<h3 id="对象修饰符"><a href="#对象修饰符" class="headerlink" title="对象修饰符"></a>对象修饰符</h3><h4 id="Public-修饰符"><a href="#Public-修饰符" class="headerlink" title="Public 修饰符"></a>Public 修饰符</h4><p>public 描述得字段可以用 <code>.</code>  访问，其他修饰符（private protect）不可以这么访问。</p>
+<h4 id="private-修饰符"><a href="#private-修饰符" class="headerlink" title="private 修饰符"></a>private 修饰符</h4><ul>
+<li>私有成员变量或函数在类的外部是不可访问的、不可查看的。只有类和友元函数可以访问私有成员。</li>
+<li>默认情况下，类的所有成员都是私有的。</li>
+</ul>
+<h4 id="protect-修饰符"><a href="#protect-修饰符" class="headerlink" title="protect 修饰符"></a>protect 修饰符</h4><p>protected（受保护）成员在派生类（即子类）中是可访问的。</p>
+<h3 id="构造函数-析构函数"><a href="#构造函数-析构函数" class="headerlink" title="构造函数&amp;析构函数"></a>构造函数&amp;析构函数</h3><ul>
+<li><p>构造函数的名称与类的名称是完全相同的，并且不会返回任何类型，也不会返回 void。</p>
+</li>
+<li><p>析构函数的名称与类的名称是完全相同的，只是在前面加了个波浪号（~）作为前缀，它不会返回任何值，也不能带有任何参数。</p>
+</li>
+</ul>
+<h3 id="new"><a href="#new" class="headerlink" title="new"></a>new</h3><p><a target="_blank" rel="noopener" href="https://unstop.com/blog/new-operator-in-cpp">https://unstop.com/blog/new-operator-in-cpp</a></p>
+<p>返回一个栈地址得指针</p>
+<h3 id="拷贝构造函数"><a href="#拷贝构造函数" class="headerlink" title="拷贝构造函数"></a>拷贝构造函数</h3><p>拷贝构造函数通常用于：</p>
+<ul>
+<li><p>通过使用另一个同类型的对象来初始化新创建的对象。</p>
+</li>
+<li><p>复制对象把它作为参数传递给函数。</p>
+</li>
+<li><p>复制对象，并从函数返回这个对象。</p>
+</li>
+</ul>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3></div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

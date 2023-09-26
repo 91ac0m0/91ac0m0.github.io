@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="toc-text">正则表达式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E4%B8%80%E4%B8%AA%E5%A4%8D%E5%88%B6%E7%9A%84%E6%8F%92%E4%BB%B6"><span class="toc-text">写一个复制的插件</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="正则表达式"><a href="#正则表达式" class="headerlink" title="正则表达式"></a>正则表达式</h2><p><a target="_blank" rel="noopener" href="https://www.haorooms.com/post/regex_qzhgfqzfhg">负向前瞻</a></p>
+<p>负前瞻：</p>
+<pre><code>haorooms(?!hrms) 查找后面不是hrms的haorooms,
+</code></pre>
+<p><code>^(?: (a|b|c)(?!.*\1))*$ </code> 查找后续不再出现的 a b c</p>
+<h2 id="写一个复制的插件"><a href="#写一个复制的插件" class="headerlink" title="写一个复制的插件"></a>写一个复制的插件</h2><p><a target="_blank" rel="noopener" href="https://juejin.cn/post/7039700870103040007">油猴脚本的编写—超详细（附自己写的油猴小脚本） - 掘金</a></p>
+<p><a target="_blank" rel="noopener" href="https://developer.chrome.com/docs/extensions/mv3/match_patterns/">url match 格式</a></p>
+<p>用 js 添加一个 svg 图片不显示</p>
+<p><a target="_blank" rel="noopener" href="https://javascript.plainenglish.io/how-to-create-an-svg-element-with-vanilla-javascript-a6b140745196">How to Create an SVG Element with Vanilla JavaScript</a></p>
+<p>哎本来的想法是用 svg 写，然后发现图片可以硬编码写到 js 里面…</p>
+<pre><code class="js">(function() &#123;
+    &#39;use strict&#39;;
+
+    let copy_div = document.createElement(&quot;div&quot;);
+
+    // where to place it 
+    copy_div.style.position = &quot;fixed&quot;;
+    copy_div.style.height = &quot;50px&quot;;
+    copy_div.style.width = &quot;50px&quot;;
+    copy_div.style.top = &quot;0px&quot;; 
+    copy_div.style.right = &quot;10px&quot;;
+    copy_div.style.zIndex = 999;
+
+
+    const ns = &#39;http://www.w3.org/2000/svg&#39;;
+    let copy_svg = document.createElementNS(ns, &quot;svg&quot;);
+    copy_div.appendChild(copy_svg);
+
+
+    //the svg setting
+    copy_svg.setAttributeNS(null, &quot;height&quot;, &quot;64px&quot;)
+    copy_svg.setAttributeNS(null, &quot;width&quot;, &quot;64px&quot;)
+    copy_svg.setAttributeNS(null, &quot;version&quot;, &quot;1.1&quot;)
+    copy_svg.setAttribute(&quot;xmlns:xlink&quot;, &quot;http://www.w3.org/1999/xlink&quot;)
+    copy_svg.setAttributeNS(null, &quot;viewBox&quot;, &quot;-307.2 -307.2 1126.40 1126.40&quot;)
+    copy_svg.setAttributeNS(null, &quot;transform&quot;,&quot;matrix(-1, 0, 0, 1, 0, 0)rotate(0)&quot;)
+    copy_svg.setAttributeNS(null, &quot;viewBox&quot;, &quot;-307.2 -307.2 1126.40 1126.40&quot;)
+    copy_svg.setAttribute( &quot;xml:space&quot;, &quot;preserve&quot;)
+    copy_svg.setAttributeNS(null, &quot;fill&quot;, &quot;#000000&quot;)
+
+    //svg path
+    let copy_svg_g = document.createElementNS(ns,&quot;g&quot;);
+    copy_svg.appendChild(copy_svg_g);
+
+    
+    let copy_svg_path = document.createElementNS(ns,&quot;path&quot;);
+    copy_svg_path.setAttribute(&quot;d&quot;, &quot;M504.302,195.59c-10.618-6.362-29.71-43.514-33.959-47.755c-4.249-4.256-28.662-13.81-28.662-13.81 l-13.795-43.514c-26.542,3.185-42.449,45.634-43.513,48.819c0,0-2.661,73.764-120.47,45.11 c-84.437-20.54-135.22-40.407-177.872-0.36c-2.668-4.578-4.491-9.234-5.822-14.257c-2.378-9.062-2.918-19.46-2.91-31.308 c0-5.806,0.109-11.924,0.117-18.34c-0.008-13.436-0.493-28.248-4.046-44.015C69.85,60.386,63.136,43.743,51.344,27.162 c-5.086-7.168-15.024-8.858-22.199-3.764c-7.167,5.094-8.858,15.031-3.764,22.199c9.304,13.145,14.162,25.368,16.932,37.551 c2.739,12.167,3.271,24.397,3.264,37.027c0,6.024-0.118,12.136-0.118,18.34c0.016,12.646,0.438,25.799,3.928,39.32 c2.746,10.735,7.722,21.58,15.508,31.706C31.93,261.458,50.037,316.584,50.037,316.584l-34.093,54.241 c-0.618,0.978-1.033,2.066-1.244,3.192L0.146,454.073c-0.641,3.521,0.862,7.08,3.819,9.084l40.979,27.763 c0.876,0.602,1.964,0.775,2.981,0.493c1.026-0.274,1.863-0.994,2.308-1.949l8.326-17.825c0.618-1.338,0.368-2.918-0.634-3.998 l-10.728-11.448c-2.182-2.324-2.973-5.634-2.081-8.701l17.84-61.033c0.579-1.948,1.784-3.646,3.435-4.82l23.983-17.058 c3.255-2.332,7.66-2.222,10.806,0.251c3.146,2.472,4.288,6.721,2.809,10.438L93.41,401.858c-1.22,3.051-0.681,6.525,1.401,9.06 l60.298,73.365h45.218c1.996,0,3.616-1.62,3.616-3.607v-22.504c0-1.996-1.62-3.615-3.616-3.615h-14.303 c-3.342,0-6.409-1.854-7.982-4.804l-24.484-41.049c-1.643-3.106-1.33-6.87,0.783-9.663l21.948-28.999 c1.706-2.245,4.367-3.575,7.192-3.575h61.197c2.872,0,5.579,1.376,7.277,3.701c1.698,2.324,2.191,5.313,1.33,8.059l-19.726,62.16 c-0.626,1.957-0.564,4.077,0.18,5.994l12.653,32.598h39.272v-8.49l-6.494-20.415c-0.61-1.909-0.563-3.967,0.133-5.852 l26.471-71.847c1.315-3.553,4.694-5.908,8.474-5.908h27.011c2.449,0,4.796,1.002,6.502,2.777l74.813,103.365c0,0,38.208,0,50.947,0 c12.738,0,7.809-25.414-4.241-26.542c-22.826-2.12-52.004-65.798-64.742-88.09c-12.739-22.285,24.664-91.299,53.067-94.453 c28.654-3.185,43.514-14.867,47.763-30.79C513.856,223.187,514.92,201.959,504.302,195.59z&quot;)
+    copy_svg_g.appendChild(copy_svg_path);
+
+
+    let url = document.URL;
+    let title = document.title;
+
+    copy_div.addEventListener(
+        &#39;click&#39;,
+        async (e) =&gt; &#123;
+            await navigator.clipboard.writeText(&quot;[&quot; + title +&quot;](&quot; + url + &quot;)&quot;)
+        &#125;
+        )
+
+
+    // add copy button to body
+    document.body.appendChild(copy_div);
+    
+&#125;)();
+</code></pre>
+<p>找到了一个好看的 SVG 库 <a target="_blank" rel="noopener" href="https://www.svgrepo.com/">SVG Repo - Free SVG Vectors and Icons</a></p>
+<p>如何操作剪贴板： <a target="_blank" rel="noopener" href="https://www.ruanyifeng.com/blog/2021/01/clipboard-api.html">剪贴板操作 Clipboard API 教程 - 阮一峰的网络日志</a></p>
+<p>最终效果：</p>
+<pre><code class="js">// ==UserScript==
+// @name         cope tilte as markdown
+// @namespace
+// @version      0.1
+// @description  try to take over the world!
+// @author       giacomo
+// @match        https://*/*
+// @grant        none
+// ==/UserScript==
+(function() &#123;
+    &#39;use strict&#39;;
+
+    // before copy
+    const icon_0 = &#39;data:image/png;base64,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&#39;
+    // after copy
+    const icon_1 = &#39;data:image/png;base64,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&#39;
+
+    //img display setting
+    const img = document.createElement(&#39;img&#39;);
+    img.src = icon_0;
+    img.style.width = &#39;50px&#39;;
+    img.style.height = &#39;50px&#39;;
+    img.style.position = &#39;fixed&#39;;
+    img.style.top = &#39;10px&#39;;
+    img.style.right = &#39;10px&#39;;
+    img.style.zIndex = 1001;
+
+    // click and copy, no permission needed
+    img.addEventListener(
+        &#39;click&#39;,
+        async (e) =&gt; &#123;
+            let url = document.URL;
+            let title = document.title;
+            await navigator.clipboard.writeText(&quot;[&quot; + title +&quot;](&quot; + url + &quot;)&quot;)
+        &#125;
+    )
+
+    // change icon
+    img.addEventListener(
+        &#39;click&#39;,
+        function() &#123;
+            img.src = icon_1;
+
+            // last for 1 s
+            setTimeout(() =&gt; &#123;
+                img.src = icon_0;
+            &#125;, 1000);
+        &#125;
+    )
+
+    // add copy button to body
+    document.body.appendChild(img);
+
+&#125;)();
+</code></pre>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

