@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#line-%E6%A0%87%E8%AE%B0"><span class="toc-text">line 标记</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nightjs"><span class="toc-text">Nightjs</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Gdb"><span class="toc-text">Gdb</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wsl-%E6%96%87%E4%BB%B6%E7%B3%BB%E7%BB%9F"><span class="toc-text">wsl 文件系统</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="line-标记"><a href="#line-标记" class="headerlink" title="line 标记"></a>line 标记</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/choumin/article/details/113784383">C语言中的#line宏</a></p>
+<p>有了这个标记可以指定报错&#x2F;调试的行数和文件名</p>
+<h2 id="Nightjs"><a href="#Nightjs" class="headerlink" title="Nightjs"></a>Nightjs</h2><p>第一处修改：bytebuffer 类的 <code>[ ]</code> 运算符可以越界</p>
+<pre><code class="cpp">[[nodiscard]] u8&amp; operator[](size_t i)
+&#123;
+    // VERIFY(i &lt; m_size);
+    return data()[i];
+&#125;
+</code></pre>
+<p>第二处更改：删去了 toblock 长度检查</p>
+<pre><code class="cpp">
+// 4. Let toSize be the number of bytes in toBlock.
+// auto to_size = to_block.size();
+
+// 5. Assert: toIndex + count ≤ toSize.
+// VERIFY(to_index + count &lt;= to_size);
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://eternal.red/2023/night_js/">找到了一个 wp</a></p>
+<h2 id="Gdb"><a href="#Gdb" class="headerlink" title="Gdb"></a>Gdb</h2><p>查看记号 info functions</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/shijingxiang/articles/4962534.html">gdb 更改符号表目录</a>，虽然符号表里面的路径是别人的，但是也可以在自己的电脑上找到源文件</p>
+<p>逆天逆天，在 gdb 还没有 run 的时候下断点是无法找到文件位置的，但是 run 之后就可以找到了，ekngui 因为多文件的符号表是递归查找的，只有 run 起来才能找到更多?</p>
+<pre><code class="bash">pwndbg&gt; file -readnow js
+Reading symbols from js...
+Expanding full symbols from js...
+pwndbg&gt; b  /home/giacomo/ctf/serenity/Userland/Libraries/LibJS/Runtime/ArrayBuffer.cpp:188
+No source file named /home/giacomo/ctf/serenity/Userland/Libraries/LibJS/Runtime/ArrayBuffer.cpp.
+</code></pre>
+<p>但是 run 之后就可以正常下断点楽…</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/dataowner/article/details/106926971">跟这个很像</a></p>
+<pre><code>info args
+p/x *(zval*)(*(var_entries*)var_hashx.first).data[0]
+</code></pre>
+<h2 id="wsl-文件系统"><a href="#wsl-文件系统" class="headerlink" title="wsl 文件系统"></a>wsl 文件系统</h2><p>在编译的时候看见楽这个<a target="_blank" rel="noopener" href="https://github.com/SerenityOS/serenity/blob/master/Documentation/BuildInstructionsWindows.md#note-on-filesystems">提示</a></p>
+<p>WSL2 filesystem performance for IO heavy tasks (such as compiling a large C++ project) on the host </p>
+<p>If it’s at all possible, store your projects in the Linux file system in WSL2.</p>
+<p>感觉 wsl 和本地磁盘传文件确实极其慢</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

