@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%9D%E6%8A%A4"><span class="toc-text">保护</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#kaslr"><span class="toc-text">kaslr</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E5%AD%98"><span class="toc-text">内存</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="保护"><a href="#保护" class="headerlink" title="保护"></a>保护</h2><h3 id="kaslr"><a href="#kaslr" class="headerlink" title="kaslr"></a>kaslr</h3><p>没开 kaslr 时, <code>page_offset_base</code> 是常量 0xffff888000000000, 开了 kaslr 后, 会在 <a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/source/arch/x86/mm/kaslr.c#L64"><code>kernel_randomize_memory()</code></a> 中加上一个随机偏移, 这个偏移对齐 <code>PUD_MASK</code>, 即 $2^{30}$ </p>
+<pre><code class="c">entropy = remain_entropy / (ARRAY_SIZE(kaslr_regions) - i);
+prandom_bytes_state(&amp;rand_state, &amp;rand, sizeof(rand));
+entropy = (rand % (entropy + 1)) &amp; PUD_MASK;
+vaddr += entropy;
+*kaslr_regions[i].base = vaddr;
+
+#define PUD_MASK    (~(PUD_SIZE - 1))
+#define PUD_SIZE    (1UL &lt;&lt; PUD_SHIFT)
+#define PUD_SHIFT   30
+</code></pre>
+<p>在题目里面有如下写法，是因为内存很小所以可以直接以获得到基址吗？</p>
+<pre><code class="c">    vmemmap_base = slab_vmemmap_addr &amp; 0xfffffffff0000000;  // 问号
+</code></pre>
+<h2 id="内存"><a href="#内存" class="headerlink" title="内存"></a>内存</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/pwl999/article/details/112055498">https://blog.csdn.net/pwl999/article/details/112055498</a> </p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/58837677/memory-mapping-in-linux-kernel-use-of-vamlloc-and-kmalloc">vmalloc</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/godspeed1989/buddy_allocator">buddy</a></p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#PIC-PIE"><span class="toc-text">PIC&#x2F;PIE</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RELRO"><span class="toc-text">RELRO</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#master-of-orw-%E5%A4%8D%E7%8E%B0"><span class="toc-text">master of orw 复现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#pic-%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-text">pic 的实现</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><p>有点混乱</p>
+<h3 id="PIC-PIE"><a href="#PIC-PIE" class="headerlink" title="PIC&#x2F;PIE"></a>PIC&#x2F;PIE</h3><p>PIC ( position independent code ) 一开始是用于动态库的加载的，这么多动态库肯定得服从任意的地址分配，而二进制文件的位置是固定的。后来发现 ASLR 的效果很好，希望引入 PIE ( position independent execute )让二进制的地址也随机化。</p>
+<p>在 gcc manual 13.2 中有关选项的解释如下</p>
+<ul>
+<li><p>static</p>
+<pre><code>On systems that support dynamic linking, this overrides -pie and prevents linking with the shared libraries. On other systems, this option has no effect.
+</code></pre>
+<p>  不和共享库链接</p>
+</li>
+<li><p>static-pie</p>
+<pre><code class="text">Produce a static position independent executable on targets that support it. A static position independent executable is similar to a static executable, but can be loaded at any address without a dynamic linker. For predictable results, you must also specify the same set of options used for compilation (-fpie, -fPIE, or model suboptions) when you specify this linker option.
+</code></pre>
+<p>  不需要动态库在任意地址加载</p>
+</li>
+<li><p>fpic</p>
+<pre><code class="text">-fpic
+Generate position-independent code (PIC) suitable for use in a shared library, if supported for the target machine. Such code accesses all constant addresses through a global offset table (GOT). The dynamic loader resolves the GOT entries when the program starts (the dynamic loader is not part of GCC; it is part of the operating system). If the GOT size for the linked executable exceeds a machine-specific maximum size, you get an error message from the linker indicating that -fpic does not work; in that case, recompile with -fPIC instead. (These maximums are 8k on the SPARC, 28k on AArch64 and 32k on the m68k and RS/6000. The x86 has no such limit.)
+
+Position-independent code requires special support, and therefore works only on certain machines. For the x86, GCC supports PIC for System V but not for the Sun 386i. Code generated for the IBM RS/6000 is always position-independent.
+
+When this flag is set, the macros `__pic__` and `__PIC__` are defined to 1.
+
+-fPIC
+
+If supported for the target machine, emit position-independent code, suitable for dynamic linking and avoiding any limit on the size of the global offset table. This option makes a difference on AArch64, m68k, PowerPC and SPARC.
+
+Position-independent code requires special support, and therefore works only on certain machines.
+
+When this flag is set, the macros `__pic__` and `__PIC__` are defined to 2.
+
+-fpie
+
+-fPIE
+
+These options are similar to -fpic and -fPIC, but the generated position-independent code can be only linked into executables. Usually these options are used to compile code that will be linked using the -pie GCC option.
+
+-fpie and -fPIE both define the macros `__pie__` and `__PIE__`. The macros have the value 1 for -fpie and 2 for -fPIE.
+</code></pre>
+<p>  PIC 需要通过 GOT 表到达地址，dnamic loader 会在程序启动&#x2F;程序过程中解析 GOT 表。</p>
+<p>  PIE 与 PIC 的概念接近，但只能被链接到可执行文件。</p>
+</li>
+</ul>
+<h2 id="RELRO"><a href="#RELRO" class="headerlink" title="RELRO"></a>RELRO</h2><p>可以向 dynamic loader 指定在什么时候解析 GOT。在 man ld 里可以看见</p>
+<pre><code class="text">lazy
+    When generating an executable or shared library, mark it to tell the dynamic linker to defer function call resolution to the point when the function is called (lazy binding), rather than at load time.Lazy binding is the default.
+</code></pre>
+<p>lazy binding 是默认的</p>
+<pre><code class="text">now 
+    When generating an executable or shared library, mark it to tell the dynamic linker to resolve all symbols when the program is started, or when the shared library is loaded by dlopen, instead of deferring function call resolution to the point when the function is first called.
+</code></pre>
+<p>但是我们用 gcc 不加 <code>-z</code> 选项编译的文件是 FULL RELRO。gcc 是默认会传递 -z now 参数 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/62527697/why-does-gcc-link-with-z-now-by-default-although-lazy-binding-is-the-default">默认是 full relro</a></p>
+<p>后面的东西是随手贴上去的</p>
+<h2 id="master-of-orw-复现"><a href="#master-of-orw-复现" class="headerlink" title="master of orw 复现"></a>master of orw 复现</h2><p>用 syscall 接收远程文件跳转执行</p>
+<pre><code class="text">gcc -o test -static -fno-stack-protector -no-pie -O3 ./lib_uring_test.c -luring
+
+-static 
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://carsontang.github.io/unix/2013/06/01/guide-to-object-file-linking/">REL 和 EXEC 的区别</a></p>
+<p>可重定位文件中，符号的地址还没有填写上去（还是 0）</p>
+<h3 id="pic-的实现"><a href="#pic-的实现" class="headerlink" title="pic 的实现"></a>pic 的实现</h3><p>在 x64 中，开了 PIC 之后，数据和函数的地址是通过 RIP 的偏移计算的。测试一下。</p>
+<pre><code class="c">int d = 3;
+
+int add(int a, int b)&#123;
+    return a+b;
+&#125;
+
+int main()&#123;
+    int x = add(d, 3);
+&#125;
+</code></pre>
+<p>汇编如下：</p>
+<pre><code class="text">pwndbg&gt; disass /r main
+Dump of assembler code for function main:
+   0x0000000000001141 &lt;+0&gt;:     f3 0f 1e fa             endbr64
+   0x0000000000001145 &lt;+4&gt;:     55                      push   rbp
+   0x0000000000001146 &lt;+5&gt;:     48 89 e5                mov    rbp,rsp
+   0x0000000000001149 &lt;+8&gt;:     48 83 ec 10             sub    rsp,0x10
+   0x000000000000114d &lt;+12&gt;:    48 8d 05 bc 2e 00 00    lea    rax,[rip+0x2ebc]        # 0x4010 &lt;d&gt;
+   0x0000000000001154 &lt;+19&gt;:    8b 00                   mov    eax,DWORD PTR [rax]
+   0x0000000000001156 &lt;+21&gt;:    be 03 00 00 00          mov    esi,0x3
+   0x000000000000115b &lt;+26&gt;:    89 c7                   mov    edi,eax
+   0x000000000000115d &lt;+28&gt;:    e8 c7 ff ff ff          call   0x1129 &lt;add&gt;
+   0x0000000000001162 &lt;+33&gt;:    89 45 fc                mov    DWORD PTR [rbp-0x4],eax
+   0x0000000000001165 &lt;+36&gt;:    b8 00 00 00 00          mov    eax,0x0
+   0x000000000000116a &lt;+41&gt;:    c9                      leave
+   0x000000000000116b &lt;+42&gt;:    c3                      ret
+End of assembler dump.
+</code></pre>
+<p><code>0x115d</code> 处的 call add 的语句是 <code>e8 cd ff ff ff</code> 即跳转到（当前地址 - 0x2e）的地方。</p>
+<p><code>0x114d</code> 是通过 rip 来相对寻址的</p>
+<p>emmm 下面是不开 -fPIC 的我怎么觉得没什么差别</p>
+<pre><code class="test">pwndbg&gt; disass /r main
+Dump of assembler code for function main:
+   0x0000000000001141 &lt;+0&gt;:     f3 0f 1e fa             endbr64
+   0x0000000000001145 &lt;+4&gt;:     55                      push   rbp
+   0x0000000000001146 &lt;+5&gt;:     48 89 e5                mov    rbp,rsp
+   0x0000000000001149 &lt;+8&gt;:     48 83 ec 10             sub    rsp,0x10
+   0x000000000000114d &lt;+12&gt;:    8b 05 bd 2e 00 00       mov    eax,DWORD PTR [rip+0x2ebd]        # 0x4010 &lt;d&gt;
+   0x0000000000001153 &lt;+18&gt;:    be 03 00 00 00          mov    esi,0x3
+   0x0000000000001158 &lt;+23&gt;:    89 c7                   mov    edi,eax
+   0x000000000000115a &lt;+25&gt;:    e8 ca ff ff ff          call   0x1129 &lt;add&gt;
+   0x000000000000115f &lt;+30&gt;:    89 45 fc                mov    DWORD PTR [rbp-0x4],eax
+   0x0000000000001162 &lt;+33&gt;:    b8 00 00 00 00          mov    eax,0x0
+   0x0000000000001167 &lt;+38&gt;:    c9                      leave
+   0x0000000000001168 &lt;+39&gt;:    c3                      ret
+End of assembler dump.
+</code></pre>
+<p>还有一些问题待解决：</p>
+<ul>
+<li>开启 pie 的程序是如何随机的？</li>
+<li>static link 包括那些库函数会被包括进来</li>
+</ul>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

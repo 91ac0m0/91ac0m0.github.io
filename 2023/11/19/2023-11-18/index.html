@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#pipe-buffer-%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-text">pipe_buffer 结构体</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pipe-buffer-uaf"><span class="toc-text">pipe buffer uaf</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B5%90%E6%A7%8B%E9%AB%94"><span class="toc-text">結構體</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pipe-buffer-%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90"><span class="toc-text">pipe_buffer 源码分析</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="pipe-buffer-结构体"><a href="#pipe-buffer-结构体" class="headerlink" title="pipe_buffer 结构体"></a>pipe_buffer 结构体</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Breeze_CAT/article/details/124887622">https://blog.csdn.net/Breeze_CAT/article/details/124887622</a></p>
+<h2 id="pipe-buffer-uaf"><a href="#pipe-buffer-uaf" class="headerlink" title="pipe buffer uaf"></a>pipe buffer uaf</h2><pre><code class="c">fcntl(pipe_fd[1], F_SETPIPE_SZ, 0x1000 * 8) 
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/16863914/im-trying-to-change-pipe-size-using-f-setpipe-sz-but-when-compiling-it-says-it">https://stackoverflow.com/questions/16863914/im-trying-to-change-pipe-size-using-f-setpipe-sz-but-when-compiling-it-says-it</a></p>
+<h2 id="結構體"><a href="#結構體" class="headerlink" title="結構體"></a>結構體</h2><p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/html/v5.3/filesystems/splice.html#pipes-api">pipe_buffer</a></p>
+<h2 id="pipe-buffer-源码分析"><a href="#pipe-buffer-源码分析" class="headerlink" title="pipe_buffer 源码分析"></a>pipe_buffer 源码分析</h2><p><code>void *kaddr = kmap_local_page(page);</code>  内存的转换方法</p>
+<p><a target="_blank" rel="noopener" href="https://linux-kernel-labs.github.io/refs/heads/master/labs/memory_mapping.html">memory maping</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.kernel.org/doc/Documentation/x86/x86_64/mm.txt">https://www.kernel.org/doc/Documentation/x86/x86_64/mm.txt</a> </p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/pwl999/article/details/112055498">https://blog.csdn.net/pwl999/article/details/112055498</a></p>
+<p><a target="_blank" rel="noopener" href="http://www.bi2.com.cn/linuxos/76.html">http://www.bi2.com.cn/linuxos/76.html</a></p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

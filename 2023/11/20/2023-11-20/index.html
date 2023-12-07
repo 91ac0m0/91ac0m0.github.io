@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#buddy-system-%E5%8F%96%E5%87%BA-0x200-%E5%A4%A7%E5%B0%8F%E7%9A%84%E5%9D%97"><span class="toc-text">buddy system 取出 0x200 大小的块</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#slab-%E5%90%91-buddy-system-%E8%AF%B7%E6%B1%82%E5%88%86%E9%85%8D-page"><span class="toc-text">slab 向 buddy system 请求分配 page</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#slab-%E5%88%86%E9%85%8D-new-object"><span class="toc-text">slab 分配 new object</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#page-%E7%BB%93%E6%9E%84%E4%BD%93%E5%AD%97%E6%AE%B5"><span class="toc-text">page 结构体字段</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%99%E4%B9%88%E6%89%93%E5%8D%B0%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-text">这么打印结构体</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="buddy-system-取出-0x200-大小的块"><a href="#buddy-system-取出-0x200-大小的块" class="headerlink" title="buddy system 取出 0x200 大小的块"></a>buddy system 取出 0x200 大小的块</h2><p><a target="_blank" rel="noopener" href="https://s3.shizhz.me/linux-mm/3.2-wu-li-nei-cun/3.2.5-slab-slub-slob#orgdec88b5">3.2.5 SLAB&#x2F;SLUB&#x2F;SLOB - Linux核心概念详解</a></p>
+<pre><code class="c">/*
+ * Go through the free lists for the given migratetype and remove
+ * the smallest available page from the freelists
+ */
+static __always_inline
+struct page *__rmqueue_smallest(struct zone *zone, unsigned int order,
+                        int migratetype)
+&#123;
+    unsigned int current_order;
+    struct free_area *area;
+    struct page *page;
+
+    /* Find a page of the appropriate size in the preferred list */
+    for (current_order = order; current_order &lt;= MAX_ORDER; ++current_order) &#123;
+        area = &amp;(zone-&gt;free_area[current_order]);
+        page = get_page_from_free_area(area, migratetype);
+        if (!page)
+            continue;
+        del_page_from_free_list(page, zone, current_order);
+        expand(zone, page, order, current_order, migratetype);
+        set_pcppage_migratetype(page, migratetype);
+        trace_mm_page_alloc_zone_locked(page, order, migratetype,
+                pcp_allowed_order(order) &amp;&amp;
+                migratetype &lt; MIGRATE_PCPTYPES);
+        return page;
+    &#125;
+
+    return NULL;
+&#125;
+</code></pre>
+<h3 id="slab-向-buddy-system-请求分配-page"><a href="#slab-向-buddy-system-请求分配-page" class="headerlink" title="slab 向 buddy system 请求分配 page"></a>slab 向 buddy system 请求分配 page</h3><pre><code class="c">struct page *__alloc_pages(gfp_t gfp, unsigned int order, int preferred_nid,
+                            nodemask_t *nodemask)
+</code></pre>
+<h3 id="slab-分配-new-object"><a href="#slab-分配-new-object" class="headerlink" title="slab 分配 new object"></a>slab 分配 new object</h3><pre><code class="c">static void *___slab_alloc(struct kmem_cache *s, gfp_t gfpflags, int node,
+              unsigned long addr, struct kmem_cache_cpu *c, unsigned int orig_size)
+              
+new_objects:
+
+
+.... 
+
+    freelist = slab-&gt;freelist;
+    slab-&gt;freelist = NULL;
+    slab-&gt;inuse = slab-&gt;objects;
+    slab-&gt;frozen = 1;
+</code></pre>
+<p>页面是如何分配结构体的</p>
+<pre><code class="c">    shuffle = shuffle_freelist(s, slab);
+
+    if (!shuffle) &#123;
+        //在 page 的开始设置 red zone 防止越界
+        start = fixup_red_left(s, start);
+        start = setup_object(s, start);
+        slab-&gt;freelist = start;
+        for (idx = 0, p = start; idx &lt; slab-&gt;objects - 1; idx++) &#123;
+            next = p + s-&gt;size;
+            next = setup_object(s, next);
+            set_freepointer(s, p, next);
+            p = next;
+        &#125;
+        set_freepointer(s, p, NULL);
+    &#125;
+
+    return slab;
+</code></pre>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_44629819/article/details/133043499">https://blog.csdn.net/qq_44629819/article/details/133043499</a></p>
+<h3 id="page-结构体字段"><a href="#page-结构体字段" class="headerlink" title="page 结构体字段"></a>page 结构体字段</h3><pre><code class="c">pwndbg&gt; x/10gx 0xffffea00001be200
+0xffffea00001be200:     0x000fffffc0000200      0xffff888004dfb500
+0xffffea00001be210:     0xdead000000000122      0x0000000000000000
+0xffffea00001be220:     0xffff888006f88450      0x0000000000aa0000
+0xffffea00001be230:     0x00000001ffffffff      0x0000000000000000
+
+flags       slab_cache
+?           ?
+freelist    
+
+struct slab &#123;
+    unsigned long __page_flags;
+    struct kmem_cache *slab_cache;
+    struct &#123;
+        union &#123;
+            struct list_head slab_list;
+#ifdef CONFIG_SLUB_CPU_PARTIAL
+            struct &#123;
+                struct slab *next;
+                int slabs;	/* Nr of slabs left */
+            &#125;;
+#endif
+        &#125;;
+        /* Double-word boundary */
+        void *freelist;		/* first free object */
+        struct &#123;
+            unsigned inuse:16;
+            unsigned objects:15;
+            unsigned frozen:1;
+        &#125;;
+    &#125;;
+    unsigned int __unused;
+    atomic_t __page_refcount;
+#ifdef CONFIG_MEMCG
+    unsigned long memcg_data;
+#endif
+&#125;;
+</code></pre>
+<h2 id="这么打印结构体"><a href="#这么打印结构体" class="headerlink" title="这么打印结构体"></a>这么打印结构体</h2><pre><code>p * (struct kmem_cache *) 0xffff888004c44100
+</code></pre>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

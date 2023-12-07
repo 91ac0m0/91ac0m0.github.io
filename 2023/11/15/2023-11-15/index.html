@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#anki"><span class="toc-text">anki</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#SLUB"><span class="toc-text">SLUB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-text">是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B3%E9%94%AE%E7%BB%93%E6%9E%84%E4%BD%93"><span class="toc-text">关键结构体</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#struct-slab%EF%BC%88struct-page-%EF%BC%89"><span class="toc-text">struct slab（struct page ）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kmem-cache-cpu"><span class="toc-text">kmem_cache_cpu</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#partial"><span class="toc-text">partial</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kmem-cache-node"><span class="toc-text">kmem_cache_node</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#kmem-cache"><span class="toc-text">kmem_cache</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kfree"><span class="toc-text">kfree</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Hardened-Freelist"><span class="toc-text">Hardened Freelist</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Freelist-randomization"><span class="toc-text">Freelist randomization</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#kmalloc"><span class="toc-text">kmalloc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E4%BB%A3%E7%A0%81"><span class="toc-text">内核代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#per-CPU"><span class="toc-text">per-CPU</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#cpio"><span class="toc-text">cpio</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B"><span class="toc-text">解压</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9"><span class="toc-text">压缩</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kernel-ROP"><span class="toc-text">kernel ROP</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="anki"><a href="#anki" class="headerlink" title="anki"></a>anki</h2><ul>
+<li>Markdown and KaTeX Support<br>  md 支持（可以写代码好好好）</li>
+</ul>
+<h2 id="SLUB"><a href="#SLUB" class="headerlink" title="SLUB"></a>SLUB</h2><p><a target="_blank" rel="noopener" href="http://www.wowotech.net/memory_management/426.html">图解 SLUB</a> 好直观的示例图</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/ocastejon/linux-kernel-learning/blob/main/notes/slab-allocator.md">The SLUB allocator</a> 清晰的笔记</p>
+<h3 id="是什么"><a href="#是什么" class="headerlink" title="是什么"></a>是什么</h3><ul>
+<li>用途</li>
+</ul>
+<p>slab 以字节为单位给结构体之类的东西分配空间。相对于 buddy 分配器分配大的空间，slab 分配器仍然从 Buddy 分配器中申请内存，之后自己对申请来的内存细分管理。</p>
+<ul>
+<li>命令查看</li>
+</ul>
+<p>可以通过命令 <code>sudo cat /proc/slabinfo</code> 查看 slab 的使用情况。不过 wsl 没有 slab，不懂为啥wsl 内核不使用 slab。</p>
+<ul>
+<li><p>实现源码</p>
+<ul>
+<li>include&#x2F;linux&#x2F;slab_def.h</li>
+<li>include&#x2F;linux&#x2F;slab.h</li>
+<li>mm&#x2F;slab.c</li>
+</ul>
+</li>
+<li><p>主要 api</p>
+<p>  <code>void *kmalloc(size_t size, gfp_t flags)</code></p>
+<p>  <code>kfree</code></p>
+<p>  其中的 flag 可以选择的参数是一些列 GFP_xxx 的标志，比如 <code>__GFP_DMA</code></p>
+</li>
+</ul>
+<h3 id="关键结构体"><a href="#关键结构体" class="headerlink" title="关键结构体"></a>关键结构体</h3><p><img src="https://nasm.re/pic/SLUB_schema1.png" alt="SLUB schema"></p>
+<blockquote>
+<p> 听说内核的内存比用户态更简单，因为matadata不是和data本身存在一起，而是保存在另外的结构体。真的假的。</p>
+<p>metadata 大概指的是这个内存的信息</p>
+</blockquote>
+<p>按照的顺序，如果直接从顶层结构体开始看会接触很多不了解的概念。</p>
+<h4 id="struct-slab（struct-page-）"><a href="#struct-slab（struct-page-）" class="headerlink" title="struct slab（struct page ）"></a>struct slab（struct page ）</h4><p><a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v6.7-rc1/source/mm/slab.h#L42">slab 结构体</a> 用于记录一个或多个连续页面，被划分成的特定的结构体数组。关键的结构体成员有</p>
+<ul>
+<li><code>void *freelist</code> 首个空闲的结构体</li>
+<li><code>struct list_head slab_list</code>  这个 slab 属于哪一个链表</li>
+<li><code>struct kmem_cache *slab_cache</code>  这个这个 slab 属于的 cache</li>
+</ul>
+<blockquote>
+<p>有趣的是，为了节省空间（毕竟每一个被分配的页都需要有一个 slab 结构体，产生大量的开销），将 slab 结构体折叠到了原有的 page 结构体当中。这篇文章介绍了 <a target="_blank" rel="noopener" href="https://lwn.net/Articles/565097/">page 结构体是怎么被塞入更多内容</a>。</p>
+</blockquote>
+<p>这些  slab 可以分为 3 类：</p>
+<ul>
+<li>full ：已经完全分配的 slab</li>
+<li>partial： 部分分配的slab</li>
+<li>free：空slab，或者没有对象被分配</li>
+</ul>
+<h4 id="kmem-cache-cpu"><a href="#kmem-cache-cpu" class="headerlink" title="kmem_cache_cpu"></a>kmem_cache_cpu</h4><p>kmem_cache_cpu 是每个 cpu 用于管理正在使用中的 slab 以及可以供使用的 slab 的结构体。这是一个 <strong>per CPU</strong> 变量，因此每个 CPU 都是独有一份的。其中的关键结构体说明如下（结合上面的图看更直观一些）</p>
+<ul>
+<li><code>void **freelist</code>  下一刻可供分配的 object</li>
+<li><code>page</code> 下一个可用的 page （就是 freelist 的所在的 page）</li>
+<li><code>partial</code>  见下文：</li>
+</ul>
+<h5 id="partial"><a href="#partial" class="headerlink" title="partial"></a>partial</h5><p>当图中右下角full slab释放obj的时候，首先就会将slab挂入per cpu partial链表管理。通过struct page中next成员形成单链表。per cpu partial链表指向的第一个page中会存放一些特殊的数据。例如：pobjects存储着per cpu partial链表中所有slab可供分配obj的总数，如图所示。当然还有一个图中没有体现的pages成员存储per cpu partial链表中所有slab缓存池的个数。pobjects到底有什么用呢？我们从full slab中释放一个obj就添加到per cpu partial链表，总不能无限制的添加吧！因此，每次添加的时候都会判断当前的pobjects是否大于kmem_cache的cpu_partial成员，如果大于，那么就会将此时per cpu partial链表中所有的slab移送到kmem_cache_node的partial链表，然后再将刚刚释放obj的slab插入到per cpu partial链表。如果不大于，则更新pobjects和pages成员，并将slab插入到per cpu partial链表</p>
+<h4 id="kmem-cache-node"><a href="#kmem-cache-node" class="headerlink" title="kmem_cache_node"></a>kmem_cache_node</h4><p>per node partia链表类似per cpu partial，区别是node中的slab是所有cpu共享的，而per cpu是每个cpu独占的。假如现在的slab布局如上图所示。假如现在如红色箭头指向的obj将会释放，那么就是一个empty slab，此时判断kmem_cache_node的nr_partial是否大于kmem_cache的min_partial，如果大于则会释放该slab的内存。 </p>
+<h4 id="kmem-cache"><a href="#kmem-cache" class="headerlink" title="kmem_cache"></a>kmem_cache</h4><p>每一种大小或者类型的缓存都由 <code>kmem_cahce</code> 管理</p>
+<p>重要字段比如</p>
+<ul>
+<li><code>const char *name</code>: 缓存的名字。比如说 <code>kmalloc-32</code></li>
+<li><code>unsigned int object_size</code>: 大小（不算metadata）</li>
+<li><code>unsigned int object_size</code>:  算上metadata 的大小</li>
+<li><code>struct kmem_cache_cpu __percpu *cpu_slab</code>:   <code>kmem_cache_cpu</code> 结构体指针</li>
+<li><code>struct kmem_cache_node *node[MAX_NUMNODES]</code>: 指针列表 <code>kmem_cache_node</code> </li>
+<li><code>unsigned int offset</code>:  见下问 kfree</li>
+<li><code>unsigned long random</code>: 见下文 kfree</li>
+<li><code>unsigned int *random_seq</code>: 见下文 kfree</li>
+</ul>
+<h3 id="kfree"><a href="#kfree" class="headerlink" title="kfree"></a>kfree</h3><p>当一个对象被 free 时，它们将被添加到板 freelist 中。 <code>kmem_cache_cpu.freelist</code>指向了 freelist 中的第一个对象。freelist 中每个后续对象的地址都存储在前一个 free 对象内的偏移为 <code>kmem_cache.offset</code> 的位置。</p>
+<p>关于 freelist 的保护有</p>
+<h4 id="Hardened-Freelist"><a href="#Hardened-Freelist" class="headerlink" title="Hardened Freelist"></a>Hardened Freelist</h4><p><code>CONFIG_SLAB_FREELIST_HARDENED</code> 安全加固宏是给<code>freelist</code> 链表指针进行混淆:</p>
+<pre><code>混淆后的指针=原指针 ^ 随机数random ^ 指针地址
+</code></pre>
+<h4 id="Freelist-randomization"><a href="#Freelist-randomization" class="headerlink" title="Freelist randomization"></a>Freelist randomization</h4><p><code>CONFIG_SLAB_FREELIST_RANDOM</code> 安全加固是将freelist 列表顺序随机化，正常freelist列表就是从开始往后按顺序排列，但如果开启了CONFIG_SLAB_FREELIST_RANDOM 则会打乱freelist 中object 的顺序，即便是刚申请好的新slab，其中的freelist 列表顺序也是随机的.</p>
+<h3 id="kmalloc"><a href="#kmalloc" class="headerlink" title="kmalloc"></a>kmalloc</h3><h2 id="内核代码"><a href="#内核代码" class="headerlink" title="内核代码"></a>内核代码</h2><p>内核代码一般在这个目录 <code>/usr/src/linux</code>。目录组成如下：</p>
+<p><code>arch</code> : 内核支持的硬件体系的代码</p>
+<p><code>include</code>: inlcude 文件</p>
+<p><code>init</code>: 启动代码</p>
+<p><code>mm</code> 内存管理</p>
+<p><code>drivers</code> 驱动</p>
+<p><code>ipc</code>进程通讯</p>
+<p><code>fs </code> 文件系统</p>
+<p><code>kernel</code> 主要核心代码</p>
+<p><code>net</code> 网络</p>
+<p><code>lib</code> 库代码</p>
+<p><code>scripts</code> 配置脚本</p>
+<h2 id="per-CPU"><a href="#per-CPU" class="headerlink" title="per-CPU"></a>per-CPU</h2><p>根据CPU的个数，在内存中生成多份拷贝，并且能够根据变量名和CPU编号，正确的对各个CPU的变量进行寻址。</p>
+<ul>
+<li>可以 CPU 之间不会相互访问，减少上锁的需要</li>
+<li>如果一个处理器操作另一个处理器缓存中保存的数据，则该处理器必须刷新或以其他方式更新其缓存。per CPU变量可以减少 缓存刷新</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://frankjkl.github.io/2019/03/08/Linux%E5%86%85%E6%A0%B8-percpu%E5%8F%98%E9%87%8F/">同步与互斥_percpu变量</a></p>
+<p><a target="_blank" rel="noopener" href="https://litux.nl/mirror/kerneldevelopment/0672327201/ch11lev1sec12.html">Reasons for Using Per-CPU Data</a></p>
+<h2 id="cpio"><a href="#cpio" class="headerlink" title="cpio"></a>cpio</h2><h3 id="解压"><a href="#解压" class="headerlink" title="解压"></a>解压</h3><p><code>cpio -idmv -D ./fs &lt; rootfs.img</code></p>
+<p><code>-i</code> 解压</p>
+<p><code>-d</code> 按照压缩文件的目录解压</p>
+<p><code>-m</code> 按照原本的时间戳</p>
+<p><code>-v</code> 显示详细信息</p>
+<p><code>-D</code> 切换目录</p>
+<h3 id="压缩"><a href="#压缩" class="headerlink" title="压缩"></a>压缩</h3><h2 id="kernel-ROP"><a href="#kernel-ROP" class="headerlink" title="kernel ROP"></a>kernel ROP</h2></div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

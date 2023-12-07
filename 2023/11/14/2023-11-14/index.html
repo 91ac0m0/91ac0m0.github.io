@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91"><span class="toc-text">端口转发</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#socat-unix"><span class="toc-text">socat (unix)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ncat-linux-windows"><span class="toc-text">ncat (linux&#x2F;windows)</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows-tcp-%E7%AB%AF%E5%8F%A3%E6%8E%92%E9%99%A4%E8%8C%83%E5%9B%B4"><span class="toc-text">Windows tcp 端口排除范围</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#drow-io"><span class="toc-text">drow. io</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="端口转发"><a href="#端口转发" class="headerlink" title="端口转发"></a>端口转发</h2><h3 id="socat-unix"><a href="#socat-unix" class="headerlink" title="socat (unix)"></a>socat (unix)</h3><pre><code>socat TCP-LISTEN: 8080,fork TCP: 192.168.1.100:80 
+</code></pre>
+<ul>
+<li><code>fork</code> 参数表示为每个连接都创建一个新的进程来处理数据。这使得可以同时处理多个连接而不会因为一个连接的处理而阻塞其他连接。</li>
+<li>socat 是双向的数据传输</li>
+</ul>
+<h3 id="ncat-linux-windows"><a href="#ncat-linux-windows" class="headerlink" title="ncat (linux&#x2F;windows)"></a>ncat (linux&#x2F;windows)</h3><pre><code>ncat --sh-exec &quot;ncat 192.168.107.129 80&quot; -l 17777 --keep-open
+</code></pre>
+<h2 id="Windows-tcp-端口排除范围"><a href="#Windows-tcp-端口排除范围" class="headerlink" title="Windows tcp 端口排除范围"></a>Windows tcp 端口排除范围</h2><p><a target="_blank" rel="noopener" href="https://superuser.com/questions/1486417/unable-to-start-kestrel-getting-an-attempt-was-made-to-access-a-socket-in-a-way">https://superuser.com/questions/1486417/unable-to-start-kestrel-getting-an-attempt-was-made-to-access-a-socket-in-a-way</a></p>
+<pre><code>&gt;&gt;&gt;  netsh interface ipv 4 show excludedportrange protocol=tcp
+
+协议 tcp 端口排除范围
+
+开始端口结束端口
+----------    --------
+      1144        1243
+      1344        1443
+      1444        1543
+      1744        1843
+      1985        2084
+      5357        5357
+      7652        7751
+      7752        7851
+      7968        8067
+     50000       50059     *
+
+* - 管理的端口排除。
+</code></pre>
+<h2 id="drow-io"><a href="#drow-io" class="headerlink" title="drow. io"></a>drow. io</h2><p>支持多种格式导出（png vsdx svg…）</p>
+<p>还有丰富的图形库</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#linux-kernel-debug-symbol"><span class="toc-text">linux kernel debug symbol</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%85%E6%A0%B8%E7%BC%96%E8%AF%91"><span class="toc-text">内核编译</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%A0%86%E9%A3%8E%E6%B0%B4"><span class="toc-text">什么是堆风水</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#kmalloc-%E5%88%86%E9%85%8D%E9%A1%BA%E5%BA%8F"><span class="toc-text">kmalloc 分配顺序</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#slab-alloc-node"><span class="toc-text">slab_alloc_node</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#slab-alloc"><span class="toc-text">___slab_alloc</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Buddy-System"><span class="toc-text">Buddy System</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#slab-%E5%92%8C-buddy-%E4%B9%8B%E9%97%B4-order-%E8%AE%A1%E7%AE%97"><span class="toc-text">slab 和 buddy 之间 order 计算</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><ul>
+<li><input checked="" disabled="" type="checkbox"> 一字节溢出修改了什么 ( 调一下 )  修改楽这个大小的结构体 free 之后在被其他东西 malloc 所在的新结构体</li>
+<li><input checked="" disabled="" type="checkbox"> slub allocator 向 buddy system 请求页面的过程</li>
+<li><input checked="" disabled="" type="checkbox"> buddy system</li>
+<li><input disabled="" type="checkbox"> 进程的 task_struct 的 cred 为 init_cred</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://arttnba3.cn/2023/05/02/CTF-0X08_D3CTF2023_D3KCACHE/#Step-I-%E9%A1%B5%E7%BA%A7%E5%A0%86%E9%A3%8E%E6%B0%B4%E6%9E%84%E9%80%A0%E7%A8%B3%E5%AE%9A%E8%B7%A8%E9%A1%B5%E6%BA%A2%E5%87%BA%E5%B8%83%E5%B1%80">【CTF.0x08】D^ 3CTF2023 d3kcache 出题手记 </a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.xmcve.com/2023/11/12/%E5%BC%BA%E7%BD%91%E6%8B%9F%E6%80%812023-Writeup/#title-7">https://blog.xmcve.com/2023/11/12/%E5%BC%BA%E7%BD%91%E6%8B%9F%E6%80%812023-Writeup/#title-7</a></p>
+<h2 id="linux-kernel-debug-symbol"><a href="#linux-kernel-debug-symbol" class="headerlink" title="linux kernel debug symbol"></a>linux kernel debug symbol</h2><pre><code>pwndbg&gt; ptype/ox kmem_cache
+type = &lt;data variable, no debug info&gt;
+</code></pre>
+<blockquote>
+<p>两种方法获取调试符号，一种是编译时带调试符号信息，另一种是下载源代码并在调试时附加</p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://yourbutterfly.github.io/note-site/module/kernel/kernel-debug/">kernel-debug - butter-fly</a> ubuntu 提供了调试信息仓库，不过应该只能下载发新版 kernel （？）小版本没有？</p>
+<p>没有符号表就感觉只能肉眼识别&#x2F;自己写结构体导入&#x2F;编译一个，可是我不知道题目的内核的 CONFIG 是什么呀…</p>
+<h2 id="内核编译"><a href="#内核编译" class="headerlink" title="内核编译"></a>内核编译</h2><p><a target="_blank" rel="noopener" href="https://richardweiyang-2.gitbook.io/kernel-exploring/">前言 - Kernel Exploring</a></p>
+<h2 id="什么是堆风水"><a href="#什么是堆风水" class="headerlink" title="什么是堆风水"></a>什么是堆风水</h2><p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/12417">从 corCTF 一道 kernel pwn 看 Linux 内核 cross-cache overflow 与页级堆风水 - 先知社区</a></p>
+<p>首先让我们重新审视 slub allocator 向 buddy system 请求页面的过程，当 freelist page 已经耗空且 partial 链表也为空时（或者 <code>kmem_cache</code> 刚刚创建后进行第一次分配时），其会向 buddy system 申请页面：</p>
+<p><img src="/Pasted%20image%2020231117161302.png"></p>
+<h2 id="kmalloc-分配顺序"><a href="#kmalloc-分配顺序" class="headerlink" title="kmalloc 分配顺序"></a>kmalloc 分配顺序</h2><p><a target="_blank" rel="noopener" href="https://github.com/g0dA/linuxStack/blob/master/%E5%85%B3%E4%BA%8E%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D%E7%9A%84%E4%B8%80%E4%BA%9B%E4%BA%8B.md">linuxStack&#x2F;关于内存分配的一些事.md at master · g0dA&#x2F;linuxStack</a></p>
+<h3 id="slab-alloc-node"><a href="#slab-alloc-node" class="headerlink" title="slab_alloc_node"></a>slab_alloc_node</h3><ul>
+<li>慢分配</li>
+</ul>
+<pre><code class="c">    if (!USE_LOCKLESS_FAST_PATH() ||
+        unlikely(!object || !slab || !node_match(slab, node))) &#123;
+        object = __slab_alloc(s, gfpflags, node, addr, c, orig_size);
+</code></pre>
+<ul>
+<li>快分配</li>
+</ul>
+<pre><code class="c">        void *next_object = get_freepointer_safe(s, object);
+if (unlikely(!this_cpu_cmpxchg_double(
+                s-&gt;cpu_slab-&gt;freelist, s-&gt;cpu_slab-&gt;tid,
+                object, tid,
+                next_object, next_tid(tid)))) &#123;
+
+            note_cmpxchg_failure(&quot;slab_alloc&quot;, s, tid);
+            goto redo;
+        &#125;
+        prefetch_freepointer(s, next_object);
+        stat(s, ALLOC_FASTPATH);
+</code></pre>
+<h3 id="slab-alloc"><a href="#slab-alloc" class="headerlink" title="___slab_alloc"></a><code>___slab_alloc</code></h3><pre><code class="c">    slab = alloc_slab_page(alloc_gfp, node, oo);
+    if (unlikely(!slab)) &#123;
+        oo = s-&gt;min;
+        alloc_gfp = flags;
+        /*
+         * Allocation may have failed due to fragmentation.
+         * Try a lower order alloc if possible
+         */
+        slab = alloc_slab_page(alloc_gfp, node, oo);
+        if (unlikely(!slab))
+            return NULL;
+        stat(s, ORDER_FALLBACK);
+    &#125;
+</code></pre>
+<p>处理新分配的 slab</p>
+<pre><code class="c">    freelist = slab-&gt;freelist;
+    slab-&gt;freelist = NULL;
+    slab-&gt;inuse = slab-&gt;objects;
+    slab-&gt;frozen = 1;
+
+    inc_slabs_node(s, slab_nid(slab), slab-&gt;objects);
+</code></pre>
+<h2 id="Buddy-System"><a href="#Buddy-System" class="headerlink" title="Buddy System"></a>Buddy System</h2><p>专门用来分配以页为单位的大内存空间, 且大小必须是 2 的整数次幂, $2^{order}×PGSIZE$. 分配时会找 order 对应的块, 如果没有, 则向上找更大的去分割一半, 直到分割出一块 order 对应大小的 (线段树动态开点!). 释放时, 如果可以, 会将相邻的两个合并成一个大的, 一直往上合并.</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/liexusong/linux-source-code-analyze/blob/master/physical-memory-buddy-system.md">linux-source-code-analyze&#x2F;physical-memory-buddy-system.md at master · liexusong&#x2F;linux-source-code-analyze</a></p>
+<h2 id="slab-和-buddy-之间-order-计算"><a href="#slab-和-buddy-之间-order-计算" class="headerlink" title="slab 和 buddy 之间 order 计算"></a>slab 和 buddy 之间 order 计算</h2></div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

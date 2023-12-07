@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%BC%82%E4%BA%AE%E7%9A%84-cpp"><span class="toc-text">漂亮的 cpp</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#lambda-%E5%87%BD%E6%95%B0"><span class="toc-text">lambda 函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#vector"><span class="toc-text">vector</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F"><span class="toc-text">拓扑排序</span></a></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="漂亮的-cpp"><a href="#漂亮的-cpp" class="headerlink" title="漂亮的 cpp"></a>漂亮的 cpp</h2><p><a target="_blank" rel="noopener" href="https://github.com/Certseeds/CS323_Compilers_2020F/tree/master/Assignment05#answer_of_question2">here</a></p>
+<pre><code class="cpp">/*
+ * @Github: https://github.com/Certseeds/CS323_Compilers_2020F
+ * @Organization: SUSTech
+ * @Author: nanoseeds
+ * @Date: 2020-11-29 14:31:17
+ * @LastEditors: nanoseeds
+ * @LastEditTime: 2020-11-29 16:08:43
+ */
+ 
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;unordered_set&gt;
+#include &lt;vector&gt;
+#include &lt;algorithm&gt;
+#include &lt;iterator&gt;
+
+using namespace std;
+using input_f = vector&lt;std::pair&lt;int, int&gt;&gt;;
+using output_f = unordered_set&lt;string&gt;;
+static input_f input;
+static int number;
+static output_f output;
+static output_f nextoutput;
+auto input_func = [] &#123;
+    int lines;
+    std::cin &gt;&gt; number &gt;&gt; lines;
+    input.resize(lines);
+    for (auto &amp;i : input) &#123;  // 遍历 vector
+        std::cin &gt;&gt; i.first &gt;&gt; i.second;
+        i.first -= 1;
+        i.second -= 1;
+    &#125;
+    return 0;
+&#125;();   // 立即执行
+auto output_func = []() &#123;
+    for (auto &amp;i: output) &#123;
+        string j(i);  // 拷贝字符串
+        transform(j.begin(), j.end(), j.begin(), [](auto r) &#123; return static_cast&lt;char&gt;(r + 1); &#125;);
+        std::cout &lt;&lt; &quot;[ &quot;;
+        std::copy(j.begin(), j.end(), ostream_iterator&lt;char&gt;(cout, &quot;, &quot;));
+        std::cout &lt;&lt; &quot;\b\b &quot;;
+        std::cout &lt;&lt; &quot;],&quot; &lt;&lt; std::endl;
+    &#125;
+&#125;;
+
+void toposort(const input_f &amp;input);
+
+int main() &#123;
+    toposort(input);
+    output_func();
+    return 0;
+&#125;
+
+void toposort(const input_f &amp;input) &#123;
+    vector&lt;int&gt; in(number, 0);
+    for (const auto &amp;i : input) &#123;
+        in[i.second]++;  // 计算入度
+    &#125;
+    string begin = &quot;&quot;;
+    output.insert(begin);
+    for (int order = 0; order &lt; number; order++) &#123;
+        for (const auto &amp;i : output) &#123;
+            //std::cout &lt;&lt; i &lt;&lt; std::endl;
+            vector&lt;int&gt; tempin(in);
+            for (const auto&amp; j : i) &#123;
+                auto num = j - &#39;0&#39;;
+                for (const auto &amp;k : input) &#123;
+                    if (k.first == num) &#123;
+                        tempin[k.second]--;
+                        /* code */
+                    &#125;
+                &#125;
+            &#125;
+            for (const auto&amp; j : i) &#123;
+                tempin[j - &#39;0&#39;] = -1;
+            &#125;
+            for (size_t j = 0; j &lt; tempin.size(); j++) &#123;
+                if (tempin[j] == 0) &#123;
+                    nextoutput.insert(string(i).append(string(1, j + &#39;0&#39;)));
+                &#125;
+            &#125;
+        &#125;
+        std::swap(output, nextoutput);
+        nextoutput.clear();
+    &#125;
+&#125;
+</code></pre>
+<h3 id="lambda-函数"><a href="#lambda-函数" class="headerlink" title="lambda 函数"></a>lambda 函数</h3><pre><code class="cpp">[capture list] (parameters) -&gt; return_type &#123;
+    // 函数体
+    return ...;
+&#125;;
+</code></pre>
+<p>匿名函数，当需要编写简短的，一次性的函数的时候可以使用</p>
+<p>可能会适当进行优化比如说内联，来减少函数调用的开销</p>
+<h3 id="vector"><a href="#vector" class="headerlink" title="vector"></a>vector</h3><p><code>std::vector</code> 在 C++ 中是非常常用的容器，特别适用于需要动态管理数据集合大小的场景，如动态存储未知数量的元素或者动态调整存储需求的情况。</p>
+<h3 id="拓扑排序"><a href="#拓扑排序" class="headerlink" title="拓扑排序"></a>拓扑排序</h3><p>实现 <a target="_blank" rel="noopener" href="https://jingsam.github.io/2020/08/11/topological-sort.html">kahn</a> 算法</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>
