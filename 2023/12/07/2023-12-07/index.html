@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AE%E6%9E%B6%E6%9E%84%E7%9E%AC%E6%80%81%E6%89%A7%E8%A1%8C%E6%94%BB%E5%87%BB"><span class="toc-text">微架构瞬态执行攻击</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E7%9E%AC%E6%80%81%E6%89%A7%E8%A1%8C"><span class="toc-text">什么是瞬态执行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E6%B5%8B%E4%BF%A1%E9%81%93%E6%80%8E%E4%B9%88%E6%B3%84%E9%9C%B2%E5%9C%A8%E7%BC%93%E5%AD%98%E9%87%8C%E9%9D%A2%E7%9A%84%E6%95%B0%E6%8D%AE"><span class="toc-text">缓存测信道怎么泄露在缓存里面的数据</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#FLUSH-RELOAD"><span class="toc-text">FLUSH+RELOAD</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%87%E7%9F%A5%E8%AF%86"><span class="toc-text">预备知识</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%A1%B5%E5%85%B1%E4%BA%AB"><span class="toc-text">页共享</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#cache-%E7%BB%93%E6%9E%84"><span class="toc-text">cache 结构</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%89%E7%BA%A7%E7%BC%93%E5%AD%98"><span class="toc-text">三级缓存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E7%BB%84%E7%9B%B8%E8%81%94%E7%BC%93%E5%AD%98"><span class="toc-text">组相联缓存</span></a></li></ol></li><li class="toc-item toc-level-4"><a class="toc-link" href="#LLC"><span class="toc-text">LLC</span></a></li></ol></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="微架构瞬态执行攻击"><a href="#微架构瞬态执行攻击" class="headerlink" title="微架构瞬态执行攻击"></a>微架构瞬态执行攻击</h2><p><a target="_blank" rel="noopener" href="https://www.secrss.com/articles/42566">异构计算系统中的微架构侧信道攻击</a></p>
+<h3 id="什么是瞬态执行"><a href="#什么是瞬态执行" class="headerlink" title="什么是瞬态执行"></a>什么是瞬态执行</h3><p>为了提升 CPU 的运行效率，现代 CPU 设计的时候会把微指令的顺序重新排列，或者在遇到分支的时候预测执行。但是这些指令不一定是有权限的，或者这个分支不一定会被执行，因此，芯片会丢弃所有的预测性结果并运行另一个分支或者触发异常。但是这些指令确实执行楽，所以缓存中就会载入越权访问的数据。</p>
+<h3 id="缓存测信道怎么泄露在缓存里面的数据"><a href="#缓存测信道怎么泄露在缓存里面的数据" class="headerlink" title="缓存测信道怎么泄露在缓存里面的数据"></a>缓存测信道怎么泄露在缓存里面的数据</h3><h2 id="FLUSH-RELOAD"><a href="#FLUSH-RELOAD" class="headerlink" title="FLUSH+RELOAD"></a>FLUSH+RELOAD</h2><p><a target="_blank" rel="noopener" href="https://zqy.ink/2023/07/18/flush_reload/">flush+reload学习笔记 | 张清越</a></p>
+<p><a target="_blank" rel="noopener" href="https://notes.caijiqhx.top/ucas/papers/flush%2Breload/">FLUSH+RELOAD - caijiqhx notes</a></p>
+<h2 id="预备知识"><a href="#预备知识" class="headerlink" title="预备知识"></a>预备知识</h2><h4 id="页共享"><a href="#页共享" class="headerlink" title="页共享"></a>页共享</h4><p>进程间共享内存主要有两个目的，首先是进程间通信，然后可以减少内存占用。</p>
+<p>减少内存的方式比如：</p>
+<ul>
+<li><p>页面感知（content-aware）共享，相同的页面由加载的页面内容的磁盘位置标识。进程间共享可执行文件和共享库的代码段。</p>
+</li>
+<li><p>基于内容的页共享，也叫内存重复数据消除（memory deduplication），是一种更主动的页共享机制。系统扫描活动的内存，识别并合并有相同内容的页。</p>
+</li>
+</ul>
+<p>但是对于不相关的进程的共享页面，这些共享页面仅仅是为了节省内存引入的，操作系统需要保护在不相关进程间共享的内存页，防止恶意进程修改共享页。把共享页设置为写时复制，写入共享页时会陷入，OS 会获取 CPU 控制权，复制共享页内容，再映射到进程的地址空间。</p>
+<p>这里存在测信道——写时复制引入的延迟会导致信息泄露。</p>
+<h4 id="cache-结构"><a href="#cache-结构" class="headerlink" title="cache 结构"></a>cache 结构</h4><h5 id="三级缓存"><a href="#三级缓存" class="headerlink" title="三级缓存"></a>三级缓存</h5><p><a target="_blank" rel="noopener" href="https://ivanzz1001.github.io/records/post/computer-basis/2018/04/25/computer_basis_cpucache">CPU体系结构之cache | Ivanzz</a></p>
+<p>下图是一个典型的存储器层次结构，使用了三级缓存。</p>
+<p><img src="https://ivanzz1001.github.io/records/assets/img/computer_basis/memory_hierarchical.jpg"></p>
+<p>他们之间的速度差距：</p>
+<p><img src="/!%5Bcpu-cache%5D(https:/ivanzz1001.github.io/records/assets/img/computer_basis/cpu_cache_latencies.jpg"></p>
+<p>L3 Cache和L1，L2 Cache有着本质的区别。L1和L2 Cache都是每个CPU core独立拥有一个，而L3 Cache是几个Cores共享的，可以认为是一个更小但是更快的<code>内存</code>(memory)。</p>
+<blockquote>
+<p>haha 又来学计组咯</p>
+</blockquote>
+<h5 id="组相联缓存"><a href="#组相联缓存" class="headerlink" title="组相联缓存"></a>组相联缓存</h5><p>缓存块被分组，每一组只能在一组特定的缓存中。比如：有8个单元可用于存储缓存所关联的缓存块，从而形成一个8路关联的组（8-way associative set）。</p>
+<ul>
+<li><p>直接映射</p>
+<ul>
+<li><p>一个主存块只能拷贝到cache的一个特定行位置上去。</p>
+</li>
+<li><p>容易冲突之后被替换</p>
+</li>
+</ul>
+</li>
+<li><p>全相联映射</p>
+<ul>
+<li><p>主存的一个块直接拷贝到cache中的任意一行上。</p>
+</li>
+<li><p>线路复杂，成本高，速度低</p>
+</li>
+</ul>
+</li>
+<li><p>组相联映射</p>
+<ul>
+<li><p>组相联映射实际上是直接映射和全相联映射的折中方案。</p>
+</li>
+<li><p>主存的某块只能映射到Cache的特定组中的任意一块。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h4 id="LLC"><a href="#LLC" class="headerlink" title="LLC"></a>LLC</h4><p>Intel LLC 的一个重要特性是包容性（inclusive），即 LLC 包含所有存储在低级缓存中的所有数据的副本。因此从 LLC 中刷新或逐出数据也从其他缓存中移除数据。</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>
