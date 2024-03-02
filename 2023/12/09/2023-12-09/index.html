@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#gdb-%E7%9A%84%E6%89%93%E5%8D%B0%E5%86%85%E5%AD%98-alais"><span class="toc-text">gdb 的打印内存 alais</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#flat-in-pwntools"><span class="toc-text">flat in pwntools</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="gdb-的打印内存-alais"><a href="#gdb-的打印内存-alais" class="headerlink" title="gdb 的打印内存 alais"></a>gdb 的打印内存 alais</h2><p>我想要快速的计算这一段内存的减去一个偏移的大小</p>
+<pre><code class="text">pwndbg&gt; x/30gx   0x7ffff7dd06e0
+0x7ffff7dd06e0 &lt;_IO_file_jumps&gt;:        0x0000000000000000      0x0000000000000000
+0x7ffff7dd06f0 &lt;_IO_file_jumps+16&gt;:     0x00007ffff7a869c0      0x00007ffff7a87730
+0x7ffff7dd0700 &lt;_IO_file_jumps+32&gt;:     0x00007ffff7a874a0      0x00007ffff7a88600
+0x7ffff7dd0710 &lt;_IO_file_jumps+48&gt;:     0x00007ffff7a89980      0x00007ffff7a861e0
+0x7ffff7dd0720 &lt;_IO_file_jumps+64&gt;:     0x00007ffff7a85ec0      0x00007ffff7a854c0
+0x7ffff7dd0730 &lt;_IO_file_jumps+80&gt;:     0x00007ffff7a88a00      0x00007ffff7a85430
+0x7ffff7dd0740 &lt;_IO_file_jumps+96&gt;:     0x00007ffff7a85370      0x00007ffff7a7a180
+0x7ffff7dd0750 &lt;_IO_file_jumps+112&gt;:    0x00007ffff7a861a0      0x00007ffff7a85b70
+0x7ffff7dd0760 &lt;_IO_file_jumps+128&gt;:    0x00007ffff7a85970      0x00007ffff7a85340
+0x7ffff7dd0770 &lt;_IO_file_jumps+144&gt;:    0x00007ffff7a85b60      0x00007ffff7a89af0
+0x7ffff7dd0780 &lt;_IO_file_jumps+160&gt;:    0x00007ffff7a89b00      0x0000000000000000
+</code></pre>
+<p>以数组形式打印内容</p>
+<pre><code class="c">p *(double(*)[144])udata
+</code></pre>
+<p>然后用 python lambda + map 处理偏移</p>
+<h2 id="flat-in-pwntools"><a href="#flat-in-pwntools" class="headerlink" title="flat in pwntools"></a>flat in pwntools</h2><p><a target="_blank" rel="noopener" href="https://docs.pwntools.com/en/stable/util/packing.html#pwnlib.util.packing.flat">flat in pwntools</a></p>
+<p>参数可以是 list tuple string。能够以字典形式设置偏移</p>
+<p><code>filter</code><br>Space between pieces of data is filled out using the iterable filler. The n’th byte in the output will be byte at index <code>n % len(iterable)</code> byte in filler if it has finite length or the byte at index n otherwise.</p>
+<p><code>length</code><br>If length is given, the output will be padded with bytes from filler to be this size. If the output is longer than length, a <a target="_blank" rel="noopener" href="https://docs.python.org/3.8/library/exceptions.html#ValueError" title="(in Python v3.8)"><code>ValueError</code></a> exception is raised.</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

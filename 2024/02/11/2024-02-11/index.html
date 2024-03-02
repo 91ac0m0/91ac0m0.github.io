@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Speed-up-system-calls"><span class="toc-text">Speed up system calls</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#xv-6-%E7%9A%84-vsc-%E8%B0%83%E8%AF%95"><span class="toc-text">xv 6 的 vsc 调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#lab-3"><span class="toc-text">lab 3</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="Speed-up-system-calls"><a href="#Speed-up-system-calls" class="headerlink" title="Speed up system calls"></a>Speed up system calls</h2><p>kernelbase 以上到 end 为 kernel 的空间，end 到 PHYSTOP 是 kmalloc 和 kfree  的空间。</p>
+<h2 id="xv-6-的-vsc-调试"><a href="#xv-6-的-vsc-调试" class="headerlink" title="xv 6 的 vsc 调试"></a>xv 6 的 vsc 调试</h2><p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/zhihaospace/p/16277330.html">四.使用vscode调试xv6内核 - All_just_for_fun - 博客园</a></p>
+<p>launch. json 指定如何启动调试，task.json 制定了调试之前需要做的工作</p>
+<p><code>-exec &lt;要执行的gdb命令&gt;</code> 可以在 vsc 中执行 gdb 命令</p>
+<p><code>-exec watch *(void/int/char...... *)(内存地址)/全局变量名 </code> 为表达式（变量）expr 设置一个观察点。一量表达式值有变化时，马上停住程序。</p>
+<pre><code class="json">//lauch.json
+&#123;
+    &quot;version&quot;: &quot;0.2.0&quot;,
+    &quot;configurations&quot;: [
+        &#123;
+            &quot;name&quot;: &quot;debug xv6&quot;,
+            &quot;type&quot;: &quot;cppdbg&quot;,
+            &quot;request&quot;: &quot;launch&quot;,
+            &quot;program&quot;: &quot;$&#123;workspaceFolder&#125;/kernel/kernel&quot;,
+            &quot;args&quot;: [],
+            &quot;stopAtEntry&quot;: true,
+            &quot;cwd&quot;: &quot;$&#123;workspaceFolder&#125;&quot;,
+            &quot;miDebuggerServerAddress&quot;: &quot;localhost:26000&quot;,
+            &quot;miDebuggerPath&quot;: &quot;/usr/bin/gdb-multiarch&quot;,
+            &quot;environment&quot;: [],
+            &quot;externalConsole&quot;: false,
+            &quot;MIMode&quot;: &quot;gdb&quot;,
+            &quot;setupCommands&quot;: [
+                &#123;
+                    &quot;description&quot;: &quot;pretty printing&quot;,
+                    &quot;text&quot;: &quot;-enable-pretty-printing&quot;,
+                    &quot;ignoreFailures&quot;: true
+                &#125;
+            ],
+            &quot;logging&quot;: &#123;
+                 &quot;engineLogging&quot;: true,
+                 &quot;programOutput&quot;: true,
+            &#125;,
+            &quot;preLaunchTask&quot;: &quot;xv6build&quot;,
+        &#125;
+    ]
+&#125;
+</code></pre>
+<pre><code class="json">// task.json
+&#123;
+    &quot;version&quot;: &quot;2.0.0&quot;,
+    &quot;tasks&quot;: [
+        &#123;
+            &quot;label&quot;: &quot;xv6build&quot;,
+            &quot;type&quot;: &quot;shell&quot;,
+            &quot;isBackground&quot;: true,
+            &quot;command&quot;: &quot;make qemu-gdb&quot;,
+            &quot;problemMatcher&quot;: [
+                &#123;
+                    &quot;pattern&quot;: [
+                        &#123;
+                            &quot;regexp&quot;: &quot;.&quot;,
+                            &quot;file&quot;: 1,
+                            &quot;location&quot;: 2,
+                            &quot;message&quot;: 3
+                        &#125;
+                    ],
+                    &quot;background&quot;: &#123;
+                        &quot;beginsPattern&quot;: &quot;.*Now run &#39;gdb&#39; in another window.&quot;,
+                        // 要对应编译成功后,一句echo的内容. 此处对应 Makefile Line:170
+                        &quot;endsPattern&quot;: &quot;.&quot;
+                    &#125;
+                &#125;
+            ]
+        &#125;
+    ]
+  &#125;
+</code></pre>
+<h2 id="lab-3"><a href="#lab-3" class="headerlink" title="lab 3"></a>lab 3</h2><p>trampoline 用来处理 user 到 kernel 模式的转换（比如切换 pagetable 和寄存器这些）</p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

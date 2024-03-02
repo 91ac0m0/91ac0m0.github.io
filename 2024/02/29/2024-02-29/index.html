@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#gdb-%E6%AE%B5%E9%94%99%E8%AF%AF%E8%B0%83%E8%AF%95"><span class="toc-text">gdb 段错误调试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E6%9E%9C-rand-%E4%B9%8B%E5%89%8D%E6%B2%A1%E6%9C%89-srand"><span class="toc-text">如果 rand 之前没有 srand</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#page-fault-%E5%92%8C-access-fault-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-text">page fault 和 access fault 的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#canary"><span class="toc-text">canary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwntools"><span class="toc-text">pwntools</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="gdb-段错误调试"><a href="#gdb-段错误调试" class="headerlink" title="gdb 段错误调试"></a>gdb 段错误调试</h2><p><a target="_blank" rel="noopener" href="https://developer.aliyun.com/article/30188">Linux下调试段错误的方法</a></p>
+<h2 id="如果-rand-之前没有-srand"><a href="#如果-rand-之前没有-srand" class="headerlink" title="如果 rand 之前没有 srand"></a>如果 rand 之前没有 srand</h2><p><a target="_blank" rel="noopener" href="https://www.iso-9899.info/n1570.html#7.22.2">标准里面写了</a></p>
+<p>会用 1 作为默认种子</p>
+<h2 id="page-fault-和-access-fault-的区别"><a href="#page-fault-和-access-fault-的区别" class="headerlink" title="page fault 和 access fault 的区别"></a>page fault 和 access fault 的区别</h2><p>page fault 是读写执行权限的错误，access 是 kernel 还是 user 的错误。</p>
+<p>access fault 也有可能由于 PMA（Physical Memory Attribute）检查失败产生。</p>
+<p>物理内存属性（PMA：Physical Memory Attributes）检查失败通常发生在处理器试图访问具有特定属性的物理内存时，但该访问违反了这些属性的规定。</p>
+<h2 id="canary"><a href="#canary" class="headerlink" title="canary"></a>canary</h2><p>原来，所有栈的 canary 都相同</p>
+<p>前一个函数的栈帧内容没有被清空，会被后续的函数再使用，alloca 可以调整取得栈变量的位置。从而泄露 canary。</p>
+<p><a target="_blank" rel="noopener" href="https://kiprey.github.io/2022/08/thread_canary/">浅析 Linux 程序的 Canary 机制</a></p>
+<h2 id="pwntools"><a href="#pwntools" class="headerlink" title="pwntools"></a>pwntools</h2><pre><code class="python"># 寻找一个字符串
+binsh = libc_base + next(libc.search(b&#39;/bin/sh&#39;))
+
+# 按照正则来接收
+canary = p.recvregex(&quot;(\-*\d+\.\d+)&quot;)
+
+# struct 来打包和解包
+# https://www.cnblogs.com/litaozijin/p/6506354.html
+&gt;&gt;&gt; f = -3001136621000090411588975790367592799993690258910694055348200145211620623843852288.000000
+&gt;&gt;&gt; hex(u64(pack(&#39;&lt;d&#39;, f)))
+&#39;0xd0d94f9496fdf700&#39;
+</code></pre>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

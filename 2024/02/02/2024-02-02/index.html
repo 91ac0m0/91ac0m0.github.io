@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>giacomo&#39;s journal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+    <script src="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/default.min.css">
+    <link
+    rel="stylesheet"
+    href="https://unpkg.com/highlightjs-copy/dist/highlightjs-copy.min.css"
+    />
+    <script>hljs.highlightAll();</script>
+    <script>hljs.addPlugin(new CopyButtonPlugin());</script>
+
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<script src="/js/jquery-3.7.1.min.js"></script>
+
+    
+<script src="/js/bootstrap-transition.js"></script>
+
+    
+<script src="/js/zoom.js"></script>
+
+
+    <style>
+        .markdown-body {
+            box-sizing: border-box;
+            min-width: 200px;
+            max-width: 980px;
+            margin-left: 28%;
+            margin-top: 6%;
+
+            padding: 45px;
+        }
+
+        @media (max-width: 767px) {
+            .markdown-body {
+                padding: 15px;
+            }
+        }
+    </style>
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body>
+    <header class="header">
+
+    <div class="navbar-left">
+        <div class="avatar">
+            <a href="/">
+                <img src="https://91ac0m0.github.io/img/avatar.jpg"alt="avatar">
+            </a>
+        </div>
+        <div class="nav-title">
+            <a class="nav-brand" href="/">giacomo</a>
+        </div>
+    </div>
+    <div class="navbar-right">
+        <ul class="nav-links">
+            
+                <div class="nav-link">
+                    <a href="/about" class="menu-item-link">
+                        about
+                    </a>
+                </div>
+            
+        </ul>
+
+    </div>
+    
+
+</header>
+
+    <div class = "toc_left">
+	
+    <div id="toc">
+        <!-- <strong class="sidebar-title">目录</strong> -->
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#asm"><span class="toc-text">asm</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#static-%E5%92%8C-const"><span class="toc-text">static 和 const</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%89%E4%B8%80%E7%A7%8D%E6%9D%83%E9%99%90%E5%8F%AB%E5%81%9A-suid"><span class="toc-text">有一种权限叫做 suid</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#house-of-cat"><span class="toc-text">house of cat</span></a></li></ol></li></ol>
+    </div>
+
+</div>
+<article class="markdown-body">
+	<div></div><h2 id="asm"><a href="#asm" class="headerlink" title="asm"></a>asm</h2><p>用 intel 风格写内联汇编</p>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/199966/how-do-you-use-gcc-to-generate-assembly-code-in-intel-syntax">https://stackoverflow.com/questions/199966/how-do-you-use-gcc-to-generate-assembly-code-in-intel-syntax</a></p>
+<h2 id="static-和-const"><a href="#static-和-const" class="headerlink" title="static 和 const"></a>static 和 const</h2><p>const 是不可修改的，所以属于不可写的 text 段。static 可以修改，但是在函数之间是保持不变的，所以单独放在 data 段。</p>
+<p>所以说这一段代码是可以执行的。</p>
+<pre><code>const int main[] = &#123;1213741674,011044140377,030722173061,01307,784287744,04433460142,012600064162,113224,0100000010,2421620736,1423376712,47432,02600001,0122000000,022044110317,022044110127,022044110124,022044110137,022044110126,022044110132,022001207620&#125;;
+</code></pre>
+<p>参考这个 <a target="_blank" rel="noopener" href="https://jroweboy.github.io/c/asm/2015/01/26/when-is-main-not-a-function.html">Main is usually a function. So then when is it not?</a></p>
+<h2 id="有一种权限叫做-suid"><a href="#有一种权限叫做-suid" class="headerlink" title="有一种权限叫做 suid"></a>有一种权限叫做 suid</h2><p>SUID 的目的就是：让本来没有相应权限的用户运行这个程序时，可以访问他没有权限访问的资源。</p>
+<h3 id="house-of-cat"><a href="#house-of-cat" class="headerlink" title="house of cat"></a>house of cat</h3><p><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-273895.htm">[原创]House of cat新型glibc中IO利用手法解析 &amp;&amp; 第六届强网杯House of cat详解-Pwn-看雪-安全社区|安全招聘|kanxue.com</a></p>
+</div>
+</article>
+
+<script src="/js/image_pop_up.js"></script>
+
+	
+
+</body>
+</html>
